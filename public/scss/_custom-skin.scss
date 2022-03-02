@@ -1,0 +1,28 @@
+// Your custom skin
+// Skins
+$skins: () !default;
+$skins: map-merge(
+  (
+    "black": (
+      "skin-primary-color":      rgb(241, 9, 9),
+      "skin-navbar":             rgb(255, 81, 0),
+      "skin-footer-color":       rgb(151, 47, 47),
+      "skin-flat":               rgb(223, 29, 29),
+      "skin-accent":             rgb(34, 163, 99),
+      "skin-sidenav-item":       rgb(212, 29, 29),
+      "skin-sidenav-item-hover": rgb(217, 231, 15),
+      "skin-gradient-start":     rgb(224, 202, 77),
+      "skin-gradient-end":       rgb(235, 206, 43),
+      "skin-mask-slight":        rgb(133, 14, 202),
+      "skin-mask-light":         rgb(224, 247, 18),
+      "skin-mask-strong":        rgb(15, 236, 82),
+      "skin-sn-child":           rgb(228, 231, 16),
+      "skin-btn-primary":        rgb(214, 208, 124),
+      "skin-btn-secondary":      rgb(24, 224, 41),
+      "skin-btn-default":        rgb(202, 199, 35),
+      "skin-text":               rgb(223, 152, 20)
+    )
+  ),
+  $skins
+);
+
