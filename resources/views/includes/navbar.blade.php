@@ -24,6 +24,12 @@
       
       <li>
         <ul class="collapsible collapsible-accordion">
+
+          <li>
+            <a href="{{ route('dashboard') }}" class="waves-effect">
+              <i class="w-fa fas fa-tachometer-alt"></i>Dashboard
+            </a>
+          </li>
           
           <li>
             <a class="collapsible-header waves-effect arrow-r">
@@ -38,9 +44,9 @@
                   </a>
                 </li>
                 <li>
-                  <a href="{{ route('documentrequest') }}" class="waves-effect">
+                  <a href="{{ route('documentlibrary') }}" class="waves-effect">
                     {{-- <span class="sv-slim">DSB</span> --}}
-                    <span class="sv-normal">Document View</span>
+                    <span class="sv-normal">Document Library</span>
                   </a>
                 </li>
               </ul>

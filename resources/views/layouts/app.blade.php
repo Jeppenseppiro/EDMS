@@ -44,7 +44,7 @@
     </style>
   </head>
 
-  <body class="black-skin fixed-sn">
+  <body class="light-blue-skin fixed-sn">
     @include('includes.navbar')
     @yield('content')
   </body>
@@ -56,11 +56,13 @@
   <script src="{{ asset('js/mdb.min.js') }}" type="text/javascript"></script>
   <script src="{{ asset('js/addons-pro/timeline.js') }}" type="text/javascript"></script>
   <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
   <script>
     CKEDITOR.replace('sample-editor');
   </script>
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  @yield('script')
+  
   <script>
     // SideNav Initialization
     $(document).ready(function() {
@@ -142,4 +144,5 @@
     // What You See Is What You Get (WYSIWYG) Text Editor
     $("#demo").mdbWYSIWYG();
   </script>
+  @yield('script')
 </html>

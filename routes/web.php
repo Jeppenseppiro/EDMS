@@ -18,8 +18,8 @@ Auth::routes();
 
 Route::group( ['middleware' => 'auth'], function(){
     Route::get('/', function () {
-        return view('welcome');
-    });
+        return view('dashboard');
+    })->name('dashboard');
 
     Route::get('/home',  'RequestEntriesController@get_data');
     Route::get('/api/documentrequest', 'RequestEntriesController@get_data');
@@ -30,15 +30,19 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::resource('users', 'UsersController');
 
     //Request Entry
-    Route::get('documentrequest', 'RequestIsoEntriesController@index')->name('documentrequest');
-    //Route::put('/documentrequest', 'RequestIsoEntriesController@index')->name('documentrequest');
-    Route::post('documentrequest/store', 'RequestIsoEntriesController@store');
-    Route::put('documentrequest/{id}', 'RequestIsoEntriesController@update');
-    Route::post('documentrequest/requesthistory/{id}', 'RequestIsoEntriesController@history');
-    Route::get('requestentryhistory', 'RequestIsoEntryHistoriesController@index');
-    Route::post('requestentryhistory/store', 'RequestIsoEntryHistoriesController@store');
+    Route::get('documentrequest', 'RequestEntriesController@index')->name('documentrequest');
+    //Route::put('/documentrequest', 'RequestEntriesController@index')->name('documentrequest');
+    Route::post('documentrequest/iso/store', 'RequestEntriesController@store_iso');
+    Route::post('documentrequest/legal/store', 'RequestEntriesController@store_legal');
+    Route::put('documentrequest/{id}', 'RequestEntriesController@update');
+    Route::post('documentrequest/requesthistory/iso/{id}', 'RequestEntriesController@history_iso');
+    Route::post('documentrequest/requesthistory/legal/{id}', 'RequestEntriesController@history_legal');
+    Route::get('requestentryhistory', 'RequestEntryHistoriesController@index');
+    Route::post('requestentryhistory/store', 'RequestEntryHistoriesController@store');
 
-    Route::post('showRequestEntry', 'RequestIsoEntriesController@show');
+    
+
+    Route::post('showRequestEntry', 'RequestEntriesController@show');
 
     
     //Document Library

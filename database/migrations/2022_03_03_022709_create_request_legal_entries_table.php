@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestIsoEntryHistoriesTable extends Migration
+class CreateRequestLegalEntriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateRequestIsoEntryHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('request_iso_entry_histories', function (Blueprint $table) {
+        Schema::create('request_legal_entries', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->string('request_iso_entry_id', 10);
+            $table->string('date_request', 20);
+            $table->text('requestor_name');
+            $table->string('document_type', 20);
+            $table->text('attachment');
+            $table->string('status', 20);
             $table->text('remarks');
-            $table->string('status', 10);
-            $table->string('tag', 10);
-            $table->string('user', 10);
         });
     }
 
@@ -31,6 +32,6 @@ class CreateRequestIsoEntryHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('request_iso_entry_histories');
+        Schema::dropIfExists('request_legal_entries');
     }
 }

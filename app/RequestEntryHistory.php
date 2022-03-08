@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RequestIsoEntryHistory extends Model
+class RequestEntryHistory extends Model
 {
     //
     public function user(){

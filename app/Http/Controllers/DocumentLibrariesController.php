@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DocumentLibrary;
 use App\DocumentCategory;
 use App\Tag;
+use App\RequestIsoEntry;
 use App\RequestIsoEntryHistory;
 use Illuminate\Http\Request;
 
@@ -17,18 +18,20 @@ class DocumentLibrariesController extends Controller
      */
     public function index()
     {
-        $request_entry_histories = RequestIsoEntryHistory::with('user','requestStatus','requestIsoEntry')->where('status','=',4)->get();
+        $document_libraries = DocumentLibrary::with('user','documentCategory','documentTag','getRequestIsoEntry')->get();
+                                    //->join('request_types', 'request_iso_entry_histories.status', '=', 'request_types.id')
+                                    //->where('status','=',4)->get();
         $document_categories = DocumentCategory::get();
         $tags = Tag::get();
-        //dd($request_entry_histories);
+        //dd($document_libraries);
         return view('documents.document_library',
             array(
-                'request_entry_histories' => $request_entry_histories,
+                'document_libraries' => $document_libraries,
                 'document_categories' => $document_categories,
                 'tags' => $tags,
             )
         );
-        return $request_entry_histories;
+        return $document_libraries;
     }
 
     /**

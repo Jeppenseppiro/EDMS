@@ -148,28 +148,34 @@
                           <th class="th-sm" width="">Revision</th>
                           <th class="th-sm" width="">Attachment</th>
                           <th class="th-sm" width="">Control</th>
+                          <th class="th-sm" width="">Status</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
                       <tbody id="fileUpload">
-                        {{-- @foreach ($request_entry_histories as $key => $request_entry_history)
+                        @foreach ($document_libraries as $document_library)
                           <tr>
-                            <td>{{$request_entry_history->id}}</td>
-                            <td>{{$request_entry_history->date_request}}</td>
-                            <td>{{$request_entry_history->user->name}}</td>
-                            <td>{{$request_entry_history->title}}</td>
-                            <td>{{$request_entry_history->proposed_effective_date}}</td>
-                            <td>{{$request_entry_history->requestType->description}}</td>
-                            <td>{{$request_entry_history->documentType->category_description}}</td>
-                            <td>{{$request_entry_history->document_to_revise}}</td>
-                            <td>{{$request_entry_history->document_purpose_request}}</td>
-                            <td>{{$request_entry_history->requestStatus->status}}</td>
-                            <td >
+                            <td>{{$document_library->id}}</td>
+                            <td>{{$document_library->description}}</td>
+                            <td>{{$document_library->documentCategory->category_description}}</td>
+                            <td>{{$document_library->document_number_series}}</td>
+                            <td>{{$document_library->documentTag->description}}</td>
+                            <td>{{$document_library->revision}}</td>
+                            <td>{{$document_library->attachment}}</td>
+                            <td>{{$document_library->control}}</td>
+                            <td>
+                              @if($document_library->getRequestIsoEntry->description == "Obsolete" && $document_library->getRequestIsoEntry->status == "Approved") 
+                                Obsolete
+                              @else
+                                Active
+                              @endif
+                            </td>
+                            <td>
                               <button id="" data-id="" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-request_isoView"><i class="fa-solid fa-eye"></i></button>
                               <button id="" data-id="" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-request_isoEdit"><i class="fa-solid fa-pen-line"></i></button>
                             </td>
                           </tr>
-                        @endforeach --}}
+                        @endforeach
                       </tbody>
                     </table>
                   </div>

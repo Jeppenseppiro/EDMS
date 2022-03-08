@@ -15,7 +15,7 @@
           <div class="card card-cascade narrower">
             <div class="row">
               <div class="col-xl-12 col-lg-12 mr-0 pb-2">
-                <div class="view view-cascade gradient-card-header morpheus-den-gradient narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
+                <div class="view view-cascade gradient-card-header success-color narrower py-2 mx-4 mb-3 d-flex justify-content-between align-items-center">
 
                   <div>
                     <div id="usersDatatableButtons"></div>
@@ -34,7 +34,7 @@
                 <div class="px-4">
                   <div class="table-responsive">
 
-                    <table id="usersDatatable" class="table table-hover table-sm" cellspacing="0" width="100%">
+                    <table id="usersDatatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
                           <th class="th-sm" width="2%">ID</th>
@@ -46,7 +46,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        @foreach ($users as $user)
+                        @foreach ($users as $key => $user)
                           <tr>
                             <td>{{$user->id}}</td>
                             <td>{{$user->name}}</td>
@@ -54,7 +54,7 @@
                             <td>{{$user->created_at}}</td>
                             <td>{{$user->updated_at}}</td>
                             <td>
-                              <button id="userEdit{{$user->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning btn-userEdit"><i class="fa-solid fa-pen-line"></i></button>
+                              <button id="{{$key}}" data-id="userEdit{{$user->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-userEdit"><i class="fa-solid fa-pen-line"></i></button>
                             </td>
                           </tr>
                         @endforeach
@@ -186,7 +186,7 @@
           {
             extend: 'copy',
             text: 'COPY',
-            className: 'btn btn-sm btn-amber waves-effect',
+            className: 'btn btn-outline-white btn-rounded btn-sm px-2',
             exportOptions: {
                 columns: 'th:not(:last-child)'
             }
@@ -194,7 +194,7 @@
           {
             extend: 'csv',
             text: 'CSV',
-            className: 'btn btn-sm btn-yellow btn-link',
+            className: 'btn btn-outline-white btn-rounded btn-sm px-2',
             title: 'CSV_'+today,
             exportOptions: {
                 columns: 'th:not(:last-child)'
@@ -203,7 +203,7 @@
           {
             extend: 'excel',
             text: 'EXCEL',
-            className: 'btn btn-sm btn-success btn-link',
+            className: 'btn btn-outline-white btn-rounded btn-sm px-2',
             title: 'EXCEL_'+today,
             exportOptions: {
                 columns: 'th:not(:last-child)'
@@ -212,7 +212,7 @@
           {
             extend: 'pdf',
             text: 'PDF',
-            className: 'btn btn-sm btn-success btn-link',
+            className: 'btn btn-outline-white btn-rounded btn-sm px-2',
             title: 'PDF_'+today,
             exportOptions: {
                 columns: 'th:not(:last-child)'
@@ -221,7 +221,7 @@
           {
             extend: 'print',
             text: 'PRINT',
-            className: 'btn btn-sm btn-success btn-link',
+            className: 'btn btn-outline-white btn-rounded btn-sm px-2',
             exportOptions: {
                 columns: 'th:not(:last-child)'
             }

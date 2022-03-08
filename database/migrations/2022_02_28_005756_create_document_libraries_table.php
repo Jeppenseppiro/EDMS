@@ -16,13 +16,14 @@ class CreateDocumentLibrariesTable extends Migration
         Schema::create('document_libraries', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
+            $table->string('requestor_name', 10);
             $table->text('description');
             $table->string('category', 10);
             $table->text('document_number_series');
             $table->string('tag', 10);
-            $table->string('revision');
-            $table->string('attachment');
-            $table->string('control');
+            $table->string('revision', 10);
+            $table->string('attachment', 10);
+            $table->string('control', 10);
         });
     }
 
