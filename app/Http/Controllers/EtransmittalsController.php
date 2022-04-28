@@ -1,0 +1,137 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Etransmittal;
+use App\EtransmittalHistory;
+use App\User;
+use Illuminate\Http\Request;
+
+class EtransmittalsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        if (auth()->user()->role == 1) {
+            $etransmittals = Etransmittal::with('getUser','getRecipient','getEtransmittalHistory')->get();
+        } else {
+            $etransmittals = Etransmittal::where('recipient', '=', auth()->user()->id)->with('getUser','getRecipient','getEtransmittalHistory')->get();
+        }
+        
+        $users = User::get();
+        return view('documents.etransmittal',
+            array(
+                'users' => $users,
+                'etransmittals' => $etransmittals,
+            )
+        );
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
+        shuffle($seed); // probably optional since array_is randomized; this may be redundant
+        $requestCopy_Code = '';
+        foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k];
+
+        $etransmittal = new Etransmittal;
+        $etransmittal->code = $requestCopy_Code;
+        $etransmittal->user = auth()->user()->id;
+        $etransmittal->item = $request->etransmittal_Item;
+        $etransmittal->recipient = $request->etransmittal_Recipient;
+        $etransmittal->save();
+
+        $etransmittal_History = new EtransmittalHistory;
+        $etransmittal_History->etransmittal_id = $etransmittal->id;
+        $etransmittal_History->status = $request->etransmittal_Status;
+        $etransmittal_History->user = auth()->user()->id;
+        $etransmittal_History->save();
+
+        return redirect()->back();
+    }
+
+    public function history_store(Request $request){
+        $etransmittal_History = new EtransmittalHistory;
+        $etransmittal_History->etransmittal_id = $request->updateEtransmittal_ID;
+        $etransmittal_History->status = $request->updateEtransmittal_Status;
+        $etransmittal_History->remarks = $request->updateEtransmittal_Remarks;
+        $etransmittal_History->user = auth()->user()->id;
+        $etransmittal_History->save();
+
+        return redirect()->back();
+    }
+
+    public function history_view($etransmittalID){
+        $etransmittal_HistoryShow = EtransmittalHistory::with('getUser')
+                                    ->where([
+                                        ['etransmittal_id', '=', $etransmittalID]
+                                    ])
+                                    ->orderBy('id', 'DESC')->get();
+        return $etransmittal_HistoryShow;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Etransmittal  $etransmittal
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Etransmittal $etransmittal)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Etransmittal  $etransmittal
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Etransmittal $etransmittal)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Etransmittal  $etransmittal
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Etransmittal $etransmittal)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Etransmittal  $etransmittal
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Etransmittal $etransmittal)
+    {
+        //
+    }
+}

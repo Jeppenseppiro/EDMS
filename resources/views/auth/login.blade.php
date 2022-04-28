@@ -46,7 +46,7 @@
                 </div>
               </div>
               <div>
-                <a href="">Forgot password?</a>
+                <a href="{{ route('password.request') }}">Forgot password?</a>
               </div>
             </div>
 

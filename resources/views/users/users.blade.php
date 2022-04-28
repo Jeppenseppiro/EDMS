@@ -40,8 +40,9 @@
                           <th class="th-sm" width="2%">ID</th>
                           <th class="th-sm" width="">Name</th>
                           <th class="th-sm" width="">Email Address</th>
-                          <th class="th-sm" width="">Created At</th>
-                          <th class="th-sm" width="">Updated At</th>
+                          <th class="th-sm" width="">Company</th>
+                          <th class="th-sm" width="">Department</th>
+                          <th class="th-sm" width="">Role</th>
                           <th class="th-sm" width="5%">Action</th>
                         </tr>
                       </thead>
@@ -51,10 +52,11 @@
                             <td>{{$user->id}}</td>
                             <td>{{$user->name}}</td>
                             <td>{{$user->email}}</td>
-                            <td>{{$user->created_at}}</td>
-                            <td>{{$user->updated_at}}</td>
+                            <td>{{$user->getCompany->company_name}}</td>
+                            <td>{{$user->getDepartment->department}}</td>
+                            <td>{{$user->getRole->name}}</td>
                             <td>
-                              <button id="{{$key}}" data-id="userEdit{{$user->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-userEdit"><i class="fa-solid fa-pen-line"></i></button>
+                              {{-- <button id="{{$key}}" data-id="userEdit{{$user->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-userEdit"><i class="fa-solid fa-pen-line"></i></button> --}}
                             </td>
                           </tr>
                         @endforeach

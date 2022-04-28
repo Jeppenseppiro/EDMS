@@ -13,9 +13,9 @@
               </td>
               <td class="text-break" style="color: white;">{{ Auth::user()->name }}</td>
             </tr>
-            <tr>
+            {{-- <tr>
               <td class="text-break" style="color: white;">Web Developer</td>
-            </tr>
+            </tr> --}}
           </tbody>
         </table>
       </li>
@@ -25,7 +25,7 @@
       <li>
         <ul class="collapsible collapsible-accordion">
 
-          <li>
+          <li class="active">
             <a href="{{ route('dashboard') }}" class="waves-effect">
               <i class="w-fa fas fa-tachometer-alt"></i>Dashboard
             </a>
@@ -44,45 +44,58 @@
                   </a>
                 </li>
                 <li>
+                  <a href="{{ route('documentcopy') }}" class="waves-effect">
+                    {{-- <span class="sv-slim">DSB</span> --}}
+                    <span class="sv-normal">Request Copy</span>
+                  </a>
+                </li>
+                <li>
                   <a href="{{ route('documentlibrary') }}" class="waves-effect">
                     {{-- <span class="sv-slim">DSB</span> --}}
                     <span class="sv-normal">Document Library</span>
                   </a>
                 </li>
+                <li>
+                  <a href="{{ route('etransmittal') }}" class="waves-effect">
+                    {{-- <span class="sv-slim">DSB</span> --}}
+                    <span class="sv-normal">E-Transmittal</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </li>
 
-          <li>
-            <a class="collapsible-header waves-effect arrow-r">
-              <i class="w-fa fas fa-tachometer-alt"></i>Configuration<i class="fas fa-angle-down rotate-icon"></i>
-            </a>
-            <div class="collapsible-body">
-              <ul>
-                {{-- <li>
-                  <a href="" class="waves-effect">
-                    <span class="sv-normal">Document Entry</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="" class="waves-effect">
-                    <span class="sv-normal">Document Post</span>
-                  </a>
-                </li> --}}
-                <li>
-                  <a href="{{ route('users.index') }}" class="waves-effect">
-                    <span class="sv-normal">Users</span>
-                  </a>
-                </li>
-                {{-- <li>
-                  <a href="" class="waves-effect">
-                    <span class="sv-normal">Obsolete</span>
-                  </a>
-                </li> --}}
-              </ul>
-            </div>
-          </li>
-
+          @if(auth()->user()->role == 1)
+            <li>
+              <a class="collapsible-header waves-effect arrow-r">
+                <i class="w-fa fas fa-tachometer-alt"></i>Configuration<i class="fas fa-angle-down rotate-icon"></i>
+              </a>
+              <div class="collapsible-body">
+                <ul>
+                  {{-- <li>
+                    <a href="" class="waves-effect">
+                      <span class="sv-normal">Document Entry</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="" class="waves-effect">
+                      <span class="sv-normal">Document Post</span>
+                    </a>
+                  </li> --}}
+                  <li>
+                    <a href="{{ route('users.index') }}" class="waves-effect">
+                      <span class="sv-normal">Users</span>
+                    </a>
+                  </li>
+                  {{-- <li>
+                    <a href="" class="waves-effect">
+                      <span class="sv-normal">Obsolete</span>
+                    </a>
+                  </li> --}}
+                </ul>
+              </div>
+            </li>
+          @endif
           <!-- <li>
             <a class="collapsible-header waves-effect arrow-r">
               <i class="w-fa fas fa-tachometer-alt"></i>Masterfiles<i class="fas fa-angle-down rotate-icon"></i>
