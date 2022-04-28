@@ -13,6 +13,8 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/addons-pro/timeline.css') }}" rel="stylesheet">
     <link href="{{ asset('css/addons-pro/timeline.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('css/filepond.css') }}" rel="stylesheet"> --}}
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
     @yield('head')
     <style>
       .content {
@@ -42,9 +44,10 @@
         }
       }
     </style>
+    @yield('style')
   </head>
 
-  <body class="light-blue-skin fixed-sn">
+  <body class="cyan-skin fixed-sn">
     @include('includes.navbar')
     @yield('content')
   </body>
@@ -55,9 +58,22 @@
   <script src="{{ asset('js/bootstrap.js') }}" type="text/javascript"></script>
   <script src="{{ asset('js/mdb.min.js') }}" type="text/javascript"></script>
   <script src="{{ asset('js/addons-pro/timeline.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}" type="text/javascript"></script>
+  {{-- <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('js/filepond.js') }}" type="text/javascript"></script> --}}
+  
+  {{-- <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script> --}}
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+  <script src="{{ url('js/addons/datatables.min.js') }}" type="text/javascript"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+  {{-- <script src="filepond.min.js"></script>
+  <script src="filepond.jquery.js"></script> --}}
   <script>
     CKEDITOR.replace('sample-editor');
   </script>
@@ -128,7 +144,9 @@
 
     // Data Picker Initialization
     $('.datepicker').pickadate({
-      min: new Date(yyyy,mm,dd)
+      min: new Date(yyyy,mm,dd),
+      format: 'yyyy-mm-dd',
+      formatSubmit: 'yyyy-mm-dd',
     });
 
     // Material Select Initialization
@@ -142,7 +160,8 @@
     })
 
     // What You See Is What You Get (WYSIWYG) Text Editor
-    $("#demo").mdbWYSIWYG();
+    //$("#demo").mdbWYSIWYG();
   </script>
+  
   @yield('script')
 </html>

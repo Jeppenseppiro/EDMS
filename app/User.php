@@ -36,4 +36,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCompany(){
+        return $this->belongsTo(Company::class, 'company', 'id');
+    }
+
+    public function getDepartment(){
+        return $this->belongsTo(Department::class, 'department', 'id');
+    }
+
+    public function getRole(){
+        return $this->belongsTo(Role::class, 'role', 'id');
+    }
+
+    public function getUserAccess(){
+        return $this->belongsTo(DocumentLibraryAccess::class, 'user_access', 'id');
+    }
 }

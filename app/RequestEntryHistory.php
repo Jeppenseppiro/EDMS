@@ -18,4 +18,8 @@ class RequestEntryHistory extends Model
     public function requestStatus(){
         return $this->belongsTo(RequestEntryStatus::class,'status','id');
     }
+
+    public function requestFile(){
+        return $this->belongsTo(FileUpload::class,'id','request_entry_history');
+    }
 }
