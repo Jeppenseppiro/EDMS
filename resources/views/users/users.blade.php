@@ -10,6 +10,130 @@
 @section('content')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
+      @if(count($errors))
+        @foreach($errors->all() as $error)
+        <a class="btn btn-info errorMessage" onclick="toastr.error('{{ $error }}');" hidden></a>
+        {{-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
+          <div class="toast-header danger-color" style="color: white;">
+            <strong class="mr-auto">Error</strong>
+            <small>just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="toast-body">
+            {{ $error }}
+          </div>
+        </div> --}}
+        @endforeach
+      @endif
+      
+      <!-- User Insert -->
+      <div class="modal fade" id="modalUserInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header warning-color">
+              <h5 class="modal-title" id="exampleModalLabel">User Sign Up</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <form class="md-form" method="POST" action="add-user">
+              @csrf
+              <div class="modal-body">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-input-text prefix"></i>
+                      <input type="text" id="name" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required>
+                      @if ($errors->has('name'))
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('name') }}</strong>
+                        </span>
+                      @endif
+                      <label for="documentLibrary_Description">Name</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-input-text prefix"></i>
+                      <input type="email" id="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
+                      @if ($errors->has('email'))
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                      @endif
+                      <label for="documentLibrary_Description">Email</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-input-text prefix"></i>
+                      <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                      @if ($errors->has('password'))
+                          <span class="invalid-feedback" role="alert">
+                              <strong>{{ $errors->first('password') }}</strong>
+                          </span>
+                      @endif
+                      <label for="password">Password</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-input-text prefix"></i>
+                      <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+                      <label for="password-confirm">Confirm Password</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-square-caret-down prefix"></i>
+                      <div class="md-form py-0 ml-5">
+                        <select id="company" name="company" class="mdb-select" searchable="Search category" required>
+                          <option class="documentCategory_OptionDisabled" value="" disabled selected>Company</option>
+                            @foreach ($companies as $company)
+                              <option @if(old('company') == $company->id) selected @endif value={{$company->id}}>({{$company->company_code}}) | {{$company->company_name}}</option>
+                            @endforeach
+                        </select>
+                        <label class="mdb-main-label">Company</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div class="md-form">
+                      <i class="fa-solid fa-square-caret-down prefix"></i>
+                      <div class="md-form py-0 ml-5">
+                        <select id="department" name="department" class="mdb-select" searchable="Search category" required>
+                          <option class="documentCategory_OptionDisabled" value="" disabled selected>Department</option>
+                            @foreach ($departments as $department)
+                              <option @if(old('department') == $department->id) selected @endif value={{$department->id}}>{{$department->department}}</option>
+                            @endforeach
+                        </select>
+                        <label class="mdb-main-label">Department</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="" class="btn btn-primary">{{ __('Sign up') }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Datatable -->
       <div class="row">
         <div class="col-xl-12 col-lg-7 mr-0 pb-2">
           <div class="card card-cascade narrower">
@@ -24,9 +148,9 @@
                   <a href="" class="white-text mx-3">Users</a>
 
                   <div>
-                    <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-pencil-alt mt-0"></i></button>
-                    <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-eraser mt-0"></i></button>
-                    <button type="button" class="btn btn-outline-white btn-rounded btn-sm px-2"><i class="fas fa-info-circle mt-0"></i></button>
+                    @if(auth()->user()->role == 1)
+                      <button type="button" class="btn btn-outline-white btn-sm px-3 btn-userInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalUserInsert"><i class="fa-solid fa-plus"></i></button>
+                    @endif
                   </div>
 
                 </div>
@@ -91,6 +215,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+  <script>
+    $('.errorMessage').trigger('click');
+    //$('.toast').toast('show');
+  </script>
   <script>
     $('.btn-userEdit').on('click', function(e){
       var btnEdit_ID = $(this).attr('id');

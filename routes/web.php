@@ -31,6 +31,7 @@ Route::group( ['middleware' => 'auth'], function(){
 
     //Users
     Route::resource('users', 'UsersController');
+    Route::post('add-user', 'UsersController@store');
 
     //---------- Request Entry ----------//
     Route::get('documentrequest', 'RequestEntriesController@index')->name('documentrequest');
