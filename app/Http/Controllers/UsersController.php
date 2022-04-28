@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Department;
+use App\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
@@ -17,18 +20,17 @@ class UsersController extends Controller
     {
         //$users = DB::table('users')->get();
         $users = User::with('getCompany','getDepartment','getRole')->get();
+        $companies = Company::get();
+        $departments = Department::get();
         return view('users.users',
             array(
                 'users' => $users,
+                'companies' => $companies,
+                'departments' => $departments,
             )
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
@@ -42,7 +44,23 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        // dd($request->all());
+        $userAccount = new User;
+        $userAccount->name = $request->name;
+        $userAccount->email = $request->email;
+        $userAccount->password = bcrypt($request->password);
+        $userAccount->company = $request->company;
+        $userAccount->department = $request->department;
+        $userAccount->save();
         //
+
+        return redirect()->back();
     }
 
     /**

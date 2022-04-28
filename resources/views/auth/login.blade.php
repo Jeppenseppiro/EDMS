@@ -2,20 +2,55 @@
 
 @section('content')
 <div class="container">
-  <div class="row justify-content-center">
+  <div class="row justify-content-center align-middle">
     <div class="col-md-8">
       <div class="card">
 
-        <h5 class="card-header info-color white-text text-center py-4">
+        <h3 class="card-header info-color white-text text-center py-4">
+          <strong>Electronic Document Management System</strong>
+        </h3>
+        <form class="text-center border border-light p-5" method="POST" action="{{ route('login') }}">
+          @csrf
+          
+          <h1 class="h3 mb-4">Sign in</h1>
+
+          <input type="email" id="email" placeholder="E-mail" class="form-control mb-4{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+          <input type="password" id="password" placeholder="Password" class="form-control mb-4{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+          
+          <div class="d-flex justify-content-around">
+            {{-- <div>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="defaultLoginFormRemember">
+                <label class="custom-control-label" for="defaultLoginFormRemember">Remember me</label>
+              </div>
+            </div> --}}
+            <div>
+              <a href="{{ route('password.request') }}">Forgot password?</a>
+            </div>
+          </div>
+
+          <button class="btn btn-info btn-block my-4" type="submit">{{ __('Login') }}</button>
+          {{-- <p>Not a member?
+            <a href="">Register</a>
+          </p>
+
+          <p>or sign in with:</p>
+          <a href="#" class="mx-2" role="button"><i class="fab fa-facebook-f light-blue-text"></i></a>
+          <a href="#" class="mx-2" role="button"><i class="fab fa-twitter light-blue-text"></i></a>
+          <a href="#" class="mx-2" role="button"><i class="fab fa-linkedin-in light-blue-text"></i></a>
+          <a href="#" class="mx-2" role="button"><i class="fab fa-github light-blue-text"></i></a> --}}
+        </form>
+
+
+
+        {{-- <h5 class="card-header info-color white-text text-center py-4">
           <strong>Sign in</strong>
         </h5>
 
         <div class="card-body px-lg-5 pt-0">
-
           <form class="text-center" style="color: #757575;" method="POST" action="{{ route('login') }}">
             @csrf
             <div class="md-form">
-              {{-- <input type="email" id="materialLoginFormEmail" class="form-control"> --}}
               <input type="email" id="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
 
               @if ($errors->has('email'))
@@ -27,7 +62,6 @@
             </div>
 
             <div class="md-form">
-              {{-- <input type="password" id="materialLoginFormPassword" class="form-control"> --}}
               <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
 
               @if ($errors->has('password'))
@@ -50,30 +84,15 @@
               </div>
             </div>
 
-            {{-- <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">Sign in</button> --}}
             <button class="btn btn-outline-info btn-rounded btn-block my-4 waves-effect z-depth-0" type="submit">{{ __('Login') }}</button>
 
             <p>Not a member?
               <a href="{{ route('register') }}">Register</a>
             </p>
 
-            {{-- <p>or sign in with:</p>
-            <a type="button" class="btn-floating btn-fb btn-sm">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-            <a type="button" class="btn-floating btn-tw btn-sm">
-              <i class="fab fa-twitter"></i>
-            </a>
-            <a type="button" class="btn-floating btn-li btn-sm">
-              <i class="fab fa-linkedin-in"></i>
-            </a>
-            <a type="button" class="btn-floating btn-git btn-sm">
-              <i class="fab fa-github"></i>
-            </a> --}}
-
           </form>
+        </div> --}}
 
-        </div>
       </div>
     </div>
   </div>
