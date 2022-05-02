@@ -68,16 +68,14 @@ class RequestCopiesController extends Controller
      */
     public function store_iso(Request $request)
     {
-        $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
+        /* $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
         shuffle($seed); // probably optional since array_is randomized; this may be redundant
         $requestCopy_Code = '';
-        foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k];
-
-        $getCurrentEntryID = DB::select("SHOW TABLE STATUS LIKE 'request_iso_copies'");
-        $nextCurrentEntryID = $getCurrentEntryID[0]->Auto_increment;
+        foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k]; */
+        $getLastDICR = DB::table('request_iso_entries')->count();
 
         $requestIsoCopy = new RequestIsoCopy;
-        $requestIsoCopy->code = $requestCopy_Code;
+        $requestIsoCopy->code = date("Y")."-".sprintf('%06d', $getLastDICR + 1);
         $requestIsoCopy->user = $request->requestISOCopy_Requestor;
         $requestIsoCopy->date_request = $request->requestISOCopy_DateRequest;
         $requestIsoCopy->document_library_id = $request->requestISOCopy_FileRequest;
@@ -85,7 +83,7 @@ class RequestCopiesController extends Controller
         $requestIsoCopy->save();
 
         $requestCopyHistory = new RequestCopyHistory;
-        $requestCopyHistory->request_copy_id = $nextCurrentEntryID;
+        $requestCopyHistory->request_copy_id = $requestIsoCopy->id;
         $requestCopyHistory->remarks = "New request copy";
         $requestCopyHistory->status = 1;
         $requestCopyHistory->tag = 1;

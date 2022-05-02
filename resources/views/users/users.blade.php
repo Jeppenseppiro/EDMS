@@ -10,23 +10,7 @@
 @section('content')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
-      @if(count($errors))
-        @foreach($errors->all() as $error)
-        <a class="btn btn-info errorMessage" onclick="toastr.error('{{ $error }}');" hidden></a>
-        {{-- <div role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false">
-          <div class="toast-header danger-color" style="color: white;">
-            <strong class="mr-auto">Error</strong>
-            <small>just now</small>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="toast-body">
-            {{ $error }}
-          </div>
-        </div> --}}
-        @endforeach
-      @endif
+      @include('includes.errormessage')
       
       <!-- User Insert -->
       <div class="modal fade" id="modalUserInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -215,10 +199,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-  <script>
-    $('.errorMessage').trigger('click');
-    //$('.toast').toast('show');
-  </script>
   <script>
     $('.btn-userEdit').on('click', function(e){
       var btnEdit_ID = $(this).attr('id');
