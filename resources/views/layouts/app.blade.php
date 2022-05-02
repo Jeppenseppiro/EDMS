@@ -81,54 +81,15 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <script>
-    // SideNav Initialization
     $(document).ready(function() {
-      let isOpen = false;
-      let $windowWidth = $( window ).width();
-      const $btnCollapse = $(".button-collapse");
-      const $content = $('#content');
-      
-      $( window ).resize(function() { 
-
-        $windowWidth = $( window ).width(); 
-        if($windowWidth > 1440) {
-          $content.css('padding-left', '250px');
-          if(isOpen) {
-            $btnCollapse.css('left', '0');
-            isOpen = false; 
-          }
-        } else if($windowWidth < 530 && isOpen) {
-          $btnCollapse.css('left', '0');
-          $content.css('padding-left', '0');
-          $('#sidenav-overlay').css('display', 'block'); 
-          $btnCollapse.trigger('click');
-        } else {
-          if(!isOpen) {
-            $content.css('padding-left', '0'); 
-          }
-        }
-      });
-
       // SideNav Button Initialization
-      $btnCollapse.sideNav(); 
-      
-      $btnCollapse.on('click', () => { 
-      isOpen = !isOpen;
-      if($windowWidth > 530) {
-        const elPadding = isOpen ? '250px' : '0';
-        $btnCollapse.css('left', elPadding);
-        $content.css('padding-left', elPadding);
-        $('#sidenav-overlay').css('display', 'none');
-      } else {
-        $('#sidenav-overlay').on('click', () => {
-          isOpen = !isOpen;
-        });
-      }    	
-      }); 
-      $('#sidenav-overlay').on('click', () => {
-        isOpen = !isOpen;
+      $(".button-collapse").sideNav({
+        slim: true
       });
-    });
+      // SideNav Scrollbar Initialization
+      var sideNavScrollbar = document.querySelector('.custom-scrollbar');
+      var ps = new PerfectScrollbar(sideNavScrollbar);
+    })
     
     var container = document.querySelector('.custom-scrollbar');
     var ps = new PerfectScrollbar(container, {
@@ -160,6 +121,7 @@
       $('[data-toggle="tooltip"]').tooltip()
     })
 
+    $('.errorMessage').trigger('click');
     // What You See Is What You Get (WYSIWYG) Text Editor
     //$("#demo").mdbWYSIWYG();
   </script>

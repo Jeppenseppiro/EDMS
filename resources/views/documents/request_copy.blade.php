@@ -190,7 +190,7 @@
                   <div>
                     {{-- @if(auth()->user()->role == 8) --}}
                     
-                    @if(in_array(8, $role))
+                    @if(in_array(1, $role) || in_array(8, $role))
                       <button type="button" class="btn btn-outline-white btn-sm px-3 btn-documentLibraryInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalDocumentCopyInsert"><i class="fa-solid fa-plus"></i></button>
                     @endif
                     {{-- @endif --}}

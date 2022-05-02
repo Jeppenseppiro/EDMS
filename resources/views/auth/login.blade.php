@@ -1,5 +1,7 @@
 @extends('layouts.login')
 
+@section('title', 'Login')
+
 @section('content')
 <div class="container">
   <div class="row justify-content-center align-middle">
@@ -14,9 +16,20 @@
           
           <h1 class="h3 mb-4">Sign in</h1>
 
-          <input type="email" id="email" placeholder="E-mail" class="form-control mb-4{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
-          <input type="password" id="password" placeholder="Password" class="form-control mb-4{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+          <input type="email" id="email" placeholder="E-mail" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+          @if ($errors->has('email'))
+            <div class="invalid-feedback mb-4">{{ $errors->first('email') }}</div>
+          @endif
+
+          <br>
+
+          <input type="password" id="password" placeholder="Password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+          @if ($errors->has('password'))
+            <div class="invalid-feedback mb-4">{{ $errors->first('password') }}</div>
+          @endif
           
+          <br>
+
           <div class="d-flex justify-content-around">
             {{-- <div>
               <div class="custom-control custom-checkbox">
@@ -29,7 +42,7 @@
             </div>
           </div>
 
-          <button class="btn btn-info btn-block my-4" type="submit">{{ __('Login') }}</button>
+          <button class="btn btn-success btn-block my-4" type="submit">{{ __('Login') }}</button>
           {{-- <p>Not a member?
             <a href="">Register</a>
           </p>
