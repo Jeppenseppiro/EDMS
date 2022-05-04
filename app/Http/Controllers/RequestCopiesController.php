@@ -21,10 +21,14 @@ class RequestCopiesController extends Controller
     {
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
-        $request_iso_copies = RequestIsoCopy::with('requestor','documentRequested.documentRevision.documentFileRevision','requestCopyType','requestIsoCopyLatestHistory')
-                                            ->whereHas('requestor', function ($requestorImmediateHead) {
-                                                $requestorImmediateHead->where('department', '=', auth()->user()->department);
+        $request_iso_copies = RequestIsoCopy::with('userRequestor','documentRequested.documentRevision.documentFileRevision','requestCopyType','requestIsoCopyLatestHistory')
+                                            
+                                            ->when(!in_array(1, $role), function ($q) {
+                                                $q->whereHas('userRequestor', function ($requestorImmediateHead) {
+                                                    $requestorImmediateHead->where('department', '=', auth()->user()->department);
+                                                });
                                             })
+                                            
                                             ->orderBy('id', 'DESC')
                                             ->get();
         $users = User::where('department', '=', auth()->user()->department)->get();
@@ -76,7 +80,8 @@ class RequestCopiesController extends Controller
 
         $requestIsoCopy = new RequestIsoCopy;
         $requestIsoCopy->code = date("Y")."-".sprintf('%06d', $getLastDICR + 1);
-        $requestIsoCopy->user = $request->requestISOCopy_Requestor;
+        $requestIsoCopy->requestor = $request->requestISOCopy_Requestor;
+        $requestIsoCopy->user = auth()->user()->id;
         $requestIsoCopy->date_request = $request->requestISOCopy_DateRequest;
         $requestIsoCopy->document_library_id = $request->requestISOCopy_FileRequest;
         $requestIsoCopy->copy_type = $request->requestISOCopy_FileRequestType;

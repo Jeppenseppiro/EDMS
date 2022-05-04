@@ -27,11 +27,11 @@
               <input id="updateDocumentLibrary_UserID" name="updateDocumentLibrary_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
               <div class="modal-body">
                 <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-sm-12">
                     <div class="md-form">
                       <i class="fa-solid fa-address-card prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_Requestor" name="requestISOCopy_Requestor" class="mdb-select" searchable="Search requestor">
+                        <select id="requestISOCopy_Requestor" name="requestISOCopy_Requestor" class="mdb-select" searchable="Search requestor" required>
                           <option class="mr-1" value="" disabled selected>Requestor</option>
                           @foreach ($users as $user)
                             <option value={{$user->id}}>{{$user->name}}</option>
@@ -41,10 +41,10 @@
                       </div>
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-6" hidden>
                     <div class="md-form">
                       <i class="fa-solid fa-calendar prefix"></i>
-                      <input type="text" id="requestISOCopy_DateRequest" name="requestISOCopy_DateRequest" class="form-control datepicker" value="{{$dateToday}}">
+                      <input type="text" id="requestISOCopy_DateRequest" name="requestISOCopy_DateRequest" class="form-control datepicker" value="{{$dateToday}}" required>
                       <label for="requestCopy_DateRequest">Date Request</label>
                     </div>
                   </div>
@@ -55,7 +55,7 @@
                     <div class="md-form">
                       <i class="fa-solid fa-square-caret-down prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_FileRequest" name="requestISOCopy_FileRequest" class="mdb-select" searchable="Search document to request copy">
+                        <select id="requestISOCopy_FileRequest" name="requestISOCopy_FileRequest" class="mdb-select" searchable="Search document to request copy" required>
                           <option class="mr-1" value="" disabled selected>File Request</option>
                           @foreach ($document_libraries as $document_library)
                             <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->revision}}</option>
@@ -69,7 +69,7 @@
                     <div class="md-form">
                       <i class="fa-solid fa-square-caret-down prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_FileRequestType" name="requestISOCopy_FileRequestType" class="mdb-select" searchable="Search document to request copy">
+                        <select id="requestISOCopy_FileRequestType" name="requestISOCopy_FileRequestType" class="mdb-select" searchable="Select file document type" required>
                           <option class="mr-1" value="" disabled selected>File Copy Type</option>
                           @foreach ($request_iso_copy_types as $request_iso_copy_type)
                             <option value={{$request_iso_copy_type->id}}>{{$request_iso_copy_type->type}}</option>
@@ -221,15 +221,15 @@
                           <tr>
                             <td>{{$request_iso_copy->id}}</td>
                             <td>{{$request_iso_copy->code}}</td>
-                            <td>{{$request_iso_copy->requestor->name}}</td>
+                            <td>{{$request_iso_copy->userRequestor->name}}</td>
                             <td>{{$request_iso_copy->date_request}}</td>
-                            <td>{{$request_iso_copy->requestIsoCopyLatestHistory->date_expiration}}</td>
+                            <td>{{$request_iso_copy->expiration_date}}</td>
                             <td>{{$request_iso_copy->documentRequested->document_number_series}} | {{$request_iso_copy->documentRequested->description}} | {{$request_iso_copy->documentRequested->revision}}</td>
                             <td>{{$request_iso_copy->requestCopyType->type}}</td>
                             <td>
                               @foreach ($request_iso_copy->documentRequested->documentRevision->documentFileRevision as $key => $link)
                                 @if($request_iso_copy->requestIsoCopyLatestHistory->status == "Emailed")
-                                  <a target="_blank" href="{{url("/pdf/iso/".$link->attachment_mask."/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">
+                                  <a target="_blank" href="{{url("/file/requestcopy/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">
                                     @if($link->type == 1)
                                       <span class="badge badge-success">Approved</span>
                                     @elseif($link->type == 2)
@@ -237,7 +237,11 @@
                                     @else
                                       <span class="badge badge-dark">Raw File</span>
                                     @endif
-                                  </a><br>
+                                  </a>
+                                {{-- @if(in_array(1, $role) || in_array(3, $role)) --}}
+                                  Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
+                                {{-- @endif --}}
+                                  <br>
                                 @endif  
                               @endforeach
                             </td>
@@ -277,6 +281,7 @@
   <script>
     requestCopy_JSON =  {!! json_encode($request_iso_copies->toArray()) !!};
     role = {!! json_encode(auth()->user()->role) !!};
+    var userRoles = role.split(',');
     //console.log(requestCopy_JSON);
     //$('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     
@@ -363,16 +368,19 @@
 
           $('.requestCopyFooterButton').show();
         } if(statusApproved[0].status == 6){
-          $('.statusRemark').show();
-          $('#requestCopy_StatusUpdate').prop('required',true);
-          $('#requestCopy_RemarksUpdate').prop('required',true);
-
-          $('.dateExpirationGenerateLink').show();
-          $('#requestCopy_DateExpiration').prop('required',true);
-          $('#requestCopy_GenerateLink').prop('required',true);
-
-          $('.requestCopyFooterButton').show();
-        } if((statusApproved[0].status == 1 && role != 5) || statusApproved[0].status == 3 || statusApproved[0].status == 7){
+          if(userRoles.includes("3") == true){
+            $('.statusRemark').show();
+            $('#requestCopy_StatusUpdate').prop('required',true);
+            $('#requestCopy_RemarksUpdate').prop('required',true);
+            $('.dateExpirationGenerateLink').show();
+            $('#requestCopy_DateExpiration').prop('required',true);
+            $('#requestCopy_GenerateLink').prop('required',true);
+            $('.requestCopyFooterButton').show();
+          } else {
+            $('.dateExpirationGenerateLink').hide();
+          }
+          
+        } if((statusApproved[0].status == 1) || statusApproved[0].status == 3 || statusApproved[0].status == 7){
           $('.statusRemark').hide();
           $('.requestCopyFooterButton').hide();
         }

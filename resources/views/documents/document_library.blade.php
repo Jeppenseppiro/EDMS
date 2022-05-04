@@ -418,6 +418,7 @@
   <script>
     userID = {!! json_encode(auth()->user()->id) !!};
     role = {!! json_encode(auth()->user()->role) !!};
+    var userRoles = role.split(',');
     count = 1;
 
     $('.btn-documentLibraryInsert').on('click', function(e){
@@ -544,13 +545,13 @@
               documentLibraryRevision += '<div class="step-content" style="background-color: #e8e8e8; min-width:90%;">';
 
               documentLibraryRevision += '<table class="table table-sm table-bordered table_documentRevision'+data[i].id+'">';
-                if(role == 1 || role == 3){
+                if(userRoles.includes("1") == true|| userRoles.includes("3") == true){
                   documentLibraryRevision += '<button data-id="'+data[i].id+'" style="text-align: center" type="button" class="btn btn-sm btn-info px-3 float-right attachment_documentRevision"><i class="fa-solid fa-plus"></i></button>';
                 }
                 
                 for(var x = 0; x < data[i].document_file_revision.length; x++){
                   // If conditional is to show only file revision if the user has access/tagged
-                  role == 1 || role == 3 ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
+                  userRoles.includes("1") == true || userRoles.includes("3") == true ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
                   
                   if(fetchAllFileRevision){
                     data[i].document_file_revision[x].is_stamped == 0 ? isStamped = 'btn-blue-grey' : isStamped = 'btn-success';
@@ -559,10 +560,10 @@
                     documentLibraryRevision += '<tr>';
                       documentLibraryRevision += '<td>';
                         $('attachment'+x).click(function() {
-                          window.location.href = "pdf/iso/'+data[i].document_file_revision[x].attachment_mask+'";
+                          window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
                         //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
-                        documentLibraryRevision += '<a data-id="" href="pdf/iso/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
+                        documentLibraryRevision += '<a data-id="" href="file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
                       documentLibraryRevision += '</td>';
 
                       documentLibraryRevision += '<td>';
@@ -582,7 +583,7 @@
                       documentLibraryRevision += '</td>';
                     
                       documentLibraryRevision += '<td>';
-                      if(role == 1 || role == 3){
+                      if(userRoles.includes("1") == true || userRoles.includes("3") == true){
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" title="Update User Access" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentFileRevision_UserAccess waves-effect waves-light"><i class="fa-solid fa-user"></i></button>';
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" id="'+data[i].document_file_revision[x].is_stamped+'" title="Toggle Stamp On/Off" style="text-align: center" type="button" class="btn btn-sm '+isStamped+' px-2 btn-documentFileRevision_Stamp"><i class="fa-solid fa-stamp"></i></button>';
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" id="'+data[i].document_file_revision[x].is_deleted+'" title="Toggle File Archive On/Off" style="text-align: center" type="button" class="btn btn-sm '+isDeleted+' px-2 btn-documentFileRevision_Archive"><i class="fa-solid fa-trash"></i></button>';
@@ -603,7 +604,7 @@
                       }
                       if(hasProcessOwner.find(element => element > 0) > 0){
                         if(userProcessOwner.find(element => element == userID)){
-                          if(role == 1 || role == 3){
+                          if(userRoles.includes("1") == true || userRoles.includes("3") == true){
                             documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
                           } else {
                             
