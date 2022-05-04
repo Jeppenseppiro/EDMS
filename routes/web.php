@@ -84,8 +84,8 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::post('etransmittal/history/{etransmittalID}', 'EtransmittalsController@history_view');
 
     //---------- PDF View ----------//
-    Route::get('/pdf/iso/{link}', 'FilesController@documentFile')->name('pdf_iso');
-    Route::get('/pdf/iso/requestcopy/{uniquelink}', 'FilesController@requestCopy');
+    Route::get('/file/{link}', 'FilesController@documentFile')->name('pdf_iso');
+    Route::get('/file/requestcopy/{uniquelink}', 'FilesController@requestCopy');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
 
     

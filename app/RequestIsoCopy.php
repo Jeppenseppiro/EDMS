@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RequestIsoCopy extends Model
 {
-    public function requestor(){
-        return $this->belongsTo(User::class,'user','id');
+    public function userRequestor(){
+        return $this->belongsTo(User::class,'requestor','id');
     }
 
     public function documentRequested(){

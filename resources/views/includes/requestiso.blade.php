@@ -10,7 +10,7 @@
               <div id="datatableISOButtons"></div>
             </div>
 
-            <b style="font-size: 24px;" class="float-left"></b>
+            <b style="font-size: 24px;" class="float-left">Document Management</b>
 
             <div>
               <button type="button" class="btn btn-outline-white btn-sm px-3 btn-requestIsoEntryInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert"><i class="fa-solid fa-plus"></i></button>

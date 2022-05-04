@@ -10,7 +10,7 @@
               <div id="datatableLegalButtons"></div>
             </div>
 
-            <b style="font-size: 24px;" class="float-left"></b>
+            <b style="font-size: 24px;" class="float-left">Legal</b>
 
             <div>
               <button type="button" class="btn btn-outline-white btn-sm px-3 btn-requestLegalEntryInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalRequestLegalEntryInsert"><i class="fa-solid fa-plus"></i></button>

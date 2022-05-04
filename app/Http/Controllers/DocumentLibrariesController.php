@@ -102,7 +102,8 @@ class DocumentLibrariesController extends Controller
         // dd($attachmentTypes);
 
         $this->validate($request, [
-            'documentLibrary_Attachment' => 'nullable|max:20000'
+            'documentLibrary_Attachment' => ['required', 'max:30000'],
+            'documentLibrary_DocumentNumberSeries' => ['required', 'unique:document_libraries,document_number_series'],
         ]);
 
         //Handle File Upload
@@ -180,24 +181,17 @@ class DocumentLibrariesController extends Controller
 
     public function revision(Request $request, $id)
     {
-        if(auth()->user()->role == 1 || auth()->user()->role == 3){
-            $documentRevisions = DocumentRevision::with('documentFileRevision.user','documentFileRevision.documentUserAccess','documentFileRevision.manyUserAccess')
-                                    ->where([
-                                        ['document_library_id', '=', $id],
-                                    ])
-                                    ->orderBy('id', 'desc')
-                                    ->get();
-        } else {
-            $documentRevisions = DocumentRevision::with('documentFileRevision.user','documentFileRevision.documentUserAccess','documentFileRevision.manyUserAccess')
-                                    ->whereHas('documentFileRevision.user', function ($documentLibrary) use($id){
-                                        $documentLibrary->where('document_library_id', '=', $id);
-                                    })
-                                    ->whereHas('documentFileRevision.manyUserAccess', function ($userAccess) {
-                                        $userAccess->where('user_access','=',auth()->user()->id);
-                                    })
-                                    ->orderBy('id', 'desc')
-                                    ->get();
-        }
+        $role = explode(",",auth()->user()->role);
+
+        $documentRevisions = DocumentRevision::with('documentFileRevision.user','documentFileRevision.documentUserAccess','documentFileRevision.manyUserAccess')
+                                                ->where([
+                                                    ['document_library_id', '=', $id],
+                                                ])
+                                                ->orderBy('id', 'desc')
+                                                ->when(!in_array(1, $role), function ($q) {
+                                                    $q->skip(0)->take(1);
+                                                })
+                                                ->get();
         
         return $documentRevisions;
     }

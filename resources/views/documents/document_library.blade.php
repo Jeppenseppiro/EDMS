@@ -10,6 +10,7 @@
 @section('content')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
+      @include('includes.errormessage')
 
       <!-- Document Library (INSERT) -->
       <div class="modal fade" id="modalDocumentLibraryInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -29,7 +30,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_Description" name="documentLibrary_Description" class="form-control" required>
+                      <input type="text" id="documentLibrary_Description" name="documentLibrary_Description" class="form-control" value="{{ old('documentLibrary_Description') }}" required>
                       <label for="documentLibrary_Description">Document Title</label>
                     </div>
                   </div>
@@ -40,7 +41,7 @@
                         <select id="documentLibrary_Tag" name="documentLibrary_Tag" class="mdb-select" searchable="Search category">
                           <option class="documentLibrary_TagDisabled" value="" disabled selected>Tag</option>
                             @foreach ($tags as $tag)
-                              <option value={{$tag->id}}>{{$tag->description}}</option>
+                              <option @if(old('documentLibrary_Tag') == $tag->id) selected @endif value={{$tag->id}}>{{$tag->description}}</option>
                             @endforeach
                         </select>
                         <label class="mdb-main-label">Tag</label>
@@ -53,7 +54,12 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_DocumentNumberSeries" name="documentLibrary_DocumentNumberSeries" class="form-control">
+                      <input type="text" id="documentLibrary_DocumentNumberSeries" name="documentLibrary_DocumentNumberSeries" class="form-control{{ $errors->has('documentLibrary_DocumentNumberSeries') ? ' is-invalid' : '' }}" value="{{ old('documentLibrary_DocumentNumberSeries') }}">
+                      @if ($errors->has('documentLibrary_DocumentNumberSeries'))
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('documentLibrary_DocumentNumberSeries') }}</strong>
+                        </span>
+                      @endif
                       <label for="documentLibrary_DocumentNumberSeries">Document Code</label>
                     </div>
                   </div>
@@ -77,7 +83,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control">
+                      <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" value="{{ old('documentLibrary_Revision') }}">
                       <label for="documentLibrary_Revision">Revision No</label>
                     </div>
                   </div>
@@ -88,7 +94,7 @@
                         <select id="documentLibrary_Company" name="documentLibrary_Company" class="mdb-select" searchable="Search category">
                           <option class="mr-1" value="" disabled selected>Company</option>
                           @foreach ($document_companies as $document_company)
-                            <option value="{{$document_company->id}}">{{$document_company->company_name}}</option>
+                            <option @if(old('documentLibrary_Company') == $document_company->id) selected @endif value={{$document_company->id}}>{{$document_company->company_name}}</option>
                           @endforeach
                         </select>
                         <label class="mdb-main-label">Company</label>
@@ -101,7 +107,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-calendar prefix"></i>
-                      <input type="text" id="documentLibrary_DateEffective" name="documentLibrary_DateEffective" class="form-control datepicker" required>
+                      <input type="text" id="documentLibrary_DateEffective" name="documentLibrary_DateEffective" class="form-control datepicker" value="{{ old('documentLibrary_DateEffective')}}" required>
                       <label for="documentLibrary_DateEffective">Effective Date</label>
                     </div>
                   </div>
@@ -112,7 +118,7 @@
                         <select id="documentLibrary_Department" name="documentLibrary_Department" class="mdb-select" searchable="Search category">
                           <option class="mr-1" value="" disabled selected>Department</option>
                           @foreach ($document_departments as $document_department)
-                            <option value="{{$document_department->id}}">{{$document_department->department}}</option>
+                            <option @if(old('documentLibrary_Department') == $document_department->id) selected @endif value={{$document_department->id}}>{{$document_department->department}}</option>
                           @endforeach
                         </select>
                         <label class="mdb-main-label">Department</label>
@@ -351,36 +357,33 @@
                     <table id="datatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th class="th-sm" width="">Document Code</th>
+                          <th class="th-sm" width="">Company</th>
+                          <th class="th-sm" width="">Control Code</th>
                           <th class="th-sm" width="">Document Title</th>
+                          <th class="th-sm" width="">Revision No</th>
+                          
                           <th class="th-sm" width="">Category</th>
                           <th class="th-sm" width="">Tag</th>
-                          <th class="th-sm" width="">Revision No</th>
-                          <th class="th-sm" width="">Attachment</th>
-                          <th class="th-sm" width="">Department</th>
-                          <th class="th-sm" width="">Company</th>
-                          <th class="th-sm" width="">Status</th>
+                          <th class="th-sm" width="">Implementation Date</th>
+                          <th class="th-sm" width="">Date Request</th>
+                          
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
                       <tbody id="fileUpload">
                         @foreach ($document_libraries as $key => $document_library)
                           <tr>
+                            <td>{{$document_library->documentCompany->company_code}}</td>
                             <td>{{$document_library->document_number_series}}</td>
                             <td>{{$document_library->description}}</td>
+                            <td>{{$document_library->revision}}</td>
+                            
                             <td>{{$document_library->documentCategory->category_description}}</td>
                             <td>{{$document_library->documentTag->description}}</td>
-                            <td>{{$document_library->revision}}</td>
+                            <td></td>
                             <td>{{$document_library->attachment}}</td>
-                            <td>{{$document_library->documentDepartment->department}}</td>
-                            <td>{{$document_library->documentCompany->company_code}}</td>
-                            <td>
-                              {{-- @if($document_library->getRequestIsoEntry == null) 
-                                Obsolete
-                              @else
-                                Active
-                              @endif --}}
-                            </td>
+                            
+                            
                             <td>
                               <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-documentLibrary_View"><i class="fa-solid fa-eye"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentLibrary_User"><i class="fa-solid fa-user"></i></button> --}}
@@ -418,6 +421,7 @@
   <script>
     userID = {!! json_encode(auth()->user()->id) !!};
     role = {!! json_encode(auth()->user()->role) !!};
+    var userRoles = role.split(',');
     count = 1;
 
     $('.btn-documentLibraryInsert').on('click', function(e){
@@ -451,7 +455,7 @@
             )
           }
         }) */
-      });
+      }).trigger('change');
       
 
       $('#documentLibrary_AddFileUpload').on('click', function(e){
@@ -544,13 +548,13 @@
               documentLibraryRevision += '<div class="step-content" style="background-color: #e8e8e8; min-width:90%;">';
 
               documentLibraryRevision += '<table class="table table-sm table-bordered table_documentRevision'+data[i].id+'">';
-                if(role == 1 || role == 3){
+                if(userRoles.includes("1") == true|| userRoles.includes("3") == true){
                   documentLibraryRevision += '<button data-id="'+data[i].id+'" style="text-align: center" type="button" class="btn btn-sm btn-info px-3 float-right attachment_documentRevision"><i class="fa-solid fa-plus"></i></button>';
                 }
                 
                 for(var x = 0; x < data[i].document_file_revision.length; x++){
                   // If conditional is to show only file revision if the user has access/tagged
-                  role == 1 || role == 3 ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
+                  userRoles.includes("1") == true || userRoles.includes("3") == true ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
                   
                   if(fetchAllFileRevision){
                     data[i].document_file_revision[x].is_stamped == 0 ? isStamped = 'btn-blue-grey' : isStamped = 'btn-success';
@@ -559,10 +563,10 @@
                     documentLibraryRevision += '<tr>';
                       documentLibraryRevision += '<td>';
                         $('attachment'+x).click(function() {
-                          window.location.href = "pdf/iso/'+data[i].document_file_revision[x].attachment_mask+'";
+                          window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
                         //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
-                        documentLibraryRevision += '<a data-id="" href="pdf/iso/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
+                        documentLibraryRevision += '<a data-id="" href="file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
                       documentLibraryRevision += '</td>';
 
                       documentLibraryRevision += '<td>';
@@ -582,7 +586,7 @@
                       documentLibraryRevision += '</td>';
                     
                       documentLibraryRevision += '<td>';
-                      if(role == 1 || role == 3){
+                      if(userRoles.includes("1") == true || userRoles.includes("3") == true){
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" title="Update User Access" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentFileRevision_UserAccess waves-effect waves-light"><i class="fa-solid fa-user"></i></button>';
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" id="'+data[i].document_file_revision[x].is_stamped+'" title="Toggle Stamp On/Off" style="text-align: center" type="button" class="btn btn-sm '+isStamped+' px-2 btn-documentFileRevision_Stamp"><i class="fa-solid fa-stamp"></i></button>';
                         documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" id="'+data[i].document_file_revision[x].is_deleted+'" title="Toggle File Archive On/Off" style="text-align: center" type="button" class="btn btn-sm '+isDeleted+' px-2 btn-documentFileRevision_Archive"><i class="fa-solid fa-trash"></i></button>';
@@ -603,7 +607,7 @@
                       }
                       if(hasProcessOwner.find(element => element > 0) > 0){
                         if(userProcessOwner.find(element => element == userID)){
-                          if(role == 1 || role == 3){
+                          if(userRoles.includes("1") == true || userRoles.includes("3") == true){
                             documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
                           } else {
                             
