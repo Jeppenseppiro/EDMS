@@ -223,7 +223,7 @@
                             <td>{{$request_iso_copy->code}}</td>
                             <td>{{$request_iso_copy->userRequestor->name}}</td>
                             <td>{{$request_iso_copy->date_request}}</td>
-                            <td>{{$request_iso_copy->expiration_date}}</td>
+                            <td>{{$request_iso_copy->requestIsoCopyLatestHistory->date_expiration}}</td>
                             <td>{{$request_iso_copy->documentRequested->document_number_series}} | {{$request_iso_copy->documentRequested->description}} | {{$request_iso_copy->documentRequested->revision}}</td>
                             <td>{{$request_iso_copy->requestCopyType->type}}</td>
                             <td>
@@ -380,7 +380,7 @@
             $('.dateExpirationGenerateLink').hide();
           }
           
-        } if((statusApproved[0].status == 1) || statusApproved[0].status == 3 || statusApproved[0].status == 7){
+        } if(((statusApproved[0].status == 1) && userRoles.includes("5") != true) || statusApproved[0].status == 3 || statusApproved[0].status == 7){
           $('.statusRemark').hide();
           $('.requestCopyFooterButton').hide();
         }

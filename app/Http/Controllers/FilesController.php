@@ -141,7 +141,7 @@ class FilesController extends Controller
 
         if(!empty($request_copy)){
             $date1 = date('Y-m-d', time());
-            $date2 = $request_copy->documentRevision->documentLibrary->requestIsoCopy->expiration_date;
+            $date2 = $request_copy->documentRevision->documentLibrary->requestIsoCopy->requestIsoCopyHistory->date_expiration;
             $timestamp1 = strtotime($date1);
             $timestamp2 = strtotime($date2);
             $difference = $timestamp2 - $timestamp1;

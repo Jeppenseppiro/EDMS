@@ -10,6 +10,7 @@
 @section('content')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
+      @include('includes.errormessage')
 
       <!-- Document Library (INSERT) -->
       <div class="modal fade" id="modalDocumentLibraryInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -29,7 +30,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_Description" name="documentLibrary_Description" class="form-control" required>
+                      <input type="text" id="documentLibrary_Description" name="documentLibrary_Description" class="form-control" value="{{ old('documentLibrary_Description') }}" required>
                       <label for="documentLibrary_Description">Document Title</label>
                     </div>
                   </div>
@@ -40,7 +41,7 @@
                         <select id="documentLibrary_Tag" name="documentLibrary_Tag" class="mdb-select" searchable="Search category">
                           <option class="documentLibrary_TagDisabled" value="" disabled selected>Tag</option>
                             @foreach ($tags as $tag)
-                              <option value={{$tag->id}}>{{$tag->description}}</option>
+                              <option @if(old('documentLibrary_Tag') == $tag->id) selected @endif value={{$tag->id}}>{{$tag->description}}</option>
                             @endforeach
                         </select>
                         <label class="mdb-main-label">Tag</label>
@@ -53,7 +54,12 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_DocumentNumberSeries" name="documentLibrary_DocumentNumberSeries" class="form-control">
+                      <input type="text" id="documentLibrary_DocumentNumberSeries" name="documentLibrary_DocumentNumberSeries" class="form-control{{ $errors->has('documentLibrary_DocumentNumberSeries') ? ' is-invalid' : '' }}" value="{{ old('documentLibrary_DocumentNumberSeries') }}">
+                      @if ($errors->has('documentLibrary_DocumentNumberSeries'))
+                        <span class="invalid-feedback" role="alert">
+                          <strong>{{ $errors->first('documentLibrary_DocumentNumberSeries') }}</strong>
+                        </span>
+                      @endif
                       <label for="documentLibrary_DocumentNumberSeries">Document Code</label>
                     </div>
                   </div>
@@ -77,7 +83,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control">
+                      <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" value="{{ old('documentLibrary_Revision') }}">
                       <label for="documentLibrary_Revision">Revision No</label>
                     </div>
                   </div>
@@ -88,7 +94,7 @@
                         <select id="documentLibrary_Company" name="documentLibrary_Company" class="mdb-select" searchable="Search category">
                           <option class="mr-1" value="" disabled selected>Company</option>
                           @foreach ($document_companies as $document_company)
-                            <option value="{{$document_company->id}}">{{$document_company->company_name}}</option>
+                            <option @if(old('documentLibrary_Company') == $document_company->id) selected @endif value={{$document_company->id}}>{{$document_company->company_name}}</option>
                           @endforeach
                         </select>
                         <label class="mdb-main-label">Company</label>
@@ -101,7 +107,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-calendar prefix"></i>
-                      <input type="text" id="documentLibrary_DateEffective" name="documentLibrary_DateEffective" class="form-control datepicker" required>
+                      <input type="text" id="documentLibrary_DateEffective" name="documentLibrary_DateEffective" class="form-control datepicker" value="{{ old('documentLibrary_DateEffective')}}" required>
                       <label for="documentLibrary_DateEffective">Effective Date</label>
                     </div>
                   </div>
@@ -112,7 +118,7 @@
                         <select id="documentLibrary_Department" name="documentLibrary_Department" class="mdb-select" searchable="Search category">
                           <option class="mr-1" value="" disabled selected>Department</option>
                           @foreach ($document_departments as $document_department)
-                            <option value="{{$document_department->id}}">{{$document_department->department}}</option>
+                            <option @if(old('documentLibrary_Department') == $document_department->id) selected @endif value={{$document_department->id}}>{{$document_department->department}}</option>
                           @endforeach
                         </select>
                         <label class="mdb-main-label">Department</label>
@@ -351,36 +357,33 @@
                     <table id="datatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th class="th-sm" width="">Document Code</th>
+                          <th class="th-sm" width="">Company</th>
+                          <th class="th-sm" width="">Control Code</th>
                           <th class="th-sm" width="">Document Title</th>
+                          <th class="th-sm" width="">Revision No</th>
+                          
                           <th class="th-sm" width="">Category</th>
                           <th class="th-sm" width="">Tag</th>
-                          <th class="th-sm" width="">Revision No</th>
-                          <th class="th-sm" width="">Attachment</th>
-                          <th class="th-sm" width="">Department</th>
-                          <th class="th-sm" width="">Company</th>
-                          <th class="th-sm" width="">Status</th>
+                          <th class="th-sm" width="">Implementation Date</th>
+                          <th class="th-sm" width="">Date Request</th>
+                          
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
                       <tbody id="fileUpload">
                         @foreach ($document_libraries as $key => $document_library)
                           <tr>
+                            <td>{{$document_library->documentCompany->company_code}}</td>
                             <td>{{$document_library->document_number_series}}</td>
                             <td>{{$document_library->description}}</td>
+                            <td>{{$document_library->revision}}</td>
+                            
                             <td>{{$document_library->documentCategory->category_description}}</td>
                             <td>{{$document_library->documentTag->description}}</td>
-                            <td>{{$document_library->revision}}</td>
+                            <td></td>
                             <td>{{$document_library->attachment}}</td>
-                            <td>{{$document_library->documentDepartment->department}}</td>
-                            <td>{{$document_library->documentCompany->company_code}}</td>
-                            <td>
-                              {{-- @if($document_library->getRequestIsoEntry == null) 
-                                Obsolete
-                              @else
-                                Active
-                              @endif --}}
-                            </td>
+                            
+                            
                             <td>
                               <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-documentLibrary_View"><i class="fa-solid fa-eye"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentLibrary_User"><i class="fa-solid fa-user"></i></button> --}}
@@ -452,7 +455,7 @@
             )
           }
         }) */
-      });
+      }).trigger('change');
       
 
       $('#documentLibrary_AddFileUpload').on('click', function(e){

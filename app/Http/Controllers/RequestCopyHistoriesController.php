@@ -41,7 +41,6 @@ class RequestCopyHistoriesController extends Controller
     {
         $requestCopyHistory = new RequestCopyHistory;
         $requestCopyHistory->request_copy_id = $request->updateRequestCopy_ID;
-        $requestCopyHistory->date_expiration = $request->requestCopy_DateExpiration;
         $requestCopyHistory->request_copy_uniquelink = $request->requestCopy_GenerateLink;
         $requestCopyHistory->remarks = $request->requestCopy_RemarksUpdate;
         $requestCopyHistory->status = $request->requestCopy_StatusUpdate;
