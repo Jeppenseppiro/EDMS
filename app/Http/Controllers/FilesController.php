@@ -87,9 +87,9 @@ class FilesController extends Controller
                 } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
                     $pdfPassword_status = true;
                     $pdfPassword_password = "holdings...";
-                } else {
+                } /* else {
                     abort(404, 'Forbidden');
-                }
+                } */
 
                 $owner_password = $pdfPassword_password;
                 $user_password = $revision_file->file_password;
