@@ -40,9 +40,9 @@
                       <i class="fa-solid fa-address-card prefix"></i>
                       <div class="md-form py-0 ml-5">
                         <select id="etransmittal_Status" name="etransmittal_Status" class="mdb-select" searchable="Search status" required>
-                          <option class="mr-1" value="" disabled selected>Status</option>
+                          <option class="mr-1" value="Shipped" disabled selected>Status</option>
                           <option value="Shipped">Shipped</option>
-                          <option value="Received">Received</option>
+                          {{-- <option value="Received">Received</option> --}}
                         </select>
                         <label class="mdb-main-label">Status</label>
                       </div>
@@ -157,6 +157,7 @@
                         <tr>
                           <th class="th-sm" width="">Code</th>
                           <th class="th-sm" width="">Item</th>
+                          <th class="th-sm" width="">Created By</th>
                           <th class="th-sm" width="">Recipient</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
@@ -166,6 +167,7 @@
                           <tr>
                             <td>{{$etransmittal->code}}</td>
                             <td>{{$etransmittal->item}}</td>
+                            <td>{{$etransmittal->getUser->name}}</td>
                             <td>{{$etransmittal->getRecipient->name}}</td>
                             <td>
                               <button id="{{$key}}" data-id="{{$etransmittal->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-etransmittal_View" title="Update E-Transmittal"><i class="fa-solid fa-arrows-rotate"></i></button>
@@ -214,7 +216,10 @@
               etransmittalHistory += '<span class="label">'+data[i].status+'</span>';
               etransmittalHistory += '</a>';
               etransmittalHistory += '<div class="step-content" style="background-color: #e8e8e8; min-width:90%;">';
-              etransmittalHistory += '<p>'+data[i].remarks+'</p>';
+              if(data[i].remarks){
+                etransmittalHistory += '<p>'+data[i].remarks+'</p>';
+              }
+              
               etransmittalHistory += '<hr>';
               etransmittalHistory += '<div class="row">';
               etransmittalHistory += '<div class="col-sm">';

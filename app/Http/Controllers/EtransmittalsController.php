@@ -19,9 +19,12 @@ class EtransmittalsController extends Controller
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
 
-        $etransmittals = Etransmittal:: when(in_array(1, $role), function ($query) {
-                                            $query->where('recipient', '=', auth()->user()->id);
-                                        })->with('getUser','getRecipient','getEtransmittalHistory')->get();
+        $etransmittals = Etransmittal::with('getUser','getRecipient','getEtransmittalHistory')
+                                        ->when(!in_array(1, $role) || !in_array(3, $role), function ($query) {
+                                            $query->where('user', '=', auth()->user()->id)
+                                                ->orWhere('recipient', '=', auth()->user()->id);;
+                                        })
+                                        ->get();
                                         
         $users = User::get();
         return view('documents.etransmittal',
