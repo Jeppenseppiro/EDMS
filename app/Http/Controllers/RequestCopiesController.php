@@ -17,22 +17,35 @@ class RequestCopiesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($tag)
     {
+        if($tag == 'iso'){
+            $tagView = 'iso';
+            $tagID = '1';
+        } elseif($tag == 'legal'){
+            $tagView = 'legal';
+            $tagID = '2';
+        }
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
+
         $request_iso_copies = RequestIsoCopy::with('userRequestor','documentRequested.documentRevision.documentFileRevision','requestCopyType','requestIsoCopyLatestHistory')
-                                            
-                                            ->when(!in_array(1, $role), function ($q) {
-                                                $q->whereHas('userRequestor', function ($requestorImmediateHead) {
+                                            ->when(in_array(3, $role), function ($query) {
+                                                $query->whereHas('requestIsoCopyLatestHistory', function ($query){
+                                                    $query->where('status', '=', 6);
+                                                });
+                                            })
+                                            ->when(in_array(5, $role), function ($query) {
+                                                $query->whereHas('userRequestor', function ($requestorImmediateHead){
                                                     $requestorImmediateHead->where('department', '=', auth()->user()->department);
                                                 });
                                             })
-                                            
+                                            ->where('tag', '=', $tagID)
                                             ->orderBy('id', 'DESC')
                                             ->get();
+
         $users = User::where('department', '=', auth()->user()->department)->get();
-        $document_libraries = DocumentLibrary::where('company', '=', auth()->user()->company)->get();
+        $document_libraries = DocumentLibrary::where([['company', '=', auth()->user()->company], ['tag', '=', $tagID]])->get();
         $request_iso_copy_statuses = RequestIsoCopyStatus::where("is_active", '=', 'Active')->get();
         $request_iso_copy_types = RequestIsoCopyType::get();
 
@@ -50,26 +63,13 @@ class RequestCopiesController extends Controller
                 'request_iso_copy_types' => $request_iso_copy_types,
                 'role' => $role,
                 'dateToday' => $dateToday,
+                'tagView' => $tagView,
+                'tagID' => $tagID,
+                'role' => $role,
             )
         );
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store_iso(Request $request)
     {
         /* $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
@@ -82,6 +82,7 @@ class RequestCopiesController extends Controller
         $requestIsoCopy->code = date("Y")."-".sprintf('%06d', $getLastDICR + 1);
         $requestIsoCopy->requestor = $request->requestISOCopy_Requestor;
         $requestIsoCopy->user = auth()->user()->id;
+        $requestIsoCopy->tag = $request->requestISOCopy_TagID;
         $requestIsoCopy->date_request = $request->requestISOCopy_DateRequest;
         $requestIsoCopy->document_library_id = $request->requestISOCopy_FileRequest;
         $requestIsoCopy->expiration_date = $request->requestCopy_DateExpiration;
@@ -96,7 +97,24 @@ class RequestCopiesController extends Controller
         $requestCopyHistory->user = $request->requestISOCopy_Requestor;
         $requestCopyHistory->save();
 
-        return redirect('documentcopy');
+        return redirect()->back();
+    }
+
+    public function edit_iso(Request $request, $id)
+    {
+        $requestIsoCopy = RequestIsoCopy::find($id);
+        $requestIsoCopy->updated_by = auth()->user()->id;
+
+        if($request->toggleApproved != null){
+            $requestIsoCopy->toggle_approved = $request->toggleApproved;
+        } if($request->toggleFillable != null){
+            $requestIsoCopy->toggle_fillable = $request->toggleFillable;
+        } if($request->toggleRawFile != null){
+            $requestIsoCopy->toggle_rawfile = $request->toggleRawFile;
+        }
+        
+        $requestIsoCopy->save();
+        return $requestIsoCopy;
     }
 
     public function history_iso(Request $request, $id)
@@ -108,5 +126,11 @@ class RequestCopiesController extends Controller
                                     ])
                                     ->orderBy('id', 'DESC')->get();
         return $requestIsoCopyHistories;
+    }
+
+    public function config_iso(Request $request, $id)
+    {
+        $requestIsoCopyConfig = RequestIsoCopy::where('id', '=', $id)->get();
+        return $requestIsoCopyConfig;
     }
 }

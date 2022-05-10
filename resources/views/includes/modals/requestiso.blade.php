@@ -13,7 +13,7 @@
         @csrf
           <input id="ISO_ID" type="hidden" value=""/>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12" hidden>
               <div class="md-form">
                 <i class="fa-solid fa-address-card prefix"></i>
                 <div class="md-form py-0 ml-5">
@@ -37,23 +37,13 @@
           </div>
           
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6" hidden>
               <div class="md-form">
                 <i class="fa-solid fa-calendar prefix"></i>
-                <input type="text" id="requestEntry_DateRequest" name="requestEntry_DateRequest" class="form-control datepicker" data-value={{"[2022,3,23]"}} required>
+                <input type="text" id="requestEntry_DateRequest" name="requestEntry_DateRequest" class="form-control datepicker" value="{{$dateToday}}" required>
                 <label for="requestEntry_DateRequest">Date Request</label>
               </div>
             </div>
-            <div class="col-sm-6">
-              <div class="md-form">
-                <i class="fa-solid fa-calendar prefix"></i>
-                <input type="text" id="requestEntry_DateEffective" name="requestEntry_DateEffective" class="form-control datepicker">
-                <label for="requestEntry_DateEffective">Proposed Effective Date</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="row">
             <div class="col-sm-6">
               <div class="md-form">
                 <i class="fa-solid fa-square-caret-down prefix"></i>
@@ -68,20 +58,13 @@
                 </div>
               </div>
             </div>
-            {{-- <div class="col-sm-6">
+            <div class="col-sm-6">
               <div class="md-form">
-                <i class="fa-solid fa-square-caret-down prefix"></i>
-                <div class="md-form py-0 ml-5">
-                  <select id="requestEntry_Status" class="mdb-select" searchable="Search status">
-                    <option class="mr-1" value="" disabled selected>Status</option>
-                    @foreach ($request_iso_statuses as $request_iso_status)
-                      <option value={{$request_iso_status->id}}>{{$request_iso_status->status}}</option>
-                    @endforeach
-                  </select>
-                  <label class="mdb-main-label">Status</label>
-                </div>
+                <i class="fa-solid fa-calendar prefix"></i>
+                <input type="text" id="requestEntry_DateEffective" name="requestEntry_DateEffective" class="form-control datepicker">
+                <label for="requestEntry_DateEffective">Proposed Effective Date</label>
               </div>
-            </div> --}}
+            </div>
           </div>
 
           <div class="row">
@@ -141,7 +124,8 @@
 
           <div class="md-form">
             <i class="fa-solid fa-align-left prefix"></i>
-            <textarea id="requestEntry_DocumentPurposeRequest" name="requestEntry_DocumentPurposeRequest" class="md-textarea form-control" rows="2" required></textarea>
+            <input type="text" id="requestEntry_DocumentPurposeRequest" name="requestEntry_DocumentPurposeRequest" class="form-control" required>
+            {{-- <textarea id="requestEntry_DocumentPurposeRequest" name="requestEntry_DocumentPurposeRequest" class="md-textarea form-control" rows="2" required></textarea> --}}
             <label for="requestEntry_DocumentPurposeRequest">Purpose of Documentation Request</label>
           </div>
 

@@ -22,26 +22,27 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form class="md-form" action="documentlibrary/store" method="POST" enctype="multipart/form-data">
+            <form class="md-form" action="{{route('documentlibrary.store')}}" method="POST" enctype="multipart/form-data">
               @csrf
               <input id="updateDocumentLibrary_UserID" name="updateDocumentLibrary_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
               <div class="modal-body">
                 <div class="row">
-                  <div class="col-sm-6">
+                  <div class="col-sm-12">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
                       <input type="text" id="documentLibrary_Description" name="documentLibrary_Description" class="form-control" value="{{ old('documentLibrary_Description') }}" required>
                       <label for="documentLibrary_Description">Document Title</label>
                     </div>
                   </div>
-                  <div class="col-sm-6">
+                  <div class="col-sm-6" hidden>
                     <div class="md-form">
                       <i class="fa-solid fa-square-caret-down prefix"></i>
                       <div class="md-form py-0 ml-5">
                         <select id="documentLibrary_Tag" name="documentLibrary_Tag" class="mdb-select" searchable="Search category">
                           <option class="documentLibrary_TagDisabled" value="" disabled selected>Tag</option>
                             @foreach ($tags as $tag)
-                              <option @if(old('documentLibrary_Tag') == $tag->id) selected @endif value={{$tag->id}}>{{$tag->description}}</option>
+                              <option value={{$tag->id}}>{{$tag->description}}</option>
+                              <option @if($tagID == $tag->id) selected @endif value={{$tag->id}}>{{$tag->description}}</option>
                             @endforeach
                         </select>
                         <label class="mdb-main-label">Tag</label>
@@ -69,9 +70,9 @@
                       <div class="md-form py-0 ml-5">
                         <select id="documentLibrary_Category" name="documentLibrary_Category" class="mdb-select" searchable="Search category">
                           <option class="documentCategory_OptionDisabled" value="" disabled selected>Category</option>
-                            {{-- @foreach ($document_categories as $document_category)
+                            @foreach ($document_categories as $document_category)
                               <option class="documentCategory_Option" value={{$document_category->id}}>{{$document_category->category_description}}</option>
-                            @endforeach --}}
+                            @endforeach
                         </select>
                         <label class="mdb-main-label">Category</label>
                       </div>
@@ -446,15 +447,6 @@
             $('#documentLibrary_Category').append('<option value="'+ data.id +'">' + data.category_description+ '</option>');
           });
         });
-
-        /* $.ajax({
-          url:  `documentlibrary/category/${e.value}`,
-          success: data => {
-            data.users.forEach(user =>
-              $('#documentLibrary_Category').append(`<option value="${user.id}">${user.name}</option>`)
-            )
-          }
-        }) */
       }).trigger('change');
       
 
@@ -536,7 +528,6 @@
         data: documentLibraryID,
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
       }).done(function(data){
-        console.log(data);
         $(".completed").remove();
         $('#updateDocumentLibrary_ID').val(documentLibraryID);
         for(var i = 0; i < data.length; i++){
@@ -566,7 +557,7 @@
                           window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
                         //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
-                        documentLibraryRevision += '<a data-id="" href="file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
+                        documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
                       documentLibraryRevision += '</td>';
 
                       documentLibraryRevision += '<td>';
@@ -601,19 +592,34 @@
                         userProcessOwner.push(data[i].document_file_revision[x].many_user_access[y].user_access);
 
                         if(data[i].document_file_revision[x].many_user_access[y].is_processowner == 1 && data[i].document_file_revision[x].many_user_access[y].user_access == userID){
-                          documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
+                          documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
+                          //documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
                         }
-                        
-                      }
-                      if(hasProcessOwner.find(element => element > 0) > 0){
-                        if(userProcessOwner.find(element => element == userID)){
-                          if(userRoles.includes("1") == true || userRoles.includes("3") == true){
-                            documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
-                          } else {
-                            
+                        if(data[i].document_file_revision[x].is_discussed == 1){
+                          if(data[i].document_file_revision[x].many_user_access[y].user_access == userID){
+                            if(userProcessOwner.find(element => element == userID)){
+                              //if(userRoles.includes("1") != true || userRoles.includes("3") != true){
+                                if(userRoles.includes("1") != true || userRoles.includes("3") != true){
+                                  documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
+                                }
+                              //}
+                            }
                           }
                         }
+                        /* if(hasProcessOwner.find(element => element > 0) > 0){
+                          if(userProcessOwner.find(element => element == userID)){
+                            if(userRoles.includes("1") != true || userRoles.includes("3") != true){
+                              //console.log(data[i].document_file_revision[x].many_user_access[y]);
+                              //documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
+                              documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
+                            } else {
+                              
+                            }
+                          }
+                        } */
+                      console.log(data[i].document_file_revision[x].is_discussed);
                       }
+                      
 
                       documentLibraryRevision += '</td>';
                     documentLibraryRevision += '</tr>';
@@ -963,7 +969,7 @@
               title: 'Are you sure?',
               //text: 'Has the document <b>('+$(this).data("attachment")+')</b> been discussed by the Process Owner?',
               icon: 'question',
-              html: 'Has the document <b>('+$(this).data("attachment")+')</b> been discussed by the Process Owner?',
+              html: 'Has the document <b>('+$(this).data("attachment")+')</b> been discussed?',
               showCancelButton: true,
               confirmButtonColor: '#3085d6',
               cancelButtonColor: '#d33',

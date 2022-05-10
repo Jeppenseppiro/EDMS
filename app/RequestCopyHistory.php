@@ -15,6 +15,10 @@ class RequestCopyHistory extends Model
         return $this->belongsTo(User::class,'requestor','id');
     }
 
+    public function requestIsoCopy(){
+        return $this->belongsTo(RequestIsoCopy::class,'request_copy_id','id');
+    }
+
     public function requestStatus(){
         return $this->belongsTo(RequestIsoCopyStatus::class,'status','id');
     }

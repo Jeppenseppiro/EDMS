@@ -138,16 +138,11 @@
               <div class="col-sm-8">
                 <div class="md-form">
                   <i class="fa-solid fa-align-left prefix"></i>
-                  {{-- <textarea id="requestEntry_RemarksUpdate" class="md-textarea form-control" rows="1"></textarea>
-                  <label for="form10">Remarks</label> --}}
-
                   <input type="text" id="requestLegalEntry_RemarksUpdate" name="requestLegalEntry_RemarksUpdate" class="form-control" required>
                 <label for="requestLegalEntry_RemarksUpdate">Remarks</label>
                 </div>
               </div>
-              <div class="col-sm-12">
-                {{-- <input class="filepond" type="file" name="requestEntry_FileUploadUpdate"> --}}
-
+              {{-- <div class="col-sm-12">
                 <div class="file-field">
                   <div class="btn btn-primary btn-sm float-left">
                     <span>Choose file</span>
@@ -157,7 +152,7 @@
                     <input class="file-path validate" type="text" placeholder="Upload your file">
                   </div>
                 </div>
-              </div>
+              </div> --}}
             </div>
           </div>
 
@@ -169,7 +164,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" id="" class="btn btn-info btn-requestLegalEntrySummaryUpdate">Submit</button>
+          <button type="button" id="" class="btn btn-primary btn-requestLegalEntrySummaryUpdate">Submit</button>
         </div>
       </form>
     </div>

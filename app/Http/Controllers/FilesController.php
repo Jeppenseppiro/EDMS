@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\PermitLicense;
 use App\DocumentRevision;
 use App\DocumentFileRevision;
 use App\DocumentLibrary;
@@ -87,9 +88,9 @@ class FilesController extends Controller
                 } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
                     $pdfPassword_status = true;
                     $pdfPassword_password = "holdings...";
-                } /* else {
+                } else {
                     abort(404, 'Forbidden');
-                } */
+                }
 
                 $owner_password = $pdfPassword_password;
                 $user_password = $revision_file->file_password;
@@ -109,7 +110,11 @@ class FilesController extends Controller
                     echo $error;
                 }
 
-                return response()->file($tmpFile);
+                if($extension[1] == 'pdf'){
+                    return response()->file($tmpFile);
+                } else {
+                    return response()->download($tmpFile);
+                }
                 
             } else {
                 abort(403, 'Forbidden');
@@ -243,8 +248,19 @@ class FilesController extends Controller
         }
     }
 
-    public function viewISO($link)
+    public function permittingLicenses($link)
     {
-        return view('documents.pdfviewer');
+        $revision_file = PermitLicense::where([['attachment_mask', '=', $link],])->first();
+        $extension = $revision_file->attachment_mask;
+        $extension = explode(".",$extension);
+
+        //dd($revision_file);
+        $file = storage_path('app/public/document/others/'.$revision_file->attachment_mask);
+
+        if($extension[1] == 'pdf'){
+            return response()->file($file);
+        } else {
+            return response()->download($file);
+        }
     }
 }

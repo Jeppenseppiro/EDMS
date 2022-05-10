@@ -16,12 +16,13 @@ class EtransmittalsController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role == 1) {
-            $etransmittals = Etransmittal::with('getUser','getRecipient','getEtransmittalHistory')->get();
-        } else {
-            $etransmittals = Etransmittal::where('recipient', '=', auth()->user()->id)->with('getUser','getRecipient','getEtransmittalHistory')->get();
-        }
-        
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
+
+        $etransmittals = Etransmittal:: when(in_array(1, $role), function ($query) {
+                                            $query->where('recipient', '=', auth()->user()->id);
+                                        })->with('getUser','getRecipient','getEtransmittalHistory')->get();
+                                        
         $users = User::get();
         return view('documents.etransmittal',
             array(

@@ -142,9 +142,9 @@
                   <b style="font-size: 24px;" class="float-left">E-Transmittal Entries</b>
 
                   <div>
-                  @if(auth()->user()->role != 2)
+                  {{-- @if(auth()->user()->role != 2) --}}
                     <button type="button" class="btn btn-outline-white btn-sm px-3 btn-etransmittalInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalEtransmittalInsert"><i class="fa-solid fa-plus"></i></button>
-                  @endif
+                  {{-- @endif --}}
                   </div>
 
                 </div>
