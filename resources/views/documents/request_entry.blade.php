@@ -216,7 +216,7 @@
           var fileName = $(this).data("file");
           var requestEntryFilePreview = '<div class="filePreview">';
               /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-              requestEntryFilePreview += '<iframe src="storage/resource/uploads/iso/'+fileName+'#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
+              requestEntryFilePreview += '<iframe src="../storage/resource/uploads/iso/'+fileName+'#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
               requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
           $('#requestEntry_ModalFilePreview').append(requestEntryFilePreview);
@@ -578,7 +578,7 @@
           var fileName = $(this).data("file");
           var requestEntryFilePreview = '<div class="filePreview">';
               /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-              requestEntryFilePreview += '<embed src="storage/resource/uploads/legal/'+fileName+'#toolbar=0" style="width:100%;height:100vh;"/>';
+              requestEntryFilePreview += '<embed src="../storage/resource/uploads/legal/'+fileName+'#toolbar=0" style="width:100%;height:100vh;"/>';
               requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
           $('#requestLegalEntry_ModalFilePreview').append(requestEntryFilePreview);
@@ -862,7 +862,7 @@
       }).container().appendTo($('#datatableLegalButtons'));
     });
   </script>
-  <script>
+  {{-- <script>
     //FilePond Initialization
     // Get a reference to the file input element
     const inputElement = document.querySelector('.filepond'/* 'input[id="filepond"]' */);
@@ -878,5 +878,5 @@
         }
       }
     });
-  </script>
+  </script> --}}
 @endsection

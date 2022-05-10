@@ -10,7 +10,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-file-pen"></i> Request Entry</h5>
             <hr>
-            <h1>0</h1>
+            <h1>{{$requestEntries->count()}}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-copy"></i> Request Copy</h5>
             <hr>
-            <h1>0</h1>
+            <h1>{{$requestCopies->count()}}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -26,7 +26,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-database"></i> Document Library</h5>
             <hr>
-            <h1>0</h1>
+            <h1>{{$documentLibraries->count()}}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -34,7 +34,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-file-export"></i> E-Transmittal</h5>
             <hr>
-            <h1>0</h1>
+            <h1>{{$eTransmittals->count()}}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -66,7 +66,7 @@
 
             <div class="card-body card-body-cascade text-center">
 
-              <canvas id="lineChart" height="100px"></canvas>
+              <canvas id="dashboardChart" height="100px"></canvas>
 
             </div>
           </div>
@@ -82,60 +82,20 @@
 @section('script')
   
   <script>
-    var ctxB = document.getElementById("lineChart").getContext('2d');
-    var myLineChart = new Chart(ctxB, {
-      plugins: [ChartDataLabels],
-      type: 'line',
-      data: {
-        labels: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-        datasets: [{
-          label: 'Entry Documents',
-          data : [300,700,2000,5000,6000,4000,2000,1000,200,100],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 2
-        }],
-      }
-    });
-      
-    var ctxB = document.getElementById("barChart").getContext('2d');
-    var myBarChart = new Chart(ctxB, {
+    var ctxB = document.getElementById("dashboardChart").getContext('2d');
+    var myChart = new Chart(ctxB, {
       plugins: [ChartDataLabels],
       type: 'bar',
       data: {
-        labels: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+        labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
         datasets: [{
-          label: 'Entry Documents',
-          data : [300,700,2000,5000,6000,4000,2000,1000,200,100],
+          label: 'Request Entry',
+          data : [{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
+            'rgba(255, 99, 132, 0.2)'
           ],
           borderColor: [
-            'rgba(255,99,132,1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
+            'rgba(255,99,132,1)'
           ],
           borderWidth: 2
         }],

@@ -20,9 +20,7 @@ Auth::routes();
 //Route::get('/users', 'PagesController@usersView')->name('users');
 
 Route::group( ['middleware' => 'auth'], function(){
-    Route::get('/', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/', 'DashboardController@index')->name('dashboard');
 
     Route::get('/home',  'RequestEntriesController@get_data');
     Route::get('/api/documentrequest', 'RequestEntriesController@get_data');
