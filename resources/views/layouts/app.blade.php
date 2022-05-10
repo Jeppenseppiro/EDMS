@@ -94,7 +94,7 @@
   
   <script>
     $(window).on('load', function() {
-      $('#mdb-preloader').delay(500).fadeOut(300);
+      $('#mdb-preloader').delay(100).fadeOut(300);
     });
 
     $(document).ready(function() {

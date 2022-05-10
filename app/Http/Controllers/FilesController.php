@@ -58,7 +58,6 @@ class FilesController extends Controller
             
             //User Access
             if($revision_file->documentUserAccess != null || auth()->user()->role == 1){
-                //dd($revision_file);
                 $pdfPassword1 = new Pdf();
                 $pdfPassword2 = new Pdf();
                 $pdfPassword3 = new Pdf();
@@ -67,55 +66,52 @@ class FilesController extends Controller
 
                 if(auth()->user()->role != 1){
                     //Allow Printing
-                    $revision_file->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
-                    //Allow Fill-In
-                    $revision_file->documentUserAccess->can_fill == 1 ? $allow_fillin = "FillIn" : $allow_fillin = null;
-                } else {
-                    $allow_printing = null;
-                    $allow_fillin = null;
-                }
-                
+                        $revision_file->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
+                        //Allow Fill-In
+                        $revision_file->documentUserAccess->can_fill == 1 ? $allow_fillin = "FillIn" : $allow_fillin = null;
+                    } else {
+                        $allow_printing = null;
+                        $allow_fillin = null;
+                    }
+                    
+                    if($extension[1] == 'pdf'){
+                        //Allow Fill-In
+                    auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
+                    
+                    if($pdfPassword1->addFile($file, 'A', 'ihdcpchi...')->saveAs($tmpFile) === true){
+                        $pdfPassword_status = true;
+                        $pdfPassword_password = "ihdcpchi...";
+                    } elseif ($pdfPassword2->addFile($file, 'A', 'pchi...')->saveAs($tmpFile) === true) {
+                        $pdfPassword_status = true;
+                        $pdfPassword_password = "pchi...";
+                    } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
+                        $pdfPassword_status = true;
+                        $pdfPassword_password = "holdings...";
+                    } else {
+                        abort(404, 'Forbidden');
+                    }
 
-                //Allow Fill-In
-                auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
-                
-                if($pdfPassword1->addFile($file, 'A', 'ihdcpchi...')->saveAs($tmpFile) === true){
-                    $pdfPassword_status = true;
-                    $pdfPassword_password = "ihdcpchi...";
-                } elseif ($pdfPassword2->addFile($file, 'A', 'pchi...')->saveAs($tmpFile) === true) {
-                    $pdfPassword_status = true;
-                    $pdfPassword_password = "pchi...";
-                } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
-                    $pdfPassword_status = true;
-                    $pdfPassword_password = "holdings...";
-                } else {
-                    abort(404, 'Forbidden');
-                }
+                    $owner_password = $pdfPassword_password;
+                    $user_password = $revision_file->file_password;
 
-                $owner_password = $pdfPassword_password;
-                $user_password = $revision_file->file_password;
-
-                $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
-                                ->addFile($file, 'A', $pdfPassword_password)
-                                ->allow($allow_printing)
-                                ->allow($allow_fillin)
-                                ->allow($allow_allFeatures)
-                                ->setPassword($owner_password)          // Set owner password
-                                ->setUserPassword($user_password)      // Set user password
-                                ->passwordEncryption(128)   // Set password encryption strength
-                                ->multiStamp($watermarkFile)
-                                ->saveAs($tmpFile);
-                if ($result === false) {
-                    $error = $pdf->getError();
-                    echo $error;
-                }
-
-                if($extension[1] == 'pdf'){
+                    $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
+                                    ->addFile($file, 'A', $pdfPassword_password)
+                                    ->allow($allow_printing)
+                                    ->allow($allow_fillin)
+                                    ->allow($allow_allFeatures)
+                                    ->setPassword($owner_password)          // Set owner password
+                                    ->setUserPassword($user_password)      // Set user password
+                                    ->passwordEncryption(128)   // Set password encryption strength
+                                    ->multiStamp($watermarkFile)
+                                    ->saveAs($tmpFile);
+                    if ($result === false) {
+                        $error = $pdf->getError();
+                        echo $error;
+                    }
                     return response()->file($tmpFile);
                 } else {
-                    return response()->download($tmpFile);
+                    return response()->download($file);
                 }
-                
             } else {
                 abort(403, 'Forbidden');
             }
@@ -194,41 +190,40 @@ class FilesController extends Controller
                     }
                     
 
-                    //Allow Fill-In
-                    auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
-                    
-                    if($pdfPassword1->addFile($file, 'A', 'ihdcpchi...')->saveAs($tmpFile) === true){
-                        $pdfPassword_status = true;
-                        $pdfPassword_password = "ihdcpchi...";
-                    } elseif ($pdfPassword2->addFile($file, 'A', 'pchi...')->saveAs($tmpFile) === true) {
-                        $pdfPassword_status = true;
-                        $pdfPassword_password = "pchi...";
-                    } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
-                        $pdfPassword_status = true;
-                        $pdfPassword_password = "holdings...";
-                    } else {
-                        abort(404, 'Forbidden');
-                    }
-
-                    $owner_password = $pdfPassword_password;
-                    $user_password = $request_copy->file_password;
-
-                    $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
-                                    ->addFile($file, 'A', $pdfPassword_password)
-                                    ->allow($allow_printing)
-                                    ->allow($allow_fillin)
-                                    ->allow($allow_allFeatures)
-                                    ->setPassword($owner_password)          // Set owner password
-                                    ->setUserPassword($user_password)      // Set user password
-                                    ->passwordEncryption(128)   // Set password encryption strength
-                                    ->multiStamp($watermarkFile)
-                                    ->saveAs($tmpFile);
-                    if ($result === false) {
-                        $error = $pdf->getError();
-                        echo $error;
-                    }
-
                     if($extension[1] == 'pdf'){
+                        //Allow Fill-In
+                        auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
+                        
+                        if($pdfPassword1->addFile($file, 'A', 'ihdcpchi...')->saveAs($tmpFile) === true){
+                            $pdfPassword_status = true;
+                            $pdfPassword_password = "ihdcpchi...";
+                        } elseif ($pdfPassword2->addFile($file, 'A', 'pchi...')->saveAs($tmpFile) === true) {
+                            $pdfPassword_status = true;
+                            $pdfPassword_password = "pchi...";
+                        } elseif ($pdfPassword3->addFile($file, 'A', 'holdings...')->saveAs($tmpFile) === true) {
+                            $pdfPassword_status = true;
+                            $pdfPassword_password = "holdings...";
+                        } else {
+                            abort(404, 'Forbidden');
+                        }
+
+                        $owner_password = $pdfPassword_password;
+                        $user_password = $request_copy->file_password;
+
+                        $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
+                                        ->addFile($file, 'A', $pdfPassword_password)
+                                        ->allow($allow_printing)
+                                        ->allow($allow_fillin)
+                                        ->allow($allow_allFeatures)
+                                        ->setPassword($owner_password)          // Set owner password
+                                        ->setUserPassword($user_password)      // Set user password
+                                        ->passwordEncryption(128)   // Set password encryption strength
+                                        ->multiStamp($watermarkFile)
+                                        ->saveAs($tmpFile);
+                        if ($result === false) {
+                            $error = $pdf->getError();
+                            echo $error;
+                        }
                         return response()->file($tmpFile);
                     } else {
                         return response()->download($tmpFile);

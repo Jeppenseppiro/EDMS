@@ -83,20 +83,10 @@ class RequestEntriesController extends Controller
             'requestEntry_Attachment' => 'nullable|max:3999'
         ]);
 
-        //Handle File Upload
-        if($request->hasFile('requestEntry_Attachment')){
-            $fileNameWithExt = $request->file('requestEntry_Attachment')->getClientOriginalName();
-            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('requestEntry_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = time().'-'.$filename.'.'.$extension;
-            $request->file('requestEntry_Attachment')->move(public_path().'/storage/resource/uploads/iso/', $fileNameToStore);
-        } else {
-            $extension = $request->file('requestEntry_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = "noimage.".$extension;
-        }
+        
 
-        $getCurrentEntryID = DB::select("SHOW TABLE STATUS LIKE 'request_iso_entries'");
-        $nextCurrentEntryID = $getCurrentEntryID[0]->Auto_increment;
+        //$getCurrentEntryID = DB::select("SHOW TABLE STATUS LIKE 'request_iso_entries'");
+        //$nextCurrentEntryID = $getCurrentEntryID[0]->Auto_increment;
         //[year]-[series number]
         $getLastDICR = DB::table('request_iso_entries')->count();
 
@@ -114,22 +104,31 @@ class RequestEntriesController extends Controller
         $requestIsoEntry->save();
 
         $requestEntryHistory = new RequestEntryHistory;
-        $requestEntryHistory->request_iso_entry_id = $nextCurrentEntryID;
+        $requestEntryHistory->request_iso_entry_id = $requestIsoEntry->id;
         $requestEntryHistory->remarks = "Created new request entry";
         $requestEntryHistory->status = 1;
         $requestEntryHistory->user = $request->requestEntry_Requestor;
         $requestEntryHistory->tag = 1;
         $requestEntryHistory->save();
 
-        $fileUpload = new FileUpload;
-        $getCurrentEntryHistoryID = RequestEntryHistory::get();
-        $nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
-        $fileUpload->request_entry = $nextCurrentEntryID;
-        $fileUpload->request_entry_history = $nextCurrentEntryHistoryID;
-        $fileUpload->file_upload = $fileNameToStore;
-        $fileUpload->tag = 1;
-        $fileUpload->user = $request->requestor_name;
-        $fileUpload->save();
+        //Handle File Upload
+        if($request->hasFile('requestEntry_Attachment')){
+            $fileNameWithExt = $request->file('requestEntry_Attachment')->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('requestEntry_Attachment')->getClientOriginalExtension();
+            $fileNameToStore = time().'-'.$filename.'.'.$extension;
+            $request->file('requestEntry_Attachment')->move(public_path().'/storage/resource/uploads/iso/', $fileNameToStore);
+
+            $fileUpload = new FileUpload;
+            $fileUpload->request_entry = $requestIsoEntry->id;
+            $fileUpload->request_entry_history = $requestEntryHistory->id;
+            $fileUpload->file_upload = $fileNameToStore;
+            $fileUpload->tag = 1;
+            $fileUpload->user = $request->requestor_name;
+            $fileUpload->save();
+        }
+
+        
 
         $requestor = User::where('id', '=', $request->requestEntry_Requestor)->first();
         $requestEntryRequestor = [
@@ -165,6 +164,24 @@ class RequestEntriesController extends Controller
             'requestLegalEntry_Attachment' => 'nullable|max:3999'
         ]);
 
+
+        $requestLegalEntry = new RequestLegalEntry;
+        $requestLegalEntry->requestor_name = $request->requestLegalEntry_Requestor;
+        $requestLegalEntry->date_request = $request->requestLegalEntry_DateRequest;
+        $requestLegalEntry->document_type = $request->requestLegalEntry_DocumentType;
+        //$requestLegalEntry->attachment = $fileNameToStore;
+        $requestLegalEntry->status = 1;
+        $requestLegalEntry->remarks = $request->requestLegalEntry_Remarks;
+        $requestLegalEntry->save();
+
+        $requestEntryHistory = new RequestEntryHistory;
+        $requestEntryHistory->request_iso_entry_id = $requestLegalEntry->id;
+        $requestEntryHistory->remarks = "Created new request entry";
+        $requestEntryHistory->status = 1;
+        $requestEntryHistory->user = $request->requestLegalEntry_User;
+        $requestEntryHistory->tag = 2;
+        $requestEntryHistory->save();
+
         //Handle File Upload
         if($request->hasFile('requestLegalEntry_Attachment')){
             $fileNameWithExt = $request->file('requestLegalEntry_Attachment')->getClientOriginalName();
@@ -174,40 +191,17 @@ class RequestEntriesController extends Controller
             //$path = $request->file('requestLegalEntry_Attachment')->storeAs('public/storage/resource/uploads/legal', $fileNameToStore);
             $request->file('requestLegalEntry_Attachment')->move(public_path().'/storage/resource/uploads/legal/', $fileNameToStore);
             //$fileNameToStore = $request->file('documentLibrary_Attachment');
-        } else {
-            $extension = $request->file('requestLegalEntry_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = "noimage.".$extension;
+
+            $fileUpload = new FileUpload;
+            $fileUpload->request_entry = $nextCurrentEntryID;
+            $fileUpload->request_entry_history = $requestEntryHistory->id;
+            $fileUpload->file_upload = $fileNameToStore;
+            $fileUpload->tag = 2;
+            $fileUpload->user = $request->requestLegalEntry_User;
+            $fileUpload->save();
         }
 
-        $getCurrentEntryID = DB::select("SHOW TABLE STATUS LIKE 'request_legal_entries'");
-        $nextCurrentEntryID = $getCurrentEntryID[0]->Auto_increment;
-
-        $requestLegalEntry = new RequestLegalEntry;
-        $requestLegalEntry->requestor_name = $request->requestLegalEntry_Requestor;
-        $requestLegalEntry->date_request = $request->requestLegalEntry_DateRequest;
-        $requestLegalEntry->document_type = $request->requestLegalEntry_DocumentType;
-        $requestLegalEntry->attachment = $fileNameToStore;
-        $requestLegalEntry->status = 1;
-        $requestLegalEntry->remarks = $request->requestLegalEntry_Remarks;
-        $requestLegalEntry->save();
-
-        $requestEntryHistory = new RequestEntryHistory;
-        $requestEntryHistory->request_iso_entry_id = $nextCurrentEntryID;
-        $requestEntryHistory->remarks = "Created new request entry";
-        $requestEntryHistory->status = 1;
-        $requestEntryHistory->user = $request->requestLegalEntry_User;
-        $requestEntryHistory->tag = 2;
-        $requestEntryHistory->save();
-
-        $fileUpload = new FileUpload;
-        $getCurrentEntryHistoryID = RequestEntryHistory::get();
-        $nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
-        $fileUpload->request_entry = $nextCurrentEntryID;
-        $fileUpload->request_entry_history = $nextCurrentEntryHistoryID;
-        $fileUpload->file_upload = $fileNameToStore;
-        $fileUpload->tag = 2;
-        $fileUpload->user = $request->requestLegalEntry_User;
-        $fileUpload->save();
+        
         
         return redirect()->back();
         //return $fileUpload;

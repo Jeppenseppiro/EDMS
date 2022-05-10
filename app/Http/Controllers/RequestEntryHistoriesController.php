@@ -19,11 +19,6 @@ use Illuminate\Support\Facades\DB;
 class RequestEntryHistoriesController extends Controller
 {
     
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
@@ -33,22 +28,7 @@ class RequestEntryHistoriesController extends Controller
         return $requestEntryHistories;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function iso_store(Request $request)
     {
         $requestEntryHistory = new RequestEntryHistory;
@@ -56,7 +36,7 @@ class RequestEntryHistoriesController extends Controller
         $requestEntryHistory->tag = $request->updateISO_TagID;
         $requestEntryHistory->status = $request->requestEntry_StatusUpdate;
         $requestEntryHistory->remarks = $request->requestEntry_RemarksUpdate;
-        $requestEntryHistory->user = $request->updateISO_UserID;
+        $requestEntryHistory->user = auth()->user()->id;
         $requestEntryHistory->save();
         //return redirect('/documentrequest');
         
@@ -74,22 +54,20 @@ class RequestEntryHistoriesController extends Controller
             $path = $request->file('requestEntry_FileUploadUpdate')->storeAs('public/resource/uploads/iso', $fileNameToStore);
 
             //$fileNameToStore = $request->file('requestEntry_FileUploadUpdate');
-        } else {
-            $extension = $request->file('requestEntry_FileUploadUpdate')->getClientOriginalExtension();
-            $fileNameToStore = "noimage.".$extension;
+            $fileUpload = new FileUpload;
+            $fileUpload->request_entry = $request->updateISO_ID;
+            $fileUpload->request_entry_history = $requestEntryHistory->id;
+            $fileUpload->file_upload = $fileNameToStore;
+            $fileUpload->tag = $request->updateISO_TagID;
+            $fileUpload->user = $request->updateISO_UserID;
+            $fileUpload->save();
         }
 
         //Get next auto-increment of Entry History
-        $getCurrentEntryHistoryID = RequestEntryHistory::get();
-        $nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
+        //$getCurrentEntryHistoryID = RequestEntryHistory::get();
+        //$nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
 
-        $fileUpload = new FileUpload;
-        $fileUpload->request_entry = $request->updateISO_ID;
-        $fileUpload->request_entry_history = $nextCurrentEntryHistoryID;
-        $fileUpload->file_upload = $fileNameToStore;
-        $fileUpload->tag = $request->updateISO_TagID;
-        $fileUpload->user = $request->updateISO_UserID;
-        $fileUpload->save();
+        
 
         if (auth()->user()->role == 3){
             $bpm = User::where('role', '=', 4)->first();
@@ -167,10 +145,16 @@ class RequestEntryHistoriesController extends Controller
 
 
 
-        return redirect('documentrequest');
+        return redirect()->back();
     }
 
+
     public function legal_store(Request $request){
+        // Validation
+        $this->validate($request, [
+            'requestLegalEntry_FileUploadUpdate' => 'nullable|max:3999'
+        ]);
+
         $requestEntryHistory = new RequestEntryHistory;
         $requestEntryHistory->request_iso_entry_id = $request->updateLegal_ID;
         $requestEntryHistory->tag = 2;
@@ -178,11 +162,6 @@ class RequestEntryHistoriesController extends Controller
         $requestEntryHistory->remarks = $request->requestLegalEntry_RemarksUpdate;
         $requestEntryHistory->user = auth()->user()->id;
         $requestEntryHistory->save();
-
-        // Validation
-        $this->validate($request, [
-            'requestLegalEntry_FileUploadUpdate' => 'nullable|max:3999'
-        ]);
 
         //Handle File Upload
         /* if($request->hasFile('requestLegalEntry_FileUploadUpdate')){
@@ -206,51 +185,6 @@ class RequestEntryHistoriesController extends Controller
         $fileUpload->user = auth()->user()->id;
         $fileUpload->save(); */
 
-        return redirect('documentrequest');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RequestEntryHistory  $requestEntryHistory
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RequestEntryHistory $requestEntryHistory)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\RequestEntryHistory  $requestEntryHistory
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RequestEntryHistory $requestEntryHistory)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RequestEntryHistory  $requestEntryHistory
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, RequestEntryHistory $requestEntryHistory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\RequestEntryHistory  $requestEntryHistory
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RequestEntryHistory $requestEntryHistory)
-    {
-        //
+        return redirect()->back();
     }
 }

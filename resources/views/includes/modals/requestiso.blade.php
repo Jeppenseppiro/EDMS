@@ -155,7 +155,6 @@
         <div class="modal-body">
           <input id="updateISO_ID" name="updateISO_ID" type="hidden" value=""/>
           <input id="updateISO_TagID" name="updateISO_TagID" type="hidden" value="1"/>
-          <input id="updateISO_UserID" name="updateISO_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
           <div class="container">
             <div class="row">
               <div class="col-sm-4">
@@ -184,7 +183,7 @@
                 <label for="requestEntry_RemarksUpdate">Remarks</label>
                 </div>
               </div>
-              {{-- <div class="col-sm-12">
+              <div class="col-sm-12">
 
                 <div class="file-field">
                   <div class="btn btn-primary btn-sm float-left">
@@ -195,7 +194,7 @@
                     <input class="file-path validate" type="text" placeholder="Upload your file">
                   </div>
                 </div>
-              </div> --}}
+              </div>
             </div>
           </div>
           <ul id="requestIsoEntryHistory" class="stepper stepper-vertical">
