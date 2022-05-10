@@ -24,8 +24,17 @@ class RequestEntriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($tag)
     {
+        if($tag == 'iso'){
+            $tagView = 'iso';
+            $tagID = '1';
+        } elseif($tag == 'legal'){
+            $tagView = 'legal';
+            $tagID = '2';
+        }
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
         $request_iso_entries = RequestIsoEntry::with('user','requestType','documentType','documentToRevise','requestStatus','requestIsoEntryLatestHistory')
                                                 ->get();
         $request_legal_entries = RequestLegalEntry::with('user','documentType','requestStatus')->get();
@@ -40,8 +49,8 @@ class RequestEntriesController extends Controller
                                                     ])->get();
         $document_libraries = DocumentLibrary::get();
         $request_types = RequestType::get();
-        $request_iso_statuses = RequestEntryStatus::where('tag', '=', '1')->get();
-        $request_legal_statuses = RequestEntryStatus::where('tag', '=', '2')->get();
+        $request_iso_statuses = RequestEntryStatus::where([['tag', '=', '1'], ['id', '!=', '1']])->get();
+        $request_legal_statuses = RequestEntryStatus::where([['tag', '=', '2'], ['id', '!=', '7']])->get();
         $request_iso_histories = RequestEntryHistory::get();
 
         //dd($approver);
@@ -57,17 +66,16 @@ class RequestEntriesController extends Controller
                 'request_iso_statuses' => $request_iso_statuses,
                 'request_legal_statuses' => $request_legal_statuses,
                 'request_iso_histories' => $request_iso_histories,
+                'dateToday' => $dateToday,
+                'tagView' => $tagView,
+                'role' => $role,
             )
         );
+        
         //return $request_iso_entries;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store_iso(Request $request)
     {
         // Validation
@@ -147,7 +155,7 @@ class RequestEntriesController extends Controller
         ];
         Notification::send($dco, new SendRequestEntry($requestEntryEmail));
 
-        return redirect('documentrequest');
+        return redirect()->back();
     }
 
     public function store_legal(Request $request)
@@ -201,7 +209,7 @@ class RequestEntriesController extends Controller
         $fileUpload->user = $request->requestLegalEntry_User;
         $fileUpload->save();
         
-        return redirect('documentrequest');
+        return redirect()->back();
         //return $fileUpload;
     }
 

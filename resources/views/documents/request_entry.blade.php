@@ -12,43 +12,72 @@
   @include('includes.modals.requestlegal')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
-      @if (auth()->user()->role == 2)
+      @if(in_array(2, $role))
         <div class="row">
-          <div class="col-lg-6 col-md-12">
-            <div class="card">
-              <div class="view btn-requestIsoEntryInsert">
-                <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
-                <a data-toggle="modal" data-target="#modalRequestIsoEntryInsert">
-                  <div class="mask rgba-white-slight"></div>
-                </a>
-              </div>
-
-              <div class="card-body">
-                <h4 class="card-title">Document Management</h4>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <div class="container">
+          @if($tagView == 'iso')
+            <div class="col-lg-12 col-md-12">
+              <div class="jumbotron">
+                <h1 class="h1-responsive"><b>Document Management</b></h1>
+                <p class="lead">This is where you can create <b>Document Request Entries</b></p>
+                <hr class="my-2">
+                <p>Click the button to create a request entry for the Document Management</p>
                 <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
               </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-12">
-            <div class="card">
-              <div class="view btn-requestLegalEntryInsert">
-                <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
-                <a data-toggle="modal" data-target="#modalRequestLegalEntryInsert">
-                  <div class="mask rgba-white-slight"></div>
-                </a>
+              {{-- <div class="card">
+                <div class="card-header">
+                  Featured
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">Document Management</h5>
+                  <p class="card-text">Click the button to create a request entry for the Document Management</p>
+                  <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
+                </div>
               </div>
+              <div class="card">
+                <div class="view btn-requestIsoEntryInsert" style="height: 100px; overflow: hidden;">
+                  <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
+                  <a data-toggle="modal" data-target="#modalRequestIsoEntryInsert">
+                    <div class="mask rgba-white-slight"></div>
+                  </a>
+                </div>
 
-              <div class="card-body">
-                <h4 class="card-title">Legal</h4>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <div class="card-body">
+                  <h4 class="card-title">Document Management</h4>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
+                </div>
+              </div>
+            </div> --}}
+          @elseif($tagView == 'legal')
+            <div class="col-lg-12 col-md-12">
+              <div class="jumbotron">
+                <h1 class="h1-responsive"><b>Legal</b></h1>
+                <p class="lead">This is where you can create <b>Legal Request Entries</b></p>
+                <hr class="my-2">
+                <p>Click the button to create a request entry for the Legal</p>
                 <button type="button" class="btn btn-success btn-requestLegalEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestLegalEntryInsert">Create Request Entry</button>
               </div>
+              {{-- <div class="card">
+                <div class="view btn-requestLegalEntryInsert">
+                  <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
+                  <a data-toggle="modal" data-target="#modalRequestLegalEntryInsert">
+                    <div class="mask rgba-white-slight"></div>
+                  </a>
+                </div>
+
+                <div class="card-body">
+                  <h4 class="card-title">Legal</h4>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <button type="button" class="btn btn-success btn-requestLegalEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestLegalEntryInsert">Create Request Entry</button>
+                </div>
+              </div> --}}
             </div>
+          @endif
           </div>
         </div>
       @else
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        {{-- <ul class="nav nav-tabs" id="myTab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="iso-tab" data-toggle="tab" href="#iso" role="tab" aria-controls="iso"
               aria-selected="true">Document Management</a>
@@ -65,7 +94,12 @@
           <div class="tab-pane fade" id="legal" role="tabpanel" aria-labelledby="legal-tab">
             @include('includes.requestlegal')
           </div>
-        </div>
+        </div> --}}
+        @if($tagView == 'iso')
+          @include('includes.requestiso')
+        @elseif($tagView == 'legal')
+          @include('includes.requestlegal')
+        @endif
       @endif
       
 
@@ -99,22 +133,23 @@
       $(".btn-requestISOEntrySummaryInsert").css({display: "block"});
       $(".btn-requestISOEntrySummaryEdit").css({display: "none"});
 
-      $('#requestEntry_Title').val('').trigger("change");
+      /* $('#requestEntry_Title').val('').trigger("change");
       $('#requestEntry_DateRequest').val('').trigger("change");
       $('#requestEntry_DateEffective').val('').trigger("change");
       $('#requestEntry_RequestType').val('').trigger("change");
       $('#requestEntry_DocumentType').val('').trigger("change");
       $('#requestEntry_DocumentRevised').val('').trigger("change");
-      $('#requestEntry_DocumentPurposeRequest').val('').trigger("change");
+      $('#requestEntry_DocumentPurposeRequest').val('').trigger("change"); */
 
       $("#requestEntry_RequestType").change(function() {
         if($('#requestEntry_RequestType').val() == 1){
           $('#requestEntry_DocumentRevised').val('');
           $(".requestEntryDocumentRevised").hide();
           $("#requestEntry_DocumentRevised").prop('required',false);
+          $(".requestEntryAttachment").show();
         } else if($('#requestEntry_RequestType').val() == 3 || $('#requestEntry_RequestType').val() == 4){
           $(".requestEntryAttachment").hide();
-          $(".requestEntryDocumentRevised").hide();
+          //$(".requestEntryDocumentRevised").hide();
         }
         
         else {

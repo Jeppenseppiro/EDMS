@@ -185,7 +185,7 @@ class RequestEntryHistoriesController extends Controller
         ]);
 
         //Handle File Upload
-        if($request->hasFile('requestLegalEntry_FileUploadUpdate')){
+        /* if($request->hasFile('requestLegalEntry_FileUploadUpdate')){
             $fileNameWithExt = $request->file('requestLegalEntry_FileUploadUpdate')->getClientOriginalName();
             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('requestLegalEntry_FileUploadUpdate')->getClientOriginalExtension();
@@ -198,17 +198,13 @@ class RequestEntryHistoriesController extends Controller
             $fileNameToStore = "noimage.".$extension;
         }
 
-        //Get next auto-increment of Entry History
-        $getCurrentEntryHistoryID = RequestEntryHistory::get();
-        $nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
-
         $fileUpload = new FileUpload;
         $fileUpload->request_entry = $request->updateLegal_ID;
-        $fileUpload->request_entry_history = $nextCurrentEntryHistoryID;
+        $fileUpload->request_entry_history = $requestEntryHistory->id;
         $fileUpload->file_upload = $fileNameToStore;
         $fileUpload->tag = 2;
         $fileUpload->user = auth()->user()->id;
-        $fileUpload->save();
+        $fileUpload->save(); */
 
         return redirect('documentrequest');
     }

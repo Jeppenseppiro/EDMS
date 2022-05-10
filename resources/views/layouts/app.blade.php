@@ -49,6 +49,17 @@
   </head>
 
   <body class="cyan-skin fixed-sn">
+    <div id="mdb-preloader" class="flex-center">
+      {{-- <div class="preloader-wrapper active"> --}}
+        <div class="spinner-border text-primary" style="width: 20rem; height: 20rem; font-size: 100px;" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      {{-- </div> --}}
+    </div>
+    {{-- <div class="spinner">
+      <div class="spinner-border text-primary" role="status">
+      </div>
+    </div> --}}
     @include('includes.navbar')
     @yield('content')
   </body>
@@ -82,6 +93,10 @@
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
   <script>
+    $(window).on('load', function() {
+      $('#mdb-preloader').delay(500).fadeOut(300);
+    });
+
     $(document).ready(function() {
       // SideNav Button Initialization
       $(".button-collapse").sideNav({

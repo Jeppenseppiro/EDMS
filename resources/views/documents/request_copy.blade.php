@@ -26,8 +26,9 @@
               @csrf
               <input id="updateDocumentLibrary_UserID" name="updateDocumentLibrary_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
               <div class="modal-body">
+                <input type="text" id="requestISOCopy_TagID" name="requestISOCopy_TagID" value="{{$tagID}}" hidden>
                 <div class="row">
-                  <div class="col-sm-12">
+                  <div class="col-sm-12 requestCopy_Requestor">
                     <div class="md-form">
                       <i class="fa-solid fa-address-card prefix"></i>
                       <div class="md-form py-0 ml-5">
@@ -85,7 +86,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" id="" class="btn btn-info btn-documentLibrarySubmit">Submit</button>
+                <button type="submit" id="" class="btn btn-primary btn-documentLibrarySubmit">Submit</button>
               </div>
             </form>
           </div>
@@ -173,6 +174,30 @@
         </div>
       </div>
 
+      <!-- Document Copy (CONFIGURATION) -->
+      <div class="modal fade" id="modalRequestIsoCopyConfigure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+          <div class="modal-content">
+            <div class="modal-header warning-color">
+              <h5 class="modal-title" id="exampleModalLabel">Configure Request Copy</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form class="md-form" id="updateRequestEntry" action="#" method="POST" enctype="multipart/form-data">
+              @csrf
+              <div class="modal-body">
+                <input id="updateRequestCopy_ID" name="updateRequestCopy_ID" type="hidden" value=""/>
+                <input id="updateRequestCopy_UserID" name="updateRequestCopy_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
+                <ul id="requestIsoCopyConfiguration">
+                  
+                </ul>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
       <!-- Request Entry Datatable -->
       <div class="row">
         <div class="col-xl-12 col-lg-7 mr-0 pb-2">
@@ -189,8 +214,12 @@
 
                   <div>
                     {{-- @if(auth()->user()->role == 8) --}}
-                    
-                    @if(in_array(1, $role) || in_array(8, $role))
+
+                    @if ($tagID == 1)
+                      @if(in_array(1, $role) || in_array(8, $role))
+                        <button type="button" class="btn btn-outline-white btn-sm px-3 btn-documentLibraryInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalDocumentCopyInsert"><i class="fa-solid fa-plus"></i></button>
+                      @endif
+                    @elseif ($tagID == 2)
                       <button type="button" class="btn btn-outline-white btn-sm px-3 btn-documentLibraryInsert" style="font-weight: bold;" data-toggle="modal" data-target="#modalDocumentCopyInsert"><i class="fa-solid fa-plus"></i></button>
                     @endif
                     {{-- @endif --}}
@@ -204,7 +233,7 @@
                     <table id="datatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th class="th-sm" width="">ID</th>
+                          {{-- <th class="th-sm" width="">ID</th> --}}
                           <th class="th-sm" width="">Code</th>
                           <th class="th-sm" width="">Requestor</th>
                           <th class="th-sm" width="">Date Request</th>
@@ -219,7 +248,7 @@
                       <tbody id="fileUpload">
                         @foreach ($request_iso_copies as $key => $request_iso_copy)
                           <tr>
-                            <td>{{$request_iso_copy->id}}</td>
+                            {{-- <td>{{$request_iso_copy->id}}</td> --}}
                             <td>{{$request_iso_copy->code}}</td>
                             <td>{{$request_iso_copy->userRequestor->name}}</td>
                             <td>{{$request_iso_copy->date_request}}</td>
@@ -230,17 +259,17 @@
                               @foreach ($request_iso_copy->documentRequested->documentRevision->documentFileRevision as $key => $link)
                                 @if($request_iso_copy->requestIsoCopyLatestHistory->status == "Emailed")
                                   <a target="_blank" href="{{url("/file/requestcopy/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">
-                                    @if($link->type == 1)
+                                    @if($link->type == 1 && $request_iso_copy->toggle_approved == 1)
                                       <span class="badge badge-success">Approved</span>
-                                    @elseif($link->type == 2)
+                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
+                                    @elseif($link->type == 2 && $request_iso_copy->toggle_fillable == 1)
                                       <span class="badge badge-primary">Fillable</span>
-                                    @else
+                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
+                                    @elseif($link->type == 3 && $request_iso_copy->toggle_rawfile == 1)
                                       <span class="badge badge-dark">Raw File</span>
+                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
                                     @endif
                                   </a>
-                                {{-- @if(in_array(1, $role) || in_array(3, $role)) --}}
-                                  Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
-                                {{-- @endif --}}
                                   <br>
                                 @endif  
                               @endforeach
@@ -248,6 +277,9 @@
                             <td>{{$request_iso_copy->requestIsoCopyLatestHistory->status}}</td>
                             <td>
                               <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" data-filetype="{{$request_iso_copy->requestCopyType->id}}" style="text-align: center" type="button" title="Update Request Copy" class="btn btn-sm btn-success px-2 btn-requestCopy_View"><i class="fa-solid fa-eye"></i></button>
+                              @if(in_array(1, $role) || in_array(3, $role))
+                                <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" data-filetype="{{$request_iso_copy->requestCopyType->id}}" data-fileid="{{$request_iso_copy->documentRequested->id}}" style="text-align: center" type="button" title="Configure Request Copy" class="btn btn-sm btn-info px-2 btn-requestCopy_Config"><i class="fa-solid fa-cog"></i></button>
+                              @endif
                               {{-- <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-requestCopy_Edit"><i class="fa-solid fa-pen-line"></i></button> --}}
                             </td>
                           </tr>
@@ -281,6 +313,15 @@
   <script>
     requestCopy_JSON =  {!! json_encode($request_iso_copies->toArray()) !!};
     role = {!! json_encode(auth()->user()->role) !!};
+    tagID = {!! json_encode($tagID) !!};
+    
+    if(tagID == 1){
+      $('.requestCopy_Requestor').attr("hidden",false);
+    } else {
+      $('.requestCopy_Requestor').attr("hidden",true);
+    }
+    
+    $('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     var userRoles = role.split(',');
     //console.log(requestCopy_JSON);
     //$('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
@@ -301,6 +342,7 @@
       var requestCopyID_Array = $(this).attr("id");
       var requestCopyID = $(this).data("id");
       var requestCopyFileType = $(this).data("filetype");
+      var requestCopyFileID = $(this).data("fileid");
 
       $('#requestCopy_GenerateLinkButton').on('click', function(e){
         var generate_random = Math.random().toString(36).substr(2).toUpperCase();
@@ -313,7 +355,6 @@
       $.ajax({
         dataType: 'JSON',
         type: 'POST',
-        //documentlibrary/store
         url:  'documentcopy/requesthistory/iso/'+requestCopyID,
         data: requestCopyID,
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -386,6 +427,89 @@
         }
       });
     });
+
+    $('.btn-requestCopy_Config').on('click', function(e){
+      $('#modalRequestIsoCopyConfigure').modal('show');
+      requestCopyID_Array = $(this).attr("id");
+      requestCopyID = $(this).data("id");
+      requestCopyFileType = $(this).data("filetype");
+      requestCopyFileID = $(this).data("fileid");
+      requestCopyConfig = {};
+        requestCopyConfig.requestCopyFileType = requestCopyFileType;
+        requestCopyConfig.requestCopyFileID = requestCopyFileID;
+      $.ajax({
+        dataType: 'JSON',
+        type: 'POST',
+        url:  'documentcopy/requestconfig/iso/'+requestCopyID,
+        data: requestCopyConfig,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      }).done(function(data){
+        $(".requestCopyConfiguration_Container").remove();
+        data[0].toggle_approved == 1 ? toggleApproved = 'checked' : toggleApproved = '';
+        data[0].toggle_fillable == 1 ? toggleFillable = 'checked' : toggleFillable = '';
+        data[0].toggle_rawfile == 1 ? toggleRawFile = 'checked' : toggleRawFile = '';
+
+        var requestCopyConfig = '<div class="requestCopyConfiguration_Container">';
+            requestCopyConfig += '<div class="custom-control custom-switch">';
+            requestCopyConfig += '<input type="checkbox" class="custom-control-input" data-id="'+data[0].id+'" id="requestCopy_Approved"'+toggleApproved+'>';
+            requestCopyConfig += '<label class="custom-control-label" for="requestCopy_Approved">Approved (Signed)</label>';
+            requestCopyConfig += '</div>';
+
+            requestCopyConfig += '<div class="custom-control custom-switch">';
+            requestCopyConfig += '<input type="checkbox" class="custom-control-input" data-id="'+data[0].id+'" id="requestCopy_Fillable"'+toggleFillable+'>';
+            requestCopyConfig += '<label class="custom-control-label" for="requestCopy_Fillable">Fillable</label>';
+            requestCopyConfig += '</div>';
+
+            requestCopyConfig += '<div class="custom-control custom-switch">';
+            requestCopyConfig += '<input type="checkbox" class="custom-control-input" data-id="'+data[0].id+'" id="requestCopy_RawFile"'+toggleRawFile+'>';
+            requestCopyConfig += '<label class="custom-control-label" for="requestCopy_RawFile">Raw File</label>';
+            requestCopyConfig += '</div>';
+            requestCopyConfig += '</div>';
+
+            $('#requestIsoCopyConfiguration').append(requestCopyConfig);
+
+        console.log(data);
+      });
+      
+      $('#requestIsoCopyConfiguration').on('click', '#requestCopy_Approved', function() {
+        $(this).prop("checked") == true ? toggleApproved = 1 : toggleApproved = 0;
+
+        edit_requestCopy = {};
+        edit_requestCopy.toggleApproved = toggleApproved;
+        $.ajax({
+          type: 'PUT',
+          url:  'documentcopy/requestconfig/iso/'+requestCopyID+'/edit',
+          data: edit_requestCopy,
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        });
+      });
+
+      $('#requestIsoCopyConfiguration').on('click', '#requestCopy_Fillable', function() {
+        $(this).prop("checked") == true ? toggleFillable = 1 : toggleFillable = 0;
+
+        edit_requestCopy = {};
+        edit_requestCopy.toggleFillable = toggleFillable;
+        $.ajax({
+          type: 'PUT',
+          url:  'documentcopy/requestconfig/iso/'+requestCopyID+'/edit',
+          data: edit_requestCopy,
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        });
+      });
+
+      $('#requestIsoCopyConfiguration').on('click', '#requestCopy_RawFile', function() {
+        $(this).prop("checked") == true ? toggleRawFile = 1 : toggleRawFile = 0;
+
+        edit_requestCopy = {};
+        edit_requestCopy.toggleRawFile = toggleRawFile;
+        $.ajax({
+          type: 'PUT',
+          url:  'documentcopy/requestconfig/iso/'+requestCopyID+'/edit',
+          data: edit_requestCopy,
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        });
+      });
+    });
   </script>
   <script>
     $(document).ready(function () {
@@ -398,7 +522,7 @@
       var datatable = $('#datatable').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-        
+        "order": [[ 0, "desc" ]],
         initComplete: function () {
           var api = this.api();
 

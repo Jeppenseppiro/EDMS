@@ -34,16 +34,17 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::post('add-user', 'UsersController@store');
 
     //---------- Request Entry ----------//
-    Route::get('documentrequest', 'RequestEntriesController@index')->name('documentrequest');
+    //Route::get('documentrequest', 'RequestEntriesController@index')->name('documentrequest');
+    Route::get('documentrequest/{tag}', 'RequestEntriesController@index');
     //Route::put('/documentrequest', 'RequestEntriesController@index')->name('documentrequest');
-    Route::post('documentrequest/iso/store', 'RequestEntriesController@store_iso');
-    Route::post('documentrequest/legal/store', 'RequestEntriesController@store_legal');
-    Route::put('documentrequest/{id}', 'RequestEntriesController@update');
-    Route::post('documentrequest/requesthistory/iso/{id}', 'RequestEntriesController@history_iso');
-    Route::post('documentrequest/requesthistory/legal/{id}', 'RequestEntriesController@history_legal');
-    Route::get('requestentryhistory', 'RequestEntryHistoriesController@index');
-    Route::post('requestentryhistory/iso/store', 'RequestEntryHistoriesController@iso_store')->name('requestentryhistory_iso');
-    Route::post('requestentryhistory/legal/store', 'RequestEntryHistoriesController@legal_store')->name('requestentryhistory_legal');
+    Route::post('documentrequest/documentrequest/iso/store', 'RequestEntriesController@store_iso');
+    Route::post('documentrequest/documentrequest/legal/store', 'RequestEntriesController@store_legal');
+    Route::put('documentrequest/documentrequest/{id}', 'RequestEntriesController@update');
+    Route::post('documentrequest/documentrequest/requesthistory/iso/{id}', 'RequestEntriesController@history_iso');
+    Route::post('documentrequest/documentrequest/requesthistory/legal/{id}', 'RequestEntriesController@history_legal');
+    Route::get('documentrequest/requestentryhistory', 'RequestEntryHistoriesController@index');
+    Route::post('documentrequest/requestentryhistory/iso/store', 'RequestEntryHistoriesController@iso_store')->name('requestentryhistory_iso');
+    Route::post('documentrequest/requestentryhistory/legal/store', 'RequestEntryHistoriesController@legal_store')->name('requestentryhistory_legal');
     //Route::post('requestentryhistory/upload', 'FileUploadsController@store');
     //Email
     /* Route::get('documentrequest/iso/store/email', function(){
@@ -56,25 +57,29 @@ Route::group( ['middleware' => 'auth'], function(){
 
 
     //---------- Request Copy ----------//
-    Route::get('documentcopy', 'RequestCopiesController@index')->name('documentcopy');
-    Route::post('documentcopy/iso/store', 'RequestCopiesController@store_iso')->name('documentcopy_iso');
-    Route::post('documentcopy/requesthistory/iso/{id}', 'RequestCopiesController@history_iso')->name('documentcopyhistory_iso');
-    Route::post('requestcopyhistory/iso/store', 'RequestCopyHistoriesController@iso_store')->name('requestcopyhistory_iso');
+    Route::get('documentcopy/{tag}', 'RequestCopiesController@index');
+    Route::post('documentcopy/documentcopy/iso/store', 'RequestCopiesController@store_iso')->name('documentcopy_iso');
+    Route::post('documentcopy/documentcopy/requesthistory/iso/{id}', 'RequestCopiesController@history_iso')->name('documentcopyhistory_iso');
+    Route::post('documentcopy/documentcopy/requestconfig/iso/{id}', 'RequestCopiesController@config_iso')->name('documentcopyconfig_iso');
+    Route::put('documentcopy/documentcopy/requestconfig/iso/{id}/edit', 'RequestCopiesController@edit_iso')->name('documentcopyedit_iso');
+    Route::post('documentcopy/requestcopyhistory/iso/store', 'RequestCopyHistoriesController@iso_store')->name('requestcopyhistory_iso');
 
     
     //---------- Document Library ----------//
-    Route::get('documentlibrary', 'DocumentLibrariesController@index')->name('documentlibrary');
-    Route::get('documentlibrary/category/tag/{id}', 'DocumentLibrariesController@dependentCategory');
-    Route::post('documentlibrary/store', 'DocumentLibrariesController@store');
-    Route::post('documentlibrary/user/access', 'DocumentLibraryAccessesController@store');
-    Route::post('documentlibrary/user/access/{id}', 'DocumentLibraryAccessesController@access');
-    Route::post('documentlibrary/revision/{id}', 'DocumentLibrariesController@revision');
+    //Route::get('documentlibrary', 'DocumentLibrariesController@index')->name('documentlibrary');
+    Route::get('documentlibrary/{tag}', 'DocumentLibrariesController@index');
+
+    Route::get('documentlibrary/documentlibrary/category/tag/{id}', 'DocumentLibrariesController@dependentCategory');
+    Route::post('documentlibrary/documentlibrary/store', 'DocumentLibrariesController@store')->name('documentlibrary.store');
+    Route::post('documentlibrary/documentlibrary/user/access', 'DocumentLibraryAccessesController@store');
+    Route::post('documentlibrary/documentlibrary/user/access/{id}', 'DocumentLibraryAccessesController@access');
+    Route::post('documentlibrary/documentlibrary/revision/{id}', 'DocumentLibrariesController@revision');
     
-    Route::post('documentrevision/store', 'DocumentRevisionsController@store');
-    Route::post('documentrevision/user/access', 'DocumentFileRevisionAccessesController@store');
-    Route::post('documentrevision/user/access/{id}', 'DocumentFileRevisionAccessesController@access');
-    Route::put('documentrevision/user/access/{id}/edit', 'DocumentFileRevisionAccessesController@edit');
-    Route::put('documentrevision/file/{id}/edit', 'DocumentFileRevisionsController@edit');
+    Route::post('documentlibrary/documentrevision/store', 'DocumentRevisionsController@store');
+    Route::post('documentlibrary/documentrevision/user/access', 'DocumentFileRevisionAccessesController@store');
+    Route::post('documentlibrary/documentrevision/user/access/{id}', 'DocumentFileRevisionAccessesController@access');
+    Route::put('documentlibrary/documentrevision/user/access/{id}/edit', 'DocumentFileRevisionAccessesController@edit');
+    Route::put('documentlibrary/documentrevision/file/{id}/edit', 'DocumentFileRevisionsController@edit');
 
     //---------- E-Transmittal ----------//
     Route::get('etransmittal', 'EtransmittalsController@index')->name('etransmittal');
@@ -83,9 +88,14 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::post('etransmittal/history/store', 'EtransmittalsController@history_store')->name('etransmittal_history_store');
     Route::post('etransmittal/history/{etransmittalID}', 'EtransmittalsController@history_view');
 
+    //---------- Permitting and Licenses ----------//
+    Route::get('permittingandlicenses', 'PermitLicensesController@index')->name('permittingandlicenses');
+    Route::post('permittingandlicenses/store', 'PermitLicensesController@store')->name('permittingandlicenses.store');
+
     //---------- PDF View ----------//
     Route::get('/file/{link}', 'FilesController@documentFile')->name('pdf_iso');
     Route::get('/file/requestcopy/{uniquelink}', 'FilesController@requestCopy');
+    Route::get('/file/permittinglicenses/{link}', 'FilesController@permittingLicenses')->name('permittingandlicenses.file');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
 
     

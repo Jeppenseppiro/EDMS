@@ -40,7 +40,6 @@
         </ul>
       </li>
 
-      
       <li>
         <ul class="collapsible collapsible-accordion">
 
@@ -57,21 +56,55 @@
             <div class="collapsible-body">
               <ul>
                 <li>
-                  <a href="{{ route('documentrequest') }}" class="waves-effect">
+                  <ul class="collapsible collapsible-accordion mt-0">
+                    <li><a class="collapsible-header waves-effect arrow-r">
+                      <i class="fas fa-chevron-right"></i>Document Management</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          <li><a href="{{ url('documentrequest/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Entry</a></li>
+                          <li><a href="{{ url('documentcopy/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Copy</a></li>
+                          <li><a href="{{ url('documentlibrary/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Document Library</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <ul class="collapsible collapsible-accordion mt-0">
+                    <li><a class="collapsible-header waves-effect arrow-r">
+                      <i class="fas fa-chevron-right"></i>Legal</a>
+                      <div class="collapsible-body">
+                        <ul>
+                          <li><a href="{{ url('documentrequest/legal') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Entry</a></li>
+                          <li><a href="{{ url('documentcopy/legal') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Copy</a></li>
+                          <li><a href="{{ url('documentlibrary/legal') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Document Library</a></li>
+                        </ul>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+                <!--<li>
+                  {{-- <a href="{{ route('documentrequest') }}" class="waves-effect"> --}}
                     {{-- <span class="sv-slim">DSB</span> --}}
                     <span class="sv-normal">Request Entry</span>
                   </a>
                 </li>
                 <li>
-                  <a href="{{ route('documentcopy') }}" class="waves-effect">
+                  {{-- <a href="{{ route('documentcopy') }}" class="waves-effect"> --}}
                     {{-- <span class="sv-slim">DSB</span> --}}
                     <span class="sv-normal">Request Copy</span>
                   </a>
                 </li>
                 <li>
-                  <a href="{{ route('documentlibrary') }}" class="waves-effect">
+                  {{-- <a href="{{ route('documentlibrary') }}" class="waves-effect"> --}}
                     {{-- <span class="sv-slim">DSB</span> --}}
                     <span class="sv-normal">Document Library</span>
+                  </a>
+                </li>-->
+                <li>
+                  <a href="{{ route('permittingandlicenses') }}" class="waves-effect">
+                    {{-- <span class="sv-slim">DSB</span> --}}
+                    <span class="sv-normal">Permitting and Licenses</span>
                   </a>
                 </li>
                 <li>
@@ -80,6 +113,7 @@
                     <span class="sv-normal">E-Transmittal</span>
                   </a>
                 </li>
+                
               </ul>
             </div>
           </li>

@@ -23,22 +23,31 @@ class DocumentLibrariesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($tag)
     {
-        if(auth()->user()->role == 1 || auth()->user()->role == 3){
-            $document_libraries = DocumentLibrary::with('user','documentCategory','documentTag','documentDepartment','documentCompany', 'documentRevision.documentFileRevision.documentUserAccess')
-                                                ->get();
-        } else {
-            $document_libraries = DocumentLibrary::with('user','documentCategory','documentTag','documentDepartment','documentCompany', 'documentRevision.documentFileRevision.documentUserAccess')
-                                                ->whereHas('documentRevision.documentFileRevision.documentUserAccess', function ($userAccess) {
-                                                    $userAccess->where('user_access','=',auth()->user()->id);
-                                                })
-                                                ->get();
+        if($tag == 'iso'){
+            $tagView = 'iso';
+            $tagID = '1';
+        } elseif($tag == 'legal'){
+            $tagView = 'legal';
+            $tagID = '2';
         }
+        
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
+
+        $document_libraries = DocumentLibrary::with('user','documentCategory','documentTag','documentDepartment','documentCompany', 'documentRevision.documentFileRevision.documentUserAccess')
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query, $role) {
+                                                    $query->whereHas('documentRevision.documentFileRevision.documentUserAccess', function ($userAccess) {
+                                                        $userAccess->where('user_access','=',auth()->user()->id);
+                                                    });
+                                                })
+                                                ->where('tag', '=', $tagID)
+                                                ->get();
         
                                     //->join('request_types', 'request_iso_entry_histories.status', '=', 'request_types.id')
                                     //->where('status','=',4)->get();
-        $document_categories = DocumentCategory::get();
+        $document_categories = DocumentCategory::where([['tag', '=', $tagID],['status', '=', 'Active'],])->get();
         $document_departments = Department::get();
         $document_companies = Company::get();
         $tags = Tag::get();
@@ -58,6 +67,10 @@ class DocumentLibrariesController extends Controller
                 'document_companies' => $document_companies,
                 'tags' => $tags,
                 'users' => $users,
+                'dateToday' => $dateToday,
+                'tagView' => $tagView,
+                'tagID' => $tagID,
+                'role' => $role,
             )
         );
         return $document_libraries;
