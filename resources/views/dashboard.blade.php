@@ -82,15 +82,21 @@
 @section('script')
   
   <script>
+    var yData_requestEntries = JSON.parse('{!! json_encode($requestEntries_Months) !!}');
+    var xData_requestEntries = JSON.parse('{!! json_encode($requestEntries_MonthCount) !!}');
+
+    var yData_requestCopies = JSON.parse('{!! json_encode($requestCopies_Months) !!}');
+    var xData_requestCopies = JSON.parse('{!! json_encode($requestCopies_MonthCount) !!}');
+
     var ctxB = document.getElementById("dashboardChart").getContext('2d');
     var myChart = new Chart(ctxB, {
       plugins: [ChartDataLabels],
       type: 'bar',
       data: {
-        labels: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+        labels: yData_requestEntries,
         datasets: [{
           label: 'Request Entry',
-          data : [{{$requestEntries->count()}},{{$requestEntries->count()}}],
+          data : xData_requestEntries,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)'
           ],
@@ -98,9 +104,9 @@
             'rgba(255,99,132,1)'
           ],
           borderWidth: 2
-        }/* , {
+        }/*, {
           label: 'Request Copy',
-          data : [{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}}],
+          data : xData_requestCopies,
           backgroundColor: [
             'rgba(54, 162, 235, 0.2)'
           ],
