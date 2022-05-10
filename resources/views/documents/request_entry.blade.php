@@ -149,7 +149,8 @@
           $(".requestEntryAttachment").show();
         } else if($('#requestEntry_RequestType').val() == 3 || $('#requestEntry_RequestType').val() == 4){
           $(".requestEntryAttachment").hide();
-          //$(".requestEntryDocumentRevised").hide();
+          $(".requestEntryDocumentRevised").show();
+          $("#requestEntry_DocumentRevised").prop('required',true);
         }
         
         else {

@@ -183,8 +183,7 @@
                 <label for="requestEntry_RemarksUpdate">Remarks</label>
                 </div>
               </div>
-              <div class="col-sm-12">
-
+              <div class="col-sm-12" hidden>
                 <div class="file-field">
                   <div class="btn btn-primary btn-sm float-left">
                     <span>Choose file</span>

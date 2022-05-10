@@ -8,14 +8,39 @@ use App\DocumentLibrary;
 use App\Etransmittal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index(){
-        $requestEntries = RequestIsoEntry::get();
-        $requestCopies = RequestIsoCopy::get();
+        $requestEntries = RequestIsoEntry::select('id', 'created_at')->get()->groupBy(function($data){
+            return Carbon::parse($data->created_at)->format('M');
+        });
+
+        $requestEntries_Months = ['January','February','March','April','May','June,','July','August','September','October','November','December'];
+        $requestEntries_MonthCount = [];
+        foreach ($requestEntries as $month => $values) {
+            $requestEntries_Months[] = $month;
+            $requestEntries_MonthCount[] = count($values);
+        }
+        //dd($requestEntries);
+        ///////////////////////////////////////////////////////////////
+
+        $requestCopies = RequestIsoCopy::select('id', 'created_at')->get()->groupBy(function($data){
+            return Carbon::parse($data->created_at)->format('M');
+        });
+
+        $requestCopies_Months = [];
+        $requestCopies_MonthCount = [];
+        foreach ($requestEntries as $month => $values) {
+            $requestCopies_Months[] = $month;
+            $requestCopies_MonthCount[] = count($values);
+        }
+
         $documentLibraries = DocumentLibrary::get();
         $eTransmittals = Etransmittal::get();
+
+        
 
         /* $requestEntries_Chart = RequestIsoEntry::
                                 select(DB::raw("COUNT(*) as count"))
@@ -42,6 +67,10 @@ class DashboardController extends Controller
                 'requestCopies' => $requestCopies,
                 'documentLibraries' => $documentLibraries,
                 'eTransmittals' => $eTransmittals,
+                'requestEntries_Months' => $requestEntries_Months,
+                'requestEntries_MonthCount' => $requestEntries_MonthCount,
+                'requestCopies_Months' => $requestCopies_Months,
+                'requestCopies_MonthCount' => $requestCopies_MonthCount,
             )
         );
     }
