@@ -795,6 +795,7 @@
 
             $("#documentFileRevisionAccess_Users").on({    
               "change": function() {
+                console.log("changed");
                 if ($('option:selected', this).text() === "Users") {
                   $('.documentFileRevisionUserAccessSubmit').hide();
                 } else {
