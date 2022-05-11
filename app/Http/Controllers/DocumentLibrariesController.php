@@ -55,6 +55,7 @@ class DocumentLibrariesController extends Controller
                         /* ->whereHas('getUserAccess', function ($userAccess) {
                             $userAccess->where('user_access','!=',auth()->user()->id);
                         }) */
+                        ->where('id', '=', 9)
                         ->get();
 
         
