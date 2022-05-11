@@ -288,9 +288,11 @@
                       <div class="col-sm-12">
                         <select class="mdb-select md-form" id="documentFileRevisionAccess_Users" name="documentFileRevisionAccess_Users[]" searchable="Select users to have access" multiple>
                           <option value="" disabled selected>Users</option>
+                          <div id="documentFileRevisionAccess_UsersDropdown">
                           @foreach ($users as $user)
                             <option value="{{$user->id}}">{{$user->name}}</option>
                           @endforeach
+                          </div>
                         </select>
                         {{-- <button class="btn-save btn btn-primary btn-sm">Save</button> --}}
                       </div>
@@ -322,7 +324,7 @@
 
                 
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer documentFileRevisionUserAccessSubmit">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btn-documentFileRevisionUserAccessSubmit">Submit</button>
               </div>
@@ -557,7 +559,10 @@
                           window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
                         //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
-                        documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
+                        documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a><br>';
+                        if(userRoles.includes("1") == true || userRoles.includes("3") == true){
+                          documentLibraryRevision += 'Password: '+data[i].document_file_revision[x].file_password;
+                        }
                       documentLibraryRevision += '</td>';
 
                       documentLibraryRevision += '<td>';
@@ -692,7 +697,9 @@
         $('.btn-documentFileRevision_UserAccess').on('click', function(e){
           var documentRevisionID = $(this).data("id");
           $('#modalFileRevisionUsers').modal('show');
+          $(".documentFileRevisionUserAccessSubmit").hide();
           $('#documentFileRevisionAccess_ID').val(documentRevisionID);
+
           $.ajax({
             dataType: 'JSON',
             type: 'POST',
@@ -764,6 +771,46 @@
                 headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
               });
             }); */
+            
+            
+            $('#documentFileRevisionUserAccess').on('click', '#documentFileRevisionAccess_Users', function() {
+              alert("asd");
+              var documentFileRevisionAccess_UsersDropdown = '<option>d</option>';
+              $('#documentFileRevisionAccess_UsersDropdown').append(documentFileRevisionAccess_UsersDropdown);
+            });
+
+            /* $("#documentFileRevisionAccess_Users").click(function() {
+              alert( "Handler for .click() called." );
+            }); */
+
+            /* $('#documentFileRevisionAccess_Users').on("click change", function(e) {
+              alert("asd");
+
+              if ($('option:selected', this).text() === "Users") {
+                $('.documentFileRevisionUserAccessSubmit').hide();
+              } else {
+                $('.documentFileRevisionUserAccessSubmit').show();
+              }
+            }); */
+
+            $("#documentFileRevisionAccess_Users").on({    
+              "change": function() {
+                console.log("changed");
+                if ($('option:selected', this).text() === "Users") {
+                  $('.documentFileRevisionUserAccessSubmit').hide();
+                } else {
+                  $('.documentFileRevisionUserAccessSubmit').show();
+                }
+              },
+
+              "focus": function() {
+                alert( "Handler for .click() called." );
+              },
+
+              "blur": function() {
+                alert( "Handler for .click() called." );
+              }
+            });
 
             $('#documentFileRevisionUserAccess').on('click', '.btn-documentFileRevision_CanPrint', function() {
               documentFileRevision_AccessID = $(this).data("id");
