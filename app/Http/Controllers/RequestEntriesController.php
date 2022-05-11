@@ -80,7 +80,7 @@ class RequestEntriesController extends Controller
     {
         // Validation
         $this->validate($request, [
-            'requestEntry_Attachment' => 'nullable|max:3999'
+            'requestEntry_Attachment' => 'nullable|max:100000'
         ]);
 
         
