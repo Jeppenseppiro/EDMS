@@ -12,6 +12,8 @@
   @include('includes.modals.requestlegal')
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
+      @include('includes.errormessage')
+      
       @if(in_array(2, $role))
         <div class="row">
           <div class="container">
