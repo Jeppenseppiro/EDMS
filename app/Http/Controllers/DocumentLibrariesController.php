@@ -171,6 +171,11 @@ class DocumentLibrariesController extends Controller
         // Document File Revision
         if ($request->hasFile('documentLibrary_Attachment')) {
             foreach ($request->file('documentLibrary_Attachment') as $key => $attachment) {
+                $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
+                shuffle($seed); // probably optional since array_is randomized; this may be redundant
+                $fileRevision_Password = '';
+                foreach (array_rand($seed, 6) as $k) $fileRevision_Password .= $seed[$k];
+
                 $fileNameWithExt = $attachment->getClientOriginalName();
                 $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $attachment->getClientOriginalExtension();
@@ -186,6 +191,7 @@ class DocumentLibrariesController extends Controller
                 $documentFileRevision->attachment = $fileNameToStore;
                 $documentFileRevision->attachment_mask = $path_basename;
                 $documentFileRevision->type = $attachmentTypes[$key];
+                $documentFileRevision->file_password = $fileRevision_Password;
                 $documentFileRevision->user = auth()->user()->id;
                 $documentFileRevision->save();
             }
