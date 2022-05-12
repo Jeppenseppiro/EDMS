@@ -532,17 +532,20 @@
       }).done(function(data){
         $(".completed").remove();
         $('#updateDocumentLibrary_ID').val(documentLibraryID);
-        for(var i = 0; i < data.length; i++){
+        for(let i = 0; i < data.length; i++){
           var documentLibraryRevision = '<li class="completed">';
               documentLibraryRevision += '<a>';
               documentLibraryRevision += '<span class="circle">+</span>';
               documentLibraryRevision += '<span class="label">'+data[i].revision+'</span>';
               documentLibraryRevision += '</a>';
-              documentLibraryRevision += '<div class="step-content" style="background-color: #e8e8e8; min-width:90%;">';
 
-              documentLibraryRevision += '<table class="table table-sm table-bordered table_documentRevision'+data[i].id+'">';
-                if(userRoles.includes("1") == true|| userRoles.includes("3") == true){
+              i == 0 ? documentLibraryRevision += '<div class="step-content grey lighten-3" style=" min-width:90%;">' : documentLibraryRevision += '<div class="step-content brown lighten-3" style="min-width:90%;">';
+              i == 0 ? documentLibraryRevision += '<table class="table table-sm  table_documentRevision'+data[i].id+'">' : documentLibraryRevision += '<table class="table table-sm text-white table_documentRevision'+data[i].id+'">';
+              
+                if((userRoles.includes("1") == true || userRoles.includes("3") == true) && i == 0){
                   documentLibraryRevision += '<button data-id="'+data[i].id+'" style="text-align: center" type="button" class="btn btn-sm btn-info px-3 float-right attachment_documentRevision"><i class="fa-solid fa-plus"></i></button>';
+                } else if(i > 0) {
+                  documentLibraryRevision += '<span class="badge badge-danger float-right">Obsolete</span>';
                 }
                 
                 for(var x = 0; x < data[i].document_file_revision.length; x++){
@@ -559,7 +562,7 @@
                           window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
                         //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
-                        documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a><br>';
+                        documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
                         if(userRoles.includes("1") == true || userRoles.includes("3") == true){
                           documentLibraryRevision += 'Password: '+data[i].document_file_revision[x].file_password;
                         }
@@ -622,7 +625,6 @@
                             }
                           }
                         } */
-                      console.log(data[i].document_file_revision[x].is_discussed);
                       }
                       
 
