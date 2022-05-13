@@ -388,7 +388,7 @@
                             
                             
                             <td>
-                              <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-documentLibrary_View"><i class="fa-solid fa-eye"></i></button>
+                              <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" title="Update Document Library" class="btn btn-sm btn-success px-2 btn-documentLibrary_View"><i class="fa-solid fa-arrows-rotate"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentLibrary_User"><i class="fa-solid fa-user"></i></button> --}}
                               {{-- <button id="{{$key}}" data-id="{{$document_library->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-documentLibrary_Edit"><i class="fa-solid fa-pen-line"></i></button> --}}
                             </td>
