@@ -208,7 +208,7 @@ class DocumentLibrariesController extends Controller
                                                     ['document_library_id', '=', $id],
                                                 ])
                                                 ->orderBy('id', 'desc')
-                                                ->when(!in_array(1, $role), function ($q) {
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($q) {
                                                     $q->skip(0)->take(1);
                                                 })
                                                 ->get();

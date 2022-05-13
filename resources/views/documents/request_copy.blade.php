@@ -38,7 +38,7 @@
                             <option value={{$user->id}}>{{$user->name}}</option>
                           @endforeach
                         </select>
-                        <label class="mdb-main-label">Requestor</label>
+                        <label class="mdb-main-label">Requestors</label>
                       </div>
                     </div>
                   </div>
@@ -321,7 +321,9 @@
       $('.requestCopy_Requestor').attr("hidden",true);
     }
     
-    $('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
+    if(tagID == 2){
+      $('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
+    }
     var userRoles = role.split(',');
     //console.log(requestCopy_JSON);
     //$('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
