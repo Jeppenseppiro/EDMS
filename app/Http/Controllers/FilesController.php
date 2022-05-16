@@ -60,15 +60,15 @@ class FilesController extends Controller
             //User Access
             //Commit
             if($revision_file->documentUserAccess != null || auth()->user()->role == 1){
-                $pdfPassword1 = new Pdf([
+                $pdfPassword1 = new Pdf($file, [
                                     'command' => base_path().'\PDFtk\bin\pdftk.exe',
                                     'useExec' => true,
                                 ]);
-                $pdfPassword2 = new Pdf([
+                $pdfPassword2 = new Pdf($file, [
                                     'command' => base_path().'\PDFtk\bin\pdftk.exe',
                                     'useExec' => true,
                                 ]);
-                $pdfPassword3 = new Pdf([
+                $pdfPassword3 = new Pdf($file, [
                                     'command' => base_path().'\PDFtk\bin\pdftk.exe',
                                     'useExec' => true,
                                 ]);
@@ -183,19 +183,18 @@ class FilesController extends Controller
                 
                 //User Access
                 if($request_copy->documentUserAccess != null || auth()->user()->role == 1){
-                    //dd($request_copy);
-                    $pdfPassword1 = new Pdf([
-                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
-                                    'useExec' => true,
-                                ]);
-                    $pdfPassword2 = new Pdf([
-                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
-                                    'useExec' => true,
-                                ]);
-                    $pdfPassword3 = new Pdf([
-                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
-                                    'useExec' => true,
-                                ]);
+                    $pdfPassword1 = new Pdf($file, [
+                                        'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                        'useExec' => true,
+                                    ]);
+                    $pdfPassword2 = new Pdf($file, [
+                                        'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                        'useExec' => true,
+                                    ]);
+                    $pdfPassword3 = new Pdf($file, [
+                                        'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                        'useExec' => true,
+                                    ]);
 
                     $pdf = new Pdf();
 
