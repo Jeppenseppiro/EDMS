@@ -58,6 +58,7 @@ class FilesController extends Controller
             
             
             //User Access
+            //Commit
             if($revision_file->documentUserAccess != null || auth()->user()->role == 1){
                 $pdfPassword1 = new Pdf([
                                     'command' => base_path().'\PDFtk\bin\pdftk.exe',
