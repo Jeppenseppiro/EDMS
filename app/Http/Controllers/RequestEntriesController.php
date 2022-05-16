@@ -15,8 +15,8 @@ use App\Notifications\SendRequestEntry;
 use App\RequestType;
 use App\RequestEntryStatus;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 class RequestEntriesController extends Controller
 {
     /**
@@ -47,7 +47,7 @@ class RequestEntriesController extends Controller
                                                             ['tag', '!=', '1'],
                                                             ['status', '=', 'Active']
                                                     ])->get();
-        $document_libraries = DocumentLibrary::get();
+        $document_libraries = DocumentLibrary::where('tag', '=', 1)->get();
         $request_types = RequestType::where('status', '=', 'Active')->get();
         $request_iso_statuses = RequestEntryStatus::where([['tag', '=', '1'], ['id', '!=', '1']])->get();
         $request_legal_statuses = RequestEntryStatus::where([['tag', '=', '2'], ['id', '!=', '7']])->get();
@@ -116,13 +116,16 @@ class RequestEntriesController extends Controller
             $fileNameWithExt = $request->file('requestEntry_Attachment')->getClientOriginalName();
             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('requestEntry_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = time().'-'.$filename.'.'.$extension;
-            $request->file('requestEntry_Attachment')->move(public_path().'/storage/resource/uploads/iso/', $fileNameToStore);
+            $fileNameToStore = $filename.'.'.$extension;
+
+            $path = Storage::putFile('public/request entry/' . $extension . '/iso/', $request->file('requestEntry_Attachment'));
+            $path_basename = basename($path);
 
             $fileUpload = new FileUpload;
             $fileUpload->request_entry = $requestIsoEntry->id;
             $fileUpload->request_entry_history = $requestEntryHistory->id;
             $fileUpload->file_upload = $fileNameToStore;
+            $fileUpload->file_mask = $path_basename;
             $fileUpload->tag = 1;
             $fileUpload->user = $request->requestor_name;
             $fileUpload->save();
@@ -161,7 +164,7 @@ class RequestEntriesController extends Controller
     {
         // Validation
         $this->validate($request, [
-            'requestLegalEntry_Attachment' => 'nullable|max:3999'
+            'requestLegalEntry_Attachment' => 'nullable|max:100000'
         ]);
 
 
@@ -187,17 +190,18 @@ class RequestEntriesController extends Controller
             $fileNameWithExt = $request->file('requestLegalEntry_Attachment')->getClientOriginalName();
             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('requestLegalEntry_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = time().'-'.$filename.'.'.$extension;
-            //$path = $request->file('requestLegalEntry_Attachment')->storeAs('public/storage/resource/uploads/legal', $fileNameToStore);
-            $request->file('requestLegalEntry_Attachment')->move(public_path().'/storage/resource/uploads/legal/', $fileNameToStore);
-            //$fileNameToStore = $request->file('documentLibrary_Attachment');
+            $fileNameToStore = $filename.'.'.$extension;
+
+            $path = Storage::putFile('public/request entry/' . $extension . '/legal/', $request->file('requestLegalEntry_Attachment'));
+            $path_basename = basename($path);
 
             $fileUpload = new FileUpload;
             $fileUpload->request_entry = $requestLegalEntry->id;
             $fileUpload->request_entry_history = $requestEntryHistory->id;
             $fileUpload->file_upload = $fileNameToStore;
+            $fileUpload->file_mask = $path_basename;
             $fileUpload->tag = 2;
-            $fileUpload->user = $request->requestLegalEntry_User;
+            $fileUpload->user = $request->requestor_name;
             $fileUpload->save();
         }
 
