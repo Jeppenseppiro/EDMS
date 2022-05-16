@@ -283,7 +283,6 @@ class FilesController extends Controller
         $extension = $permittingLicense->attachment;
         $extension = explode(".",$extension);
 
-        //dd($revision_file);
         $file = storage_path('app/public/document/others/'.$permittingLicense->attachment_mask);
 
         if($extension[1] == 'pdf'){
