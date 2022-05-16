@@ -44,7 +44,9 @@ class RequestCopiesController extends Controller
                                             ->orderBy('id', 'DESC')
                                             ->get();
 
-        $users = User::where('department', '=', auth()->user()->department)->get();
+        $users = User:: when(!in_array(1, $role), function ($query) {
+                            $query->where('department', '=', auth()->user()->department);
+                        })->get();
         $document_libraries = DocumentLibrary::where([['company', '=', auth()->user()->company], ['tag', '=', $tagID]])->get();
         $request_iso_copy_statuses = RequestIsoCopyStatus::where("is_active", '=', 'Active')->get();
         $request_iso_copy_types = RequestIsoCopyType::get();

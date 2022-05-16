@@ -84,7 +84,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" value="{{ old('documentLibrary_Revision') }}">
+                      <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" value="0" readonly>
                       <label for="documentLibrary_Revision">Revision No</label>
                     </div>
                   </div>
@@ -144,7 +144,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" id="" class="btn btn-info btn-documentLibrarySubmit">Submit</button>
+                <button type="submit" id="" class="btn btn-primary btn-documentLibrarySubmit">Submit</button>
               </div>
             </form>
           </div>
@@ -167,12 +167,13 @@
                 @if(auth()->user()->role == 1 || auth()->user()->role == 3)
                   <input id="updateDocumentLibrary_ID" name="updateDocumentLibrary_ID" type="hidden" value=""/>
                   <input id="updateDocumentLibrary_UserID" name="updateDocumentLibrary_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
+                  <input id="documentLibrary_Tag" name="documentLibrary_Tag" type="hidden" value="{{ $tagID }}"/>
                     <div class="container">
                       <div class="row">
                         <div class="col-sm-6">
                           <div class="md-form">
                             <i class="fa-solid fa-input-text prefix"></i>
-                            <input type="text" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" required>
+                            <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" required>
                             <label for="documentLibrary_Revision">Revision</label>
                           </div>
                         </div>
@@ -430,7 +431,7 @@
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');
 
-      $('#documentLibrary_Tag').on('change', e => {
+      /* $('#documentLibrary_Tag').on('change', e => {
         documentTagID = $('#documentLibrary_Tag option:selected').not('option:disabled').val();
 
         
@@ -449,7 +450,7 @@
             $('#documentLibrary_Category').append('<option value="'+ data.id +'">' + data.category_description+ '</option>');
           });
         });
-      }).trigger('change');
+      }).trigger('change'); */
       
 
       $('#documentLibrary_AddFileUpload').on('click', function(e){

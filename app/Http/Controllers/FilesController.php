@@ -5,6 +5,7 @@ use App\PermitLicense;
 use App\DocumentRevision;
 use App\DocumentFileRevision;
 use App\DocumentLibrary;
+use App\Etransmittal;
 use App\RequestIsoCopy;
 use App\RequestCopyHistory;
 use tecknickom\tcpdf\tcpdf;
@@ -45,7 +46,7 @@ class FilesController extends Controller
             elseif($revision_file->documentRevision->documentLibrary->tag == 2){ $fileCategory = 'legal'; }
             elseif($revision_file->documentRevision->documentLibrary->tag == 3){ $fileCategory = 'other'; }
             
-            $extension = $revision_file->attachment_mask;
+            $extension = $revision_file->attachment;
             $extension = explode(".",$extension);
             $file = storage_path('app/public/document/'.$extension[1].'/'.$fileCategory.'/').$link;
             $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
@@ -243,14 +244,30 @@ class FilesController extends Controller
         }
     }
 
-    public function permittingLicenses($link)
+    public function etransmittalFile($link)
     {
-        $revision_file = PermitLicense::where([['attachment_mask', '=', $link],])->first();
-        $extension = $revision_file->attachment_mask;
+        $etransmittal = Etransmittal::where([['attachment_mask', '=', $link],])->first();
+        $extension = $etransmittal->attachment;
         $extension = explode(".",$extension);
 
         //dd($revision_file);
-        $file = storage_path('app/public/document/others/'.$revision_file->attachment_mask);
+        $file = storage_path('app/public/etransmittal/'.$extension[1 ].'/'.$etransmittal->attachment_mask);
+
+        if($extension[1] == 'pdf'){
+            return response()->file($file);
+        } else {
+            return response()->download($file);
+        }
+    }
+
+    public function permittingLicenses($link)
+    {
+        $permittingLicense = PermitLicense::where([['attachment_mask', '=', $link],])->first();
+        $extension = $permittingLicense->attachment;
+        $extension = explode(".",$extension);
+
+        //dd($revision_file);
+        $file = storage_path('app/public/document/others/'.$permittingLicense->attachment_mask);
 
         if($extension[1] == 'pdf'){
             return response()->file($file);

@@ -117,12 +117,13 @@
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth()+01).padStart(2, '0'); //January is 0!
+    var mm_datepicker = String(today.getMonth()).padStart(2, '0'); //January is 0!
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
 
     // Data Picker Initialization
     $('.datepicker').pickadate({
-      min: new Date(yyyy,mm,dd),
+      min: new Date(yyyy,mm_datepicker,dd),
       format: 'yyyy-mm-dd',
       formatSubmit: 'yyyy-mm-dd',
     });
