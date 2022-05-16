@@ -268,7 +268,6 @@ class FilesController extends Controller
         $extension = $etransmittal->attachment;
         $extension = explode(".",$extension);
 
-        //dd($revision_file);
         $file = storage_path('app/public/etransmittal/'.$extension[1 ].'/'.$etransmittal->attachment_mask);
 
         if($extension[1] == 'pdf'){
