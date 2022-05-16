@@ -97,15 +97,13 @@
                 <i class="fa-solid fa-square-caret-down prefix"></i>
                 <div class="md-form py-0 ml-5">
                   <select id="requestEntry_DocumentRevised" name="requestEntry_DocumentRevised" class="mdb-select" searchable="Search document to be Revised">
-                    <option class="mr-1" value="" disabled selected>Document to be Revised</option>
+                    <option class="mr-1 requestEntry_DocumentReference" value="" disabled selected>Document to be Revised</option>
                     @foreach ($document_libraries as $document_library)
                       <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->revision}}</option>
                     @endforeach
                   </select>
-                  <label class="mdb-main-label">Document to be Revised</label>
-                  <div class="red-text">
-                    Note: Pevious revisions will automatically be <b>Obsolete</b> once new revision is uploaded
-                  </div>
+                  <label class="mdb-main-label requestEntry_DocumentReference">Document to be Revised</label>
+                  <div class="red-text requestEntry_DocumentReferenceNote"></div>
                 </div>
               </div>
             </div>
