@@ -48,7 +48,7 @@ class RequestEntriesController extends Controller
                                                             ['status', '=', 'Active']
                                                     ])->get();
         $document_libraries = DocumentLibrary::get();
-        $request_types = RequestType::get();
+        $request_types = RequestType::where('status', '=', 'Active')->get();
         $request_iso_statuses = RequestEntryStatus::where([['tag', '=', '1'], ['id', '!=', '1']])->get();
         $request_legal_statuses = RequestEntryStatus::where([['tag', '=', '2'], ['id', '!=', '7']])->get();
         $request_iso_histories = RequestEntryHistory::get();
@@ -193,7 +193,7 @@ class RequestEntriesController extends Controller
             //$fileNameToStore = $request->file('documentLibrary_Attachment');
 
             $fileUpload = new FileUpload;
-            $fileUpload->request_entry = $nextCurrentEntryID;
+            $fileUpload->request_entry = $requestLegalEntry->id;
             $fileUpload->request_entry_history = $requestEntryHistory->id;
             $fileUpload->file_upload = $fileNameToStore;
             $fileUpload->tag = 2;

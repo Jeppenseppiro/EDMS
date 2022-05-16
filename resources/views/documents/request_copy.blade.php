@@ -38,7 +38,7 @@
                             <option value={{$user->id}}>{{$user->name}}</option>
                           @endforeach
                         </select>
-                        <label class="mdb-main-label">Requestors</label>
+                        <label class="mdb-main-label">Requestor</label>
                       </div>
                     </div>
                   </div>
@@ -276,7 +276,7 @@
                             </td>
                             <td>{{$request_iso_copy->requestIsoCopyLatestHistory->status}}</td>
                             <td>
-                              <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" data-filetype="{{$request_iso_copy->requestCopyType->id}}" style="text-align: center" type="button" title="Update Request Copy" class="btn btn-sm btn-success px-2 btn-requestCopy_View"><i class="fa-solid fa-eye"></i></button>
+                              <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" data-filetype="{{$request_iso_copy->requestCopyType->id}}" style="text-align: center" type="button" title="Update Request Copy" class="btn btn-sm btn-success px-2 btn-requestCopy_View"><i class="fa-solid fa-arrows-rotate"></i></button>
                               @if(in_array(1, $role) || in_array(3, $role))
                                 <button id="{{$key}}" data-id="{{$request_iso_copy->id}}" data-filetype="{{$request_iso_copy->requestCopyType->id}}" data-fileid="{{$request_iso_copy->documentRequested->id}}" style="text-align: center" type="button" title="Configure Request Copy" class="btn btn-sm btn-info px-2 btn-requestCopy_Config"><i class="fa-solid fa-cog"></i></button>
                               @endif

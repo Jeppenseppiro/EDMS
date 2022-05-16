@@ -13,7 +13,7 @@
         <div class="modal-body">
           <input id="requestLegalEntry_User" name="requestLegalEntry_User" type="hidden" value="{{ Auth::user()->id }}"/>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12" hidden>
               <div class="md-form">
                 <i class="fa-solid fa-address-card prefix"></i>
                 <div class="md-form py-0 ml-5">
@@ -30,14 +30,14 @@
           </div>
           
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6" hidden>
               <div class="md-form">
                 <i class="fa-solid fa-calendar prefix"></i>
-                <input type="text" id="requestLegalEntry_DateRequest" name="requestLegalEntry_DateRequest" class="form-control datepicker" required>
+                <input type="text" id="requestLegalEntry_DateRequest" name="requestLegalEntry_DateRequest" class="form-control datepicker" value="{{$dateToday}}" required>
                 <label for="requestLegalEntry_DateRequest">Date Request</label>
               </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
               <div class="md-form">
                 <i class="fa-solid fa-square-caret-down prefix"></i>
                 <div class="md-form py-0 ml-5">
@@ -97,7 +97,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-info btn-requestLegalEntrySummaryInsert">Submit</button>
+          <button type="button" class="btn btn-primary btn-requestLegalEntrySummaryInsert">Submit</button>
           <button type="button" class="btn btn-warning btn-requestLegalEntrySummaryEdit">Edit</button>
         </div>
       </form>

@@ -6,7 +6,7 @@ use App\Etransmittal;
 use App\EtransmittalHistory;
 use App\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class EtransmittalsController extends Controller
 {
     /**
@@ -57,12 +57,28 @@ class EtransmittalsController extends Controller
         shuffle($seed); // probably optional since array_is randomized; this may be redundant
         $requestCopy_Code = '';
         foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k];
-
+        
         $etransmittal = new Etransmittal;
         $etransmittal->code = $requestCopy_Code;
+        
         $etransmittal->user = auth()->user()->id;
         $etransmittal->item = $request->etransmittal_Item;
         $etransmittal->recipient = $request->etransmittal_Recipient;
+        
+
+        if ($request->hasFile('etransmittal_Attachment')) {
+            $fileNameWithExt = $request->etransmittal_Attachment->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->etransmittal_Attachment->getClientOriginalExtension();
+            $fileNameToStore = $filename . '.' . $extension;
+
+            $path = Storage::putFile('public/etransmittal/'.$extension.'/', $request->etransmittal_Attachment);
+            $path_basename = basename($path);
+
+            $etransmittal->attachment = $fileNameToStore;
+            $etransmittal->attachment_mask = $path_basename;
+        }
+
         $etransmittal->save();
 
         $etransmittal_History = new EtransmittalHistory;

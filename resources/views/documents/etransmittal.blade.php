@@ -34,6 +34,21 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+                  <div class="col-sm-12 etransmittal_FileUpload">
+                    <div class="file-field">
+                      <div class="btn btn-primary btn-sm float-left">
+                        <span>Choose file</span>
+                        <input type="file" name="etransmittal_Attachment">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Attachment">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="md-form">
@@ -156,6 +171,7 @@
                       <thead>
                         <tr>
                           <th class="th-sm" width="">Code</th>
+                          <th class="th-sm" width="">Attachment</th>
                           <th class="th-sm" width="">Item</th>
                           <th class="th-sm" width="">Created By</th>
                           <th class="th-sm" width="">Recipient</th>
@@ -166,6 +182,9 @@
                         @foreach ($etransmittals as $key => $etransmittal)
                           <tr>
                             <td>{{$etransmittal->code}}</td>
+                            <td>
+                              <a target="_blank" href="{{url("/file/etransmittal/".$etransmittal->attachment_mask)}}"><span class="badge badge-success">{{$etransmittal->attachment}}</span></a>
+                            </td>
                             <td>{{$etransmittal->item}}</td>
                             <td>{{$etransmittal->getUser->name}}</td>
                             <td>{{$etransmittal->getRecipient->name}}</td>
@@ -219,7 +238,6 @@
               if(data[i].remarks){
                 etransmittalHistory += '<p>'+data[i].remarks+'</p>';
               }
-              
               etransmittalHistory += '<hr>';
               etransmittalHistory += '<div class="row">';
               etransmittalHistory += '<div class="col-sm">';

@@ -103,6 +103,9 @@
                     @endforeach
                   </select>
                   <label class="mdb-main-label">Document to be Revised</label>
+                  <div class="red-text">
+                    Note: Pevious revisions will automatically be <b>Obsolete</b> once new revision is uploaded
+                  </div>
                 </div>
               </div>
             </div>

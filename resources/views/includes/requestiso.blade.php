@@ -55,7 +55,7 @@
                       <td>{{$request_iso_entry->document_purpose_request}}</td>
                       <td>{{$request_iso_entry->requestIsoEntryLatestHistory->status}}</td>
                       <td >
-                        <button id="{{$key}}" data-id="{{$request_iso_entry->id}}" style="text-align: center" type="button" title="Update Request Entry" class="btn btn-sm btn-success px-2 btn-request_isoView"><i class="fa-solid fa-arrows-rotate"></i></button>
+                        <button id="{{$key}}" data-id="{{$request_iso_entry->id}}" style="text-align: center" type="button" title="Update Document Management Request Entry" class="btn btn-sm btn-success px-2 btn-request_isoView"><i class="fa-solid fa-arrows-rotate"></i></button>
                         {{-- <button id="{{$key}}" data-id="{{$request_iso_entry->id}}" style="color: black; text-align: center" type="button" title="Edit Request Entry" class="btn btn-sm btn-warning px-2 btn-request_isoEdit"><i class="fa-solid fa-pen-line"></i></button> --}}
                       </td>
                     </tr>
