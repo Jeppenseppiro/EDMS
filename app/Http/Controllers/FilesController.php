@@ -58,10 +58,20 @@ class FilesController extends Controller
             
             
             //User Access
+            //Commit
             if($revision_file->documentUserAccess != null || auth()->user()->role == 1){
-                $pdfPassword1 = new Pdf();
-                $pdfPassword2 = new Pdf();
-                $pdfPassword3 = new Pdf();
+                $pdfPassword1 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
+                $pdfPassword2 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
+                $pdfPassword3 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
 
                 $pdf = new Pdf();
 
@@ -174,9 +184,18 @@ class FilesController extends Controller
                 //User Access
                 if($request_copy->documentUserAccess != null || auth()->user()->role == 1){
                     //dd($request_copy);
-                    $pdfPassword1 = new Pdf();
-                    $pdfPassword2 = new Pdf();
-                    $pdfPassword3 = new Pdf();
+                    $pdfPassword1 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
+                    $pdfPassword2 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
+                    $pdfPassword3 = new Pdf([
+                                    'command' => base_path().'\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
 
                     $pdf = new Pdf();
 
@@ -250,7 +269,6 @@ class FilesController extends Controller
         $extension = $etransmittal->attachment;
         $extension = explode(".",$extension);
 
-        //dd($revision_file);
         $file = storage_path('app/public/etransmittal/'.$extension[1 ].'/'.$etransmittal->attachment_mask);
 
         if($extension[1] == 'pdf'){
@@ -266,7 +284,6 @@ class FilesController extends Controller
         $extension = $permittingLicense->attachment;
         $extension = explode(".",$extension);
 
-        //dd($revision_file);
         $file = storage_path('app/public/document/others/'.$permittingLicense->attachment_mask);
 
         if($extension[1] == 'pdf'){
