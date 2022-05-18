@@ -11,10 +11,6 @@ class DocumentRevision extends Model
         return $this->belongsTo(User::class,'user','id');
     }
 
-    public function revisionFiles(){
-        return $this->hasMany(DocumentFileRevision::class,'document_revision_id','id');
-    }
-
     public function documentFileRevision(){
         return $this->hasMany(DocumentFileRevision::class,'document_revision_id','id');
     }

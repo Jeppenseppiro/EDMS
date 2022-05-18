@@ -138,6 +138,26 @@
       $('[data-toggle="tooltip"]').tooltip()
     })
 
+    //
+    toastr.options = {
+      "closeButton": true,
+      "debug": false,
+      "newestOnTop": true,
+      "progressBar": false,
+      "positionClass": "md-toast-top-full-width",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": 300,
+      "hideDuration": 1000,
+      "timeOut": 0,
+      "extendedTimeOut": 0,
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut",
+      "tapToDismiss": false
+    }
+
     $('.errorMessage').trigger('click');
     // What You See Is What You Get (WYSIWYG) Text Editor
     //$("#demo").mdbWYSIWYG();

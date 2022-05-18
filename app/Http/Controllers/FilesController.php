@@ -6,6 +6,7 @@ use App\DocumentRevision;
 use App\DocumentFileRevision;
 use App\DocumentLibrary;
 use App\Etransmittal;
+use App\EtransmittalHistory;
 use App\RequestIsoCopy;
 use App\RequestCopyHistory;
 use tecknickom\tcpdf\tcpdf;
@@ -15,30 +16,25 @@ use tecknickom\tcpdf\tcpdf;
 //use tecnickcom\tcpdf\Tcpdf;
 use mikehaertl\pdftk\Pdf;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 class FilesController extends Controller
 {
     public function documentFile($link)
     {
-        
-        if(auth()->user()->role == 1){
-            $revision_file = DocumentFileRevision::with('documentRevision.documentLibrary')
-                                                ->where([
-                                                    ['attachment_mask', '=', $link],
-                                                ])
-                                                ->first();
-        } else {
-            $revision_file = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary')
-                                                ->whereHas('documentUserAccess', function ($userAccess) {
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
+
+        $revision_file = DocumentFileRevision::with('documentRevision.documentLibrary')
+                                            ->when(!in_array(1, $role), function ($query, $role) {
+                                                $query->whereHas('documentUserAccess', function ($userAccess) {
                                                     $userAccess->where('user_access', '=', auth()->user()->id);
-                                                })
-                                                ->where([
-                                                    ['attachment_mask', '=', $link],
-                                                ])
-                                                ->first();
-        }
-        
-        //dd($revision_file);
+                                                });
+                                            })
+
+                                            ->where([
+                                                ['attachment_mask', '=', $link],
+                                            ])
+                                            ->first();
         
         if(!empty($revision_file)){
             // Source file and watermark config
@@ -74,6 +70,7 @@ class FilesController extends Controller
                                 ]);
 
                 $pdf = new Pdf();
+                $obsolete_pdf = new Pdf();
 
                 if(auth()->user()->role != 1){
                     //Allow Printing
@@ -107,14 +104,34 @@ class FilesController extends Controller
 
                     $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
                                     ->addFile($file, 'A', $pdfPassword_password)
-                                    ->allow($allow_printing)
-                                    ->allow($allow_fillin)
-                                    ->allow($allow_allFeatures)
-                                    ->setPassword($owner_password)          // Set owner password
-                                    ->setUserPassword($user_password)      // Set user password
-                                    ->passwordEncryption(128)   // Set password encryption strength
-                                    ->multiStamp($watermarkFile)
+                                    
+                                    ->stamp($watermarkFile)
                                     ->saveAs($tmpFile);
+                    if($revision_file->documentRevision->is_obsolete == 1){
+                        $obsolete_watermarkFile = storage_path('app/obsolete_watermark.pdf');
+                        $result = $obsolete_pdf
+                                        ->addFile($tmpFile, 'A', $pdfPassword_password)
+                                        ->allow($allow_printing)
+                                        ->allow($allow_fillin)
+                                        ->allow($allow_allFeatures)
+                                        ->setPassword($owner_password)          // Set owner password
+                                        ->setUserPassword($user_password)      // Set user password
+                                        ->passwordEncryption(128)   // Set password encryption strength
+                                        ->stamp($obsolete_watermarkFile)
+                                        ->saveAs($tmpFile);
+                    } else {
+                        $obsolete_watermarkFile = storage_path('app/controlledcopy_blank.pdf');
+                        $result = $obsolete_pdf
+                                        ->addFile($tmpFile, 'A', $pdfPassword_password)
+                                        ->allow($allow_printing)
+                                        ->allow($allow_fillin)
+                                        ->allow($allow_allFeatures)
+                                        ->setPassword($owner_password)          // Set owner password
+                                        ->setUserPassword($user_password)      // Set user password
+                                        ->passwordEncryption(128)   // Set password encryption strength
+                                        ->stamp($obsolete_watermarkFile)
+                                        ->saveAs($tmpFile);
+                    }
                     if ($result === false) {
                         $error = $pdf->getError();
                         echo $error;
@@ -131,9 +148,12 @@ class FilesController extends Controller
         }
     }
 
-    public function requestCopy($uniquelink)
+    public function requestCopy($attachment, $uniquelink)
     {
-        if(auth()->user()->role == 1){
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
+
+        /* if(auth()->user()->role == 1){
             $request_copy = DocumentFileRevision::with('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
                                                 ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userAccess) use($uniquelink){
                                                     $userAccess->where('request_copy_uniquelink', '=', $uniquelink);
@@ -148,8 +168,19 @@ class FilesController extends Controller
                                                     $userLink->where('request_copy_uniquelink', '=', $uniquelink);
                                                 })
                                                 ->first();
-        }
-        //dd($request_copy->documentRevision->documentLibrary->requestIsoCopy);
+        } */
+        $request_copy = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
+                                                ->when(!in_array(1, $role), function ($query, $role) {
+                                                    $query->whereHas('documentUserAccess', function ($userAccess) {
+                                                        $userAccess->where('user_access', '=', auth()->user()->id);
+                                                    });
+                                                })
+                                                ->where('attachment_mask', $attachment)
+                                                ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userLink) use($uniquelink){
+                                                    $userLink->where('request_copy_uniquelink', '=', $uniquelink);
+                                                })
+                                                ->first();
+        //dd($request_copy);
 
         if(!empty($request_copy)){
             $date1 = date('Y-m-d', time());
@@ -166,7 +197,7 @@ class FilesController extends Controller
                 elseif($request_copy->documentRevision->documentLibrary->tag == 2){ $fileCategory = 'legal'; }
                 elseif($request_copy->documentRevision->documentLibrary->tag == 3){ $fileCategory = 'other'; }
                 
-                $extension = $request_copy->attachment_mask;
+                $extension = $request_copy->attachment;
                 $extension = explode(".",$extension);
                 $file = storage_path('app/public/document/'.$extension[1].'/'.$fileCategory.'/').$link;
                 $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
@@ -182,7 +213,7 @@ class FilesController extends Controller
                 }
                 
                 //User Access
-                if($request_copy->documentUserAccess != null || auth()->user()->role == 1){
+                if($request_copy->documentUserAccess != null || in_array(1, $role)){
                     $pdfPassword1 = new Pdf($file, [
                                         'command' => base_path().'\PDFtk\bin\pdftk.exe',
                                         'useExec' => true,
@@ -197,6 +228,7 @@ class FilesController extends Controller
                                     ]);
 
                     $pdf = new Pdf();
+                    $obsolete_pdf = new Pdf();
 
                     if(auth()->user()->role != 1){
                         //Allow Printing
@@ -231,21 +263,41 @@ class FilesController extends Controller
 
                         $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
                                         ->addFile($file, 'A', $pdfPassword_password)
-                                        ->allow($allow_printing)
-                                        ->allow($allow_fillin)
-                                        ->allow($allow_allFeatures)
-                                        ->setPassword($owner_password)          // Set owner password
-                                        ->setUserPassword($user_password)      // Set user password
-                                        ->passwordEncryption(128)   // Set password encryption strength
-                                        ->multiStamp($watermarkFile)
+                                        
+                                        ->stamp($watermarkFile)
                                         ->saveAs($tmpFile);
+                        if($request_copy->documentRevision->is_obsolete == 1){
+                            $obsolete_watermarkFile = storage_path('app/obsolete_watermark.pdf');
+                            $result = $obsolete_pdf
+                                            ->addFile($tmpFile, 'A', $pdfPassword_password)
+                                            ->allow($allow_printing)
+                                            ->allow($allow_fillin)
+                                            ->allow($allow_allFeatures)
+                                            ->setPassword($owner_password)          // Set owner password
+                                            ->setUserPassword($user_password)      // Set user password
+                                            ->passwordEncryption(128)   // Set password encryption strength
+                                            ->stamp($obsolete_watermarkFile)
+                                            ->saveAs($tmpFile);
+                        } else {
+                            $obsolete_watermarkFile = storage_path('app/controlledcopy_blank.pdf');
+                            $result = $obsolete_pdf
+                                            ->addFile($tmpFile, 'A', $pdfPassword_password)
+                                            ->allow($allow_printing)
+                                            ->allow($allow_fillin)
+                                            ->allow($allow_allFeatures)
+                                            ->setPassword($owner_password)          // Set owner password
+                                            ->setUserPassword($user_password)      // Set user password
+                                            ->passwordEncryption(128)   // Set password encryption strength
+                                            ->stamp($obsolete_watermarkFile)
+                                            ->saveAs($tmpFile);
+                        }
                         if ($result === false) {
                             $error = $pdf->getError();
                             echo $error;
                         }
                         return response()->file($tmpFile);
                     } else {
-                        return response()->download($tmpFile);
+                        return response()->download($file);
                     }
                     
                     
@@ -264,11 +316,11 @@ class FilesController extends Controller
 
     public function etransmittalFile($link)
     {
-        $etransmittal = Etransmittal::where([['attachment_mask', '=', $link],])->first();
+        $etransmittal = EtransmittalHistory::where([['attachment_mask', '=', $link],])->first();
         $extension = $etransmittal->attachment;
         $extension = explode(".",$extension);
 
-        $file = storage_path('app/public/etransmittal/'.$extension[1 ].'/'.$etransmittal->attachment_mask);
+        $file = storage_path('app/public/etransmittal/'.$extension[1].'/'.$etransmittal->attachment_mask);
 
         if($extension[1] == 'pdf'){
             return response()->file($file);

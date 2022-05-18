@@ -14,6 +14,10 @@ class RequestIsoCopy extends Model
         return $this->belongsTo(DocumentLibrary::class,'document_library_id','id');
     }
 
+    public function documentRevision(){
+        return $this->belongsTo(documentRevision::class,'document_revision_id','id');
+    }
+
     public function requestCopyType(){
         return $this->belongsTo(RequestIsoCopyType::class,'copy_type','id');
     }

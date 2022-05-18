@@ -29,7 +29,7 @@ class RequestCopiesController extends Controller
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
 
-        $request_iso_copies = RequestIsoCopy::with('userRequestor','documentRequested.documentRevision.documentFileRevision','requestCopyType','requestIsoCopyLatestHistory')
+        $request_iso_copies = RequestIsoCopy::with('userRequestor', 'documentRevision.documentFileRevision', 'requestCopyType','requestIsoCopyLatestHistory')
                                             ->when(in_array(3, $role), function ($query) {
                                                 $query->whereHas('requestIsoCopyLatestHistory', function ($query){
                                                     $query->where('status', '=', 6);
@@ -47,7 +47,13 @@ class RequestCopiesController extends Controller
         $users = User:: when(!in_array(1, $role), function ($query) {
                             $query->where('department', '=', auth()->user()->department);
                         })->get();
-        $document_libraries = DocumentLibrary::where([['company', '=', auth()->user()->company], ['tag', '=', $tagID]])->get();
+        $document_libraries = DocumentLibrary::with(['documentMultipleRevision' => function($query){$query->orderBy('id', 'DESC')->first();}])
+                                            ->where([
+                                                ['company', '=', auth()->user()->company], 
+                                                ['tag', '=', $tagID]
+                                            ])
+                                            ->get();
+        
         $request_iso_copy_statuses = RequestIsoCopyStatus::where("is_active", '=', 'Active')->get();
         $request_iso_copy_types = RequestIsoCopyType::get();
 
@@ -70,6 +76,9 @@ class RequestCopiesController extends Controller
                 'role' => $role,
             )
         );
+
+
+        
     }
     
     public function store_iso(Request $request)
@@ -78,17 +87,39 @@ class RequestCopiesController extends Controller
         shuffle($seed); // probably optional since array_is randomized; this may be redundant
         $requestCopy_Code = '';
         foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k]; */
+        $this->validate($request, [
+            'requestCopy_Requestor' => ['required'],
+            'requestCopy_FileRequest' => ['required'],
+            'requestCopy_FileRequestType' => ['required'],
+        ]);
+
         $getLastDICR = DB::table('request_iso_copies')->count();
+        $revision = RequestIsoCopy::with(['documentRequested.documentMultipleRevision.documentFileRevision', 'documentRequested.documentMultipleRevision' => function($query){
+                                $query->where('is_obsolete', 0);
+                            }])
+                            ->where('document_library_id', $request->requestCopy_FileRequest)
+                            ->first();
 
         $requestIsoCopy = new RequestIsoCopy;
         $requestIsoCopy->code = date("Y")."-".sprintf('%06d', $getLastDICR + 1);
-        $requestIsoCopy->requestor = $request->requestISOCopy_Requestor;
+        $requestIsoCopy->requestor = $request->requestCopy_Requestor;
         $requestIsoCopy->user = auth()->user()->id;
         $requestIsoCopy->tag = $request->requestISOCopy_TagID;
         $requestIsoCopy->date_request = $request->requestISOCopy_DateRequest;
-        $requestIsoCopy->document_library_id = $request->requestISOCopy_FileRequest;
+        $requestIsoCopy->document_library_id = $request->requestCopy_FileRequest;
+
+        $revision = DocumentLibrary::with(['documentMultipleRevision' => function($query){
+                                    $query->where('is_obsolete', '=', 0);
+                                }])
+                                ->where('id', 1)
+                                ->first();
+
+        //if($revision->documentRequested){
+        $requestIsoCopy->document_revision_id = $revision->documentMultipleRevision[0]->id;
+        //}
+
         $requestIsoCopy->expiration_date = $request->requestCopy_DateExpiration;
-        $requestIsoCopy->copy_type = $request->requestISOCopy_FileRequestType;
+        $requestIsoCopy->copy_type = $request->requestCopy_FileRequestType;
         $requestIsoCopy->save();
 
         $requestCopyHistory = new RequestCopyHistory;
@@ -96,7 +127,7 @@ class RequestCopiesController extends Controller
         $requestCopyHistory->remarks = "New request copy";
         $requestCopyHistory->status = 1;
         $requestCopyHistory->tag = 1;
-        $requestCopyHistory->user = $request->requestISOCopy_Requestor;
+        $requestCopyHistory->user = $request->requestCopy_Requestor;
         $requestCopyHistory->save();
 
         return redirect()->back();
