@@ -11,6 +11,7 @@
  
   <div id="content" class="heavy-rain-gradient color-block content" style="padding-top: 20px;">
     <section>
+      @include('includes.errormessage')
       
       <!-- Document Copy (INSERT) -->
       <div class="modal fade" id="modalDocumentCopyInsert" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -32,7 +33,7 @@
                     <div class="md-form">
                       <i class="fa-solid fa-address-card prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_Requestor" name="requestISOCopy_Requestor" class="mdb-select" searchable="Search requestor" required>
+                        <select id="requestCopy_Requestor" name="requestCopy_Requestor" class="mdb-select" searchable="Search requestor" required>
                           <option class="mr-1" value="" disabled selected>Requestor</option>
                           @foreach ($users as $user)
                             <option value={{$user->id}}>{{$user->name}}</option>
@@ -56,10 +57,12 @@
                     <div class="md-form">
                       <i class="fa-solid fa-square-caret-down prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_FileRequest" name="requestISOCopy_FileRequest" class="mdb-select" searchable="Search document to request copy" required>
+                        <select id="requestCopy_FileRequest" name="requestCopy_FileRequest" class="mdb-select" searchable="Search document to request copy" required>
                           <option class="mr-1" value="" disabled selected>File Request</option>
                           @foreach ($document_libraries as $document_library)
-                            <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->revision}}</option>
+                            
+                            <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->documentMultipleRevision->first()->revision}}</option>
+                            {{-- <option value={{$document_library->id}}>{{$document_library->documentMultipleRevision}}</option> --}}
                           @endforeach
                         </select>
                         <label class="mdb-main-label">File Request</label>
@@ -70,7 +73,7 @@
                     <div class="md-form">
                       <i class="fa-solid fa-square-caret-down prefix"></i>
                       <div class="md-form py-0 ml-5">
-                        <select id="requestISOCopy_FileRequestType" name="requestISOCopy_FileRequestType" class="mdb-select" searchable="Select file document type" required>
+                        <select id="requestCopy_FileRequestType" name="requestCopy_FileRequestType" class="mdb-select" searchable="Select file document type" required>
                           <option class="mr-1" value="" disabled selected>File Copy Type</option>
                           @foreach ($request_iso_copy_types as $request_iso_copy_type)
                             <option value={{$request_iso_copy_type->id}}>{{$request_iso_copy_type->type}}</option>
@@ -253,25 +256,27 @@
                             <td>{{$request_iso_copy->userRequestor->name}}</td>
                             <td>{{$request_iso_copy->date_request}}</td>
                             <td>{{$request_iso_copy->requestIsoCopyLatestHistory->date_expiration}}</td>
-                            <td>{{$request_iso_copy->documentRequested->document_number_series}} | {{$request_iso_copy->documentRequested->description}} | {{$request_iso_copy->documentRequested->revision}}</td>
+                            <td>{{$request_iso_copy->documentRequested->document_number_series}} | {{$request_iso_copy->documentRequested->description}} | {{$request_iso_copy->documentRevision->revision}}</td>
                             <td>{{$request_iso_copy->requestCopyType->type}}</td>
                             <td>
-                              @foreach ($request_iso_copy->documentRequested->documentRevision->documentFileRevision as $key => $link)
+                              {{-- {{$request_iso_copy->documentRevision->documentFileRevision}} --}}
+                              @foreach ($request_iso_copy->documentRevision->documentFileRevision as $key => $link)
                                 @if($request_iso_copy->requestIsoCopyLatestHistory->status == "Emailed")
-                                  <a target="_blank" href="{{url("/file/requestcopy/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">
+                                  <a target="_blank" href="{{url("/file/".$link->attachment_mask."/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">
                                     @if($link->type == 1 && $request_iso_copy->toggle_approved == 1)
                                       <span class="badge badge-success">Approved</span>
-                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
                                     @elseif($link->type == 2 && $request_iso_copy->toggle_fillable == 1)
                                       <span class="badge badge-primary">Fillable</span>
-                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
                                     @elseif($link->type == 3 && $request_iso_copy->toggle_rawfile == 1)
                                       <span class="badge badge-dark">Raw File</span>
-                                      Password: {{$request_iso_copy->documentRequested->documentRevision->documentFileRevision[$key]->file_password}}
                                     @endif
                                   </a>
-                                  <br>
-                                @endif  
+                                  @if(in_array(1, $role) || in_array(3, $role))
+                                    Password: {{$request_iso_copy->documentRevision->documentFileRevision[$key]->file_password}}
+                                  @endif
+                                  <br> 
+                                @endif 
+                                {{-- <a target="_blank" href="{{url("/file/requestcopy/".$request_iso_copy->requestIsoCopyLatestHistory->request_copy_uniquelink)}}">s</a><br> --}}
                               @endforeach
                             </td>
                             <td>{{$request_iso_copy->requestIsoCopyLatestHistory->status}}</td>
@@ -322,11 +327,11 @@
     }
     
     if(tagID == 2){
-      $('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
+      $('#requestCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     }
     var userRoles = role.split(',');
     //console.log(requestCopy_JSON);
-    //$('#requestISOCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
+    //$('#requestCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');

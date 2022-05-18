@@ -1,40 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\DocumentLibrary;
 use App\DocumentRevision;
 use App\DocumentFileRevision;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
 class DocumentRevisionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -46,6 +20,7 @@ class DocumentRevisionsController extends Controller
         $documentRevision->document_library_id = $request->updateDocumentLibrary_ID;
         $documentRevision->revision = $request->documentLibrary_Revision;
         $documentRevision->effective_date = $request->documentLibrary_DateEffective;
+        DB::table('document_revisions')->where('document_library_id', '=', $request->updateDocumentLibrary_ID)->update(['is_obsolete' => '1']);
         $documentRevision->save();
 
         $attachmentTypes = $request->documentLibrary_AttachmentType;
@@ -65,6 +40,9 @@ class DocumentRevisionsController extends Controller
             $path = Storage::putFile('public/document/' . $extension . '/' . $tag, $attachment);
             $path_basename = basename($path);
 
+            
+            // DocumentFileRevision::where('document_revision_id', $documentRevision->id)->update(['is_obsolete' => 1]);
+
             $documentFileRevision = new DocumentFileRevision;
             $documentFileRevision->document_revision_id = $documentRevision->id;
             $documentFileRevision->attachment = $fileNameToStore;
@@ -83,48 +61,4 @@ class DocumentRevisionsController extends Controller
         return $request->all();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\DocumentRevision  $documentRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function show(DocumentRevision $documentRevision)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\DocumentRevision  $documentRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(DocumentRevision $documentRevision)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\DocumentRevision  $documentRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, DocumentRevision $documentRevision)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\DocumentRevision  $documentRevision
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(DocumentRevision $documentRevision)
-    {
-        //
-    }
 }

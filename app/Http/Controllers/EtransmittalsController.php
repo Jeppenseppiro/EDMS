@@ -60,12 +60,13 @@ class EtransmittalsController extends Controller
         
         $etransmittal = new Etransmittal;
         $etransmittal->code = $requestCopy_Code;
-        
         $etransmittal->user = auth()->user()->id;
         $etransmittal->item = $request->etransmittal_Item;
         $etransmittal->recipient = $request->etransmittal_Recipient;
-        
+        $etransmittal->save();
 
+        $etransmittal_History = new EtransmittalHistory;
+        $etransmittal_History->etransmittal_id = $etransmittal->id;
         if ($request->hasFile('etransmittal_Attachment')) {
             $fileNameWithExt = $request->etransmittal_Attachment->getClientOriginalName();
             $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
@@ -75,14 +76,9 @@ class EtransmittalsController extends Controller
             $path = Storage::putFile('public/etransmittal/'.$extension.'/', $request->etransmittal_Attachment);
             $path_basename = basename($path);
 
-            $etransmittal->attachment = $fileNameToStore;
-            $etransmittal->attachment_mask = $path_basename;
+            $etransmittal_History->attachment = $fileNameToStore;
+            $etransmittal_History->attachment_mask = $path_basename;
         }
-
-        $etransmittal->save();
-
-        $etransmittal_History = new EtransmittalHistory;
-        $etransmittal_History->etransmittal_id = $etransmittal->id;
         $etransmittal_History->status = $request->etransmittal_Status;
         $etransmittal_History->user = auth()->user()->id;
         $etransmittal_History->save();
@@ -93,6 +89,20 @@ class EtransmittalsController extends Controller
     public function history_store(Request $request){
         $etransmittal_History = new EtransmittalHistory;
         $etransmittal_History->etransmittal_id = $request->updateEtransmittal_ID;
+
+        if ($request->hasFile('updateEtransmittal_Attachment')) {
+            $fileNameWithExt = $request->updateEtransmittal_Attachment->getClientOriginalName();
+            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            $extension = $request->updateEtransmittal_Attachment->getClientOriginalExtension();
+            $fileNameToStore = $filename . '.' . $extension;
+
+            $path = Storage::putFile('public/etransmittal/'.$extension.'/', $request->updateEtransmittal_Attachment);
+            $path_basename = basename($path);
+
+            $etransmittal_History->attachment = $fileNameToStore;
+            $etransmittal_History->attachment_mask = $path_basename;
+        }
+
         $etransmittal_History->status = $request->updateEtransmittal_Status;
         $etransmittal_History->remarks = $request->updateEtransmittal_Remarks;
         $etransmittal_History->user = auth()->user()->id;

@@ -29,7 +29,7 @@
                     <th class="th-sm" width="">Requestor</th>
                     <th class="th-sm" width="">Document Type</th>
                     <th class="th-sm" width="">Status</th>
-                    <th class="th-sm" width="">Attachment</th>
+                    <th class="th-sm" width="">Attachment File</th>
                     <th class="th-sm" width="">Remarks</th>
                     <th class="th-sm" width="">Action</th>
                   </tr>
@@ -45,9 +45,9 @@
                       <td>{{$request_legal_entry->attachment}}</td>
                       <td>{{$request_legal_entry->remarks}}</td>
                       <td width="1%">
-                        @if(in_array(1, $role) || in_array(4, $role))
+                        @if(in_array(1, $role) || in_array(3, $role))
                         <button id="{{$key}}" data-id="{{$request_legal_entry->id}}" style="text-align: center" type="button" title="Update Legal Request Entry" class="btn btn-sm btn-success px-2 btn-request_legalView"><i class="fa-solid fa-arrows-rotate"></i></button>
-                        {{-- <button id="{{$key}}" data-id="{{$request_legal_entry->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-request_legalEdit"><i class="fa-solid fa-pen-line"></i></button> --}}
+                        {{-- <button id="{{$key}}" data-id="{{$request_legal_entry->id}}" style="color: black; text-align: center"asdasdas type="button" class="btn btn-sm btn-warning px-2 btn-request_legalEdit"><i class="fa-solid fa-pen-line"></i></button> --}}
                         @endif
                       </td>
                     </tr>

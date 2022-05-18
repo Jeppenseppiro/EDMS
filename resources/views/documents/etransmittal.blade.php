@@ -33,21 +33,7 @@
                       <label for="etransmittal_Item">Item</label>
                     </div>
                   </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-sm-12 etransmittal_FileUpload">
-                    <div class="file-field">
-                      <div class="btn btn-primary btn-sm float-left">
-                        <span>Choose file</span>
-                        <input type="file" name="etransmittal_Attachment">
-                      </div>
-                      <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Attachment">
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                </div>                
 
                 <div class="row">
                   <div class="col-sm-6">
@@ -79,6 +65,19 @@
                   </div>
                 </div>
                 
+                <div class="row">
+                  <div class="col-sm-12 etransmittal_FileUpload">
+                    <div class="file-field">
+                      <div class="btn btn-primary btn-sm float-left">
+                        <span>Choose file</span>
+                        <input type="file" name="etransmittal_Attachment">
+                      </div>
+                      <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Attachment">
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -127,6 +126,19 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-sm-12 updateEtransmittal_FileUpload">
+                      <div class="file-field">
+                        <div class="btn btn-primary btn-sm float-left">
+                          <span>Choose file</span>
+                          <input type="file" id="updateEtransmittal_Attachment" name="updateEtransmittal_Attachment" required>
+                        </div>
+                        <div class="file-path-wrapper">
+                          <input class="file-path validate" type="text" placeholder="Attachment">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <ul id="etransmittalHistory" class="stepper stepper-vertical">
                   {{-- <input id="" type="text" value="{{$request_iso_history->id}}"/> --}}
@@ -171,7 +183,6 @@
                       <thead>
                         <tr>
                           <th class="th-sm" width="">Code</th>
-                          <th class="th-sm" width="">Attachment</th>
                           <th class="th-sm" width="">Item</th>
                           <th class="th-sm" width="">Created By</th>
                           <th class="th-sm" width="">Recipient</th>
@@ -182,9 +193,6 @@
                         @foreach ($etransmittals as $key => $etransmittal)
                           <tr>
                             <td>{{$etransmittal->code}}</td>
-                            <td>
-                              <a target="_blank" href="{{url("/file/etransmittal/".$etransmittal->attachment_mask)}}"><span class="badge badge-success">{{$etransmittal->attachment}}</span></a>
-                            </td>
                             <td>{{$etransmittal->item}}</td>
                             <td>{{$etransmittal->getUser->name}}</td>
                             <td>{{$etransmittal->getRecipient->name}}</td>
@@ -240,6 +248,7 @@
               etransmittalHistory += '<hr>';
               etransmittalHistory += '<div class="row">';
               etransmittalHistory += '<div class="col-sm">';
+              etransmittalHistory += '<a target="_blank" href="file/etransmittal/'+data[i].attachment_mask+'"  id="'+data[i].id+'" data-file="'+data[i].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2">'+data[i].attachment+'</a>';
               etransmittalHistory += '</div>';
               etransmittalHistory += '<div class="col-sm">';
               etransmittalHistory += '<span class="label float-right" style="font-size: 10px;">'+data[i].get_user.name+'</span><br>';
