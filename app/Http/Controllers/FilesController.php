@@ -69,8 +69,14 @@ class FilesController extends Controller
                                     'useExec' => true,
                                 ]);
 
-                $pdf = new Pdf();
-                $obsolete_pdf = new Pdf();
+                $pdf = new Pdf($file, [
+                                'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                                'useExec' => true,
+                            ]);
+                $obsolete_pdf = new Pdf($file, [
+                                    'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                                    'useExec' => true,
+                                ]);
 
                 if(auth()->user()->role != 1){
                     //Allow Printing
@@ -227,8 +233,14 @@ class FilesController extends Controller
                                         'useExec' => true,
                                     ]);
 
-                    $pdf = new Pdf();
-                    $obsolete_pdf = new Pdf();
+                    $pdf = new Pdf($file, [
+                                'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                                'useExec' => true,
+                            ]);
+                    $obsolete_pdf = new Pdf($file, [
+                                'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                                'useExec' => true,
+                            ]);
 
                     if(auth()->user()->role != 1){
                         //Allow Printing
