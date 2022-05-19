@@ -70,7 +70,7 @@
                     <div class="file-field">
                       <div class="btn btn-primary btn-sm float-left">
                         <span>Choose file</span>
-                        <input type="file" name="etransmittal_Attachment">
+                        <input type="file" name="etransmittal_Attachment" required>
                       </div>
                       <div class="file-path-wrapper">
                         <input class="file-path validate" type="text" placeholder="Attachment">
@@ -184,18 +184,27 @@
                         <tr>
                           <th class="th-sm" width="">Code</th>
                           <th class="th-sm" width="">Item</th>
-                          <th class="th-sm" width="">Created By</th>
+                          <th class="th-sm" width="">Shipper</th>
+                          <th class="th-sm" width="">Shipper Company</th>
+                          <th class="th-sm" width="">Shipper Department</th>
                           <th class="th-sm" width="">Recipient</th>
+                          <th class="th-sm" width="">Recipient Company</th>
+                          <th class="th-sm" width="">Recipient Department</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
                       <tbody id="fileUpload">
                         @foreach ($etransmittals as $key => $etransmittal)
                           <tr>
-                            <td>{{$etransmittal->code}}</td>
+                            <td>{{str_pad($etransmittal->id, 3, '0', STR_PAD_LEFT)}}</td>
+                              {{-- {{$etransmittal->code}} --}}
                             <td>{{$etransmittal->item}}</td>
                             <td>{{$etransmittal->getUser->name}}</td>
+                            <td>{{$etransmittal->getUser->getCompany->company_name}}</td>
+                            <td>{{$etransmittal->getUser->getDepartment->department}}</td>
                             <td>{{$etransmittal->getRecipient->name}}</td>
+                            <td>{{$etransmittal->getRecipient->getCompany->company_name}}</td>
+                            <td>{{$etransmittal->getRecipient->getDepartment->department}}</td>
                             <td>
                               <button id="{{$key}}" data-id="{{$etransmittal->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-etransmittal_View" title="Update E-Transmittal"><i class="fa-solid fa-arrows-rotate"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$etransmittal->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-etransmittal_Edit" title="Edit E-Transmittal"><i class="fa-solid fa-pen-line"></i></button> --}}
@@ -290,15 +299,15 @@
   <script>
     $(document).ready(function () {
       // Setup - add a text input to each footer cell
-     /*  $('#datatable thead tr')
+      $('#datatable thead tr')
           .clone(true)
           .addClass('filters')
-          .appendTo('#datatable thead'); */
+          .appendTo('#datatable thead');
 
       var datatable = $('#datatable').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-        
+        "order": [[ 0, "desc" ]],
         initComplete: function () {
           var api = this.api();
 

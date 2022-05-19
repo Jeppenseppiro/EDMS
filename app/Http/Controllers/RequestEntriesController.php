@@ -19,11 +19,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 class RequestEntriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index($tag)
     {
         if($tag == 'iso'){
@@ -210,27 +205,7 @@ class RequestEntriesController extends Controller
         return redirect()->back();
         //return $fileUpload;
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\RequestIsoEntry  $requestIsoEntry
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RequestIsoEntry $requestIsoEntry)
-    {
-        $requestIsoEntry = new RequestIsoEntry;
-        $requestIsoEntry->ID = $requestIsoEntry->ID;
-        return $requestIsoEntry;
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\RequestIsoEntry  $requestIsoEntry
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, $id)
     {
         $requestIsoEntry = RequestIsoEntry::find($id);
@@ -268,16 +243,4 @@ class RequestEntriesController extends Controller
                                     ->orderBy('id', 'DESC')->get();
         return $requestIsoEntryHistories;
     }
-
-
-    public function sendRequestEntry()
-    {
-        $user = User::where('id', '=', auth()->user()->id)->first();
-        $requestEntry = [
-            'body' => 'asd',
-        ];
-        Notification::send($user, new SendRequestEntry($requestEntry));
-        //Notification::send($user, new SendRequestEntry($dicrNumber));
-    }
-
 }

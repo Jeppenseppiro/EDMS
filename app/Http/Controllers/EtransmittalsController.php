@@ -19,7 +19,7 @@ class EtransmittalsController extends Controller
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
 
-        $etransmittals = Etransmittal::with('getUser','getRecipient','getEtransmittalHistory')
+        $etransmittals = Etransmittal::with('getUser.getCompany','getUser.getDepartment','getRecipient.getCompany','getRecipient.getDepartment','getEtransmittalHistory')
                                         ->when(!in_array(1, $role) || !in_array(3, $role), function ($query) {
                                             $query->where('user', '=', auth()->user()->id)
                                                 ->orWhere('recipient', '=', auth()->user()->id);;
@@ -59,7 +59,7 @@ class EtransmittalsController extends Controller
         foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k];
         
         $etransmittal = new Etransmittal;
-        $etransmittal->code = $requestCopy_Code;
+        $etransmittal->code = sprintf('%03d', $etransmittal->insert_id);
         $etransmittal->user = auth()->user()->id;
         $etransmittal->item = $request->etransmittal_Item;
         $etransmittal->recipient = $request->etransmittal_Recipient;
