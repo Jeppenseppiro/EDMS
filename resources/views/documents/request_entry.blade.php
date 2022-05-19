@@ -14,7 +14,7 @@
     <section>
       @include('includes.errormessage')
       
-      @if(in_array(2, $role))
+      {{-- @if(in_array(2, $role))
         <div class="row">
           <div class="container">
           @if($tagView == 'iso')
@@ -26,31 +26,6 @@
                 <p>Click the button to create a request entry for the Document Management</p>
                 <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
               </div>
-              {{-- <div class="card">
-                <div class="card-header">
-                  Featured
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">Document Management</h5>
-                  <p class="card-text">Click the button to create a request entry for the Document Management</p>
-                  <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
-                </div>
-              </div>
-              <div class="card">
-                <div class="view btn-requestIsoEntryInsert" style="height: 100px; overflow: hidden;">
-                  <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
-                  <a data-toggle="modal" data-target="#modalRequestIsoEntryInsert">
-                    <div class="mask rgba-white-slight"></div>
-                  </a>
-                </div>
-
-                <div class="card-body">
-                  <h4 class="card-title">Document Management</h4>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <button type="button" class="btn btn-success btn-requestIsoEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestIsoEntryInsert">Create Request Entry</button>
-                </div>
-              </div>
-            </div> --}}
           @elseif($tagView == 'legal')
             <div class="col-lg-12 col-md-12">
               <div class="jumbotron">
@@ -60,52 +35,23 @@
                 <p>Click the button to create a request entry for the Legal</p>
                 <button type="button" class="btn btn-success btn-requestLegalEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestLegalEntryInsert">Create Request Entry</button>
               </div>
-              {{-- <div class="card">
-                <div class="view btn-requestLegalEntryInsert">
-                  <img src="https://images.unsplash.com/photo-1562654501-a0ccc0fc3fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZG9jdW1lbnR8ZW58MHx8MHx8&w=1000&q=80" class="card-img-top" alt="photo">
-                  <a data-toggle="modal" data-target="#modalRequestLegalEntryInsert">
-                    <div class="mask rgba-white-slight"></div>
-                  </a>
-                </div>
-
-                <div class="card-body">
-                  <h4 class="card-title">Legal</h4>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <button type="button" class="btn btn-success btn-requestLegalEntryInsert" style="font-weight: bold; width: 100%;" data-toggle="modal" data-target="#modalRequestLegalEntryInsert">Create Request Entry</button>
-                </div>
-              </div> --}}
             </div>
           @endif
           </div>
         </div>
       @else
-        {{-- <ul class="nav nav-tabs" id="myTab" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link active" id="iso-tab" data-toggle="tab" href="#iso" role="tab" aria-controls="iso"
-              aria-selected="true">Document Management</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="legal-tab" data-toggle="tab" href="#legal" role="tab" aria-controls="legal"
-              aria-selected="false">Legal</a>
-          </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="iso" role="tabpanel" aria-labelledby="iso-tab">
-            @include('includes.requestiso')
-          </div>
-          <div class="tab-pane fade" id="legal" role="tabpanel" aria-labelledby="legal-tab">
-            @include('includes.requestlegal')
-          </div>
-        </div> --}}
         @if($tagView == 'iso')
           @include('includes.requestiso')
         @elseif($tagView == 'legal')
           @include('includes.requestlegal')
         @endif
-      @endif
-      
+      @endif --}}
 
-      
+      @if($tagView == 'iso')
+        @include('includes.requestiso')
+      @elseif($tagView == 'legal')
+        @include('includes.requestlegal')
+      @endif
     </section>
   </div>
 @endsection
