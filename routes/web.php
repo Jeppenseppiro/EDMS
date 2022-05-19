@@ -49,7 +49,6 @@ Route::group( ['middleware' => 'auth'], function(){
         Mail::to('jcjurolan@premiummegastructures.com')->send(new SendRequestEntry());
         return new SendRequestEntry();
     }); */
-    Route::get('documentrequest/email', 'RequestEntriesController@sendRequestEntry');
 
     Route::get('documentrequest/iso/tracking/{dicr}', 'RequestEntryTrackingController@tracking');
 
@@ -96,8 +95,4 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::get('/file/etransmittal/{uniquelink}', 'FilesController@etransmittalFile');
     Route::get('/file/permittinglicenses/{link}', 'FilesController@permittingLicenses')->name('permittingandlicenses.file');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
-
-    
-
-    Route::post('showRequestEntry', 'RequestEntriesController@show');
 });

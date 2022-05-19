@@ -35,7 +35,7 @@ class FilesController extends Controller
                                                 ['attachment_mask', '=', $link],
                                             ])
                                             ->first();
-        
+        // dd($revision_file);
         if(!empty($revision_file)){
             // Source file and watermark config
             if($revision_file->documentRevision->documentLibrary->tag == 1){ $fileCategory = 'iso'; }
@@ -80,15 +80,15 @@ class FilesController extends Controller
 
                 if(auth()->user()->role != 1){
                     //Allow Printing
-                        $revision_file->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
-                        //Allow Fill-In
-                        $revision_file->documentUserAccess->can_fill == 1 ? $allow_fillin = "FillIn" : $allow_fillin = null;
-                    } else {
-                        $allow_printing = null;
-                        $allow_fillin = null;
-                    }
+                    $revision_file->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
+                    //Allow Fill-In
+                    $revision_file->documentUserAccess->can_fill == 1 ? $allow_fillin = "FillIn" : $allow_fillin = null;
+                } else {
+                    $allow_printing = null;
+                    $allow_fillin = null;
+                }
                     
-                    if($extension[1] == 'pdf'){
+                if($extension[1] == 'pdf'){
                         //Allow Fill-In
                     auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
                     

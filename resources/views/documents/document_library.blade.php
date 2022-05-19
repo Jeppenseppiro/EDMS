@@ -1109,10 +1109,10 @@
   <script>
     $(document).ready(function () {
       // Setup - add a text input to each footer cell
-     /*  $('#datatable thead tr')
+      $('#datatable thead tr')
           .clone(true)
           .addClass('filters')
-          .appendTo('#datatable thead'); */
+          .appendTo('#datatable thead');
 
       var datatable = $('#datatable').DataTable({
         orderCellsTop: true,
