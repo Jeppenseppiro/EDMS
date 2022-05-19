@@ -173,6 +173,21 @@
                         <div class="col-sm-6">
                           <div class="md-form">
                             <i class="fa-solid fa-input-text prefix"></i>
+                            <input type="text" id="documentLibrary_ControlCode" name="documentLibrary_ControlCode" class="form-control" required>
+                            <label for="documentLibrary_ControlCode">Control Code</label>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="md-form">
+                            <i class="fa-solid fa-input-text prefix"></i>
+                            <input type="text" id="documentLibrary_Remarks" name="documentLibrary_Remarks" class="form-control" required>
+                            <label for="documentLibrary_Remarks">Remarks</label>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                          <div class="md-form">
+                            <i class="fa-solid fa-input-text prefix"></i>
                             <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" required>
                             <label for="documentLibrary_Revision">Revision</label>
                           </div>
@@ -190,7 +205,7 @@
                           <tr>
                             <th width="65%" scope="col">File Upload</th>
                             <th width="30%" scope="col">File Type</th>
-                            <th width="5%" scope="col"><button type="button" class="btn btn-info px-3" id="documentLibraryUpdate_AddFileUpload"><i class="fa-solid fa-plus"></i></button></th>
+                            <th width="5%" scope="col"><button type="button" class="btn btn-sm btn-info px-3" id="documentLibraryUpdate_AddFileUpload"><i class="fa-solid fa-plus"></i></button></th>
                           </tr>
                         </thead>
                         <tbody id="documentLibraryUpdate_FileUploads">
@@ -361,16 +376,14 @@
                     <table id="datatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th class="th-sm" width="">Company</th>
-                          <th class="th-sm" width="">Control Code</th>
-                          <th class="th-sm" width="">Document Title</th>
-                          <th class="th-sm" width="">Revision No</th>
-                          
-                          <th class="th-sm" width="">Category</th>
-                          <th class="th-sm" width="">Tag</th>
-                          <th class="th-sm" width="">Implementation Date</th>
-                          <th class="th-sm" width="">Date Request</th>
-                          
+                          <th class="th-sm " width="">Company</th>
+                          <th class="th-sm " width="">Control Code</th>
+                          <th class="th-sm " width="">Document Title</th>
+                          <th class="th-sm " width="">Revision No</th>
+                          <th class="th-sm " width="">Category</th>
+                          <th class="th-sm " width="">Tag</th>
+                          <th class="th-sm " width="">Implementation Date</th>
+                          <th class="th-sm " width="">Date Request</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
@@ -426,7 +439,7 @@
     userID = {!! json_encode(auth()->user()->id) !!};
     role = {!! json_encode(auth()->user()->role) !!};
     var userRoles = role.split(',');
-    count = 1;
+    count = 0;
 
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');
@@ -511,7 +524,7 @@
             documentLibraryFileUpload += '      <option value="3">Raw File</option>';
             documentLibraryFileUpload += '    </select>';
             documentLibraryFileUpload += '  </td>';
-            documentLibraryFileUpload += '  <td><button type="button" class="btn btn-danger px-3 remove_insertfileupload" data-row="row'+count+'"><i class="fa-solid fa-trash"></i></button></td>';
+            documentLibraryFileUpload += '  <td><button type="button" class="btn btn-sm btn-danger px-3 remove_insertfileupload" data-row="row'+count+'"><i class="fa-solid fa-trash"></i></button></td>';
             documentLibraryFileUpload += '</tr>';
         $('#documentLibraryUpdate_FileUploads').append(documentLibraryFileUpload);
       });

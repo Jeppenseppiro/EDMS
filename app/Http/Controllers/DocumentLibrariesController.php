@@ -42,6 +42,9 @@ class DocumentLibrariesController extends Controller
                                                         $userAccess->where('user_access','=',auth()->user()->id);
                                                     });
                                                 })
+                                                ->when(auth()->user()->company != 5, function ($query){
+                                                    $query->where('company', '=', auth()->user()->company);
+                                                })
                                                 ->where('tag', '=', $tagID)
                                                 ->get();
         
