@@ -134,7 +134,7 @@
                     <tr>
                       <th width="65%" scope="col">File Upload</th>
                       <th width="30%" scope="col">File Type</th>
-                      <th width="5%" scope="col"><button type="button" class="btn btn-info px-3" id="documentLibrary_AddFileUpload"><i class="fa-solid fa-plus"></i></button></th>
+                      <th width="5%" scope="col"><button type="button" class="btn btn-sm btn-info px-3" id="documentLibrary_AddFileUpload"><i class="fa-solid fa-plus"></i></button></th>
                     </tr>
                   </thead>
                   <tbody id="documentLibrary_FileUploads">
@@ -489,7 +489,7 @@
             documentLibraryFileUpload += '      <option value="3">Raw File</option>';
             documentLibraryFileUpload += '    </select>';
             documentLibraryFileUpload += '  </td>';
-            documentLibraryFileUpload += '  <td><button type="button" class="btn btn-danger px-3 remove_insertfileupload" data-row="row'+count+'"><i class="fa-solid fa-trash"></i></button></td>';
+            documentLibraryFileUpload += '  <td><button type="button" class="btn btn-sm btn-danger px-3 remove_insertfileupload" data-row="row'+count+'"><i class="fa-solid fa-trash"></i></button></td>';
             documentLibraryFileUpload += '</tr>';
         $('#documentLibrary_FileUploads').append(documentLibraryFileUpload);
       });
@@ -550,16 +550,17 @@
           var documentLibraryRevision = '<li class="completed">';
               documentLibraryRevision += '<a>';
               documentLibraryRevision += '<span class="circle">+</span>';
-              documentLibraryRevision += '<span class="label">'+data[i].revision+'</span>';
+              documentLibraryRevision += '<span class="label">Revision '+data[i].revision+' ';
+              data[i].is_obsolete >= 1 ? documentLibraryRevision += '<span class="badge badge-danger">Obsolete</span>' : documentLibraryRevision += '';
+              documentLibraryRevision += '<br><span class="label" style="font-size: 10px;">Effective Date: '+data[i].effective_date+'</span>';
+              documentLibraryRevision += '</span>';
               documentLibraryRevision += '</a>';
 
-              i == 0 ? documentLibraryRevision += '<div class="step-content grey lighten-3" style=" min-width:90%;">' : documentLibraryRevision += '<div class="step-content brown lighten-3" style="min-width:90%;">';
-              i == 0 ? documentLibraryRevision += '<table class="table table-sm  table_documentRevision'+data[i].id+'">' : documentLibraryRevision += '<table class="table table-sm text-white table_documentRevision'+data[i].id+'">';
-              
-                if((userRoles.includes("1") == true || userRoles.includes("3") == true) && i == 0){
+              documentLibraryRevision += '<div class="step-content grey lighten-3" style=" min-width:90%;">';
+                documentLibraryRevision += '<table class="table table-sm  table_documentRevision'+data[i].id+'">';
+
+                if((userRoles.includes("1") == true || userRoles.includes("3") == true) && data[i].is_obsolete <= 0){
                   documentLibraryRevision += '<button data-id="'+data[i].id+'" style="text-align: center" type="button" class="btn btn-sm btn-info px-3 float-right attachment_documentRevision"><i class="fa-solid fa-plus"></i></button>';
-                } else if(i > 0) {
-                  documentLibraryRevision += '<span class="badge badge-danger float-right">Obsolete</span>';
                 }
                 
                 for(var x = 0; x < data[i].document_file_revision.length; x++){
@@ -575,21 +576,14 @@
                         $('attachment'+x).click(function() {
                           window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
                         });
-                        //documentLibraryRevision += '<button type="button">'+data[i].document_file_revision[x].attachment+'</button>';
                         documentLibraryRevision += '<a data-id="" href="../file/'+data[i].document_file_revision[x].attachment_mask+'" target="_blank" id="'+data[i].document_file_revision[x].id+'" data-file="'+data[i].document_file_revision[x].attachment+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment'+x+'">'+data[i].document_file_revision[x].attachment+'</a>';
-                        if(userRoles.includes("1") == true || userRoles.includes("3") == true){
-                          documentLibraryRevision += 'Password: '+data[i].document_file_revision[x].file_password;
-                        }
+                        userRoles.includes("1") == true || userRoles.includes("3") == true ? documentLibraryRevision += 'Password: '+data[i].document_file_revision[x].file_password : documentLibraryRevision += '';
                       documentLibraryRevision += '</td>';
 
                       documentLibraryRevision += '<td>';
-                        if(data[i].document_file_revision[x].type == 1){
-                          documentLibraryRevisionType = "Approved (Signed)";
-                        } else if (data[i].document_file_revision[x].type == 2){
-                          documentLibraryRevisionType = "Fillable";
-                        } else if (data[i].document_file_revision[x].type == 3){
-                          documentLibraryRevisionType = "Raw File";
-                        }
+                        if(data[i].document_file_revision[x].type == 1){ documentLibraryRevisionType = "Approved (Signed)"; } 
+                        else if (data[i].document_file_revision[x].type == 2){ documentLibraryRevisionType = "Fillable"; } 
+                        else if (data[i].document_file_revision[x].type == 3){ documentLibraryRevisionType = "Raw File"; }
                         documentLibraryRevision += documentLibraryRevisionType;
                       documentLibraryRevision += '</td>';
 
@@ -620,49 +614,24 @@
                         if(data[i].document_file_revision[x].is_discussed == 1){
                           if(data[i].document_file_revision[x].many_user_access[y].user_access == userID){
                             if(userProcessOwner.find(element => element == userID)){
-                              //if(userRoles.includes("1") != true || userRoles.includes("3") != true){
-                                if(userRoles.includes("1") != true || userRoles.includes("3") != true){
-                                  documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
-                                }
-                              //}
+                              if(userRoles.includes("1") != true || userRoles.includes("3") != true){
+                                documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
+                              }
                             }
                           }
                         }
-                        /* if(hasProcessOwner.find(element => element > 0) > 0){
-                          if(userProcessOwner.find(element => element == userID)){
-                            if(userRoles.includes("1") != true || userRoles.includes("3") != true){
-                              //console.log(data[i].document_file_revision[x].many_user_access[y]);
-                              //documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].is_discussed+'" type="button" style="text-align: center; width: 100%;" title="Toggle Discussed On/Off" class="btn btn-sm '+isDiscussed+' px-2 btn-documentFileRevision_Discussed">Discussed</button>';
-                              documentLibraryRevision += '<button data-id="'+data[i].document_file_revision[x].many_user_access[y].id+'" data-attachment="'+data[i].document_file_revision[x].attachment+'" id="'+data[i].document_file_revision[x].many_user_access[y].is_acknowledged+'" type="button" style="text-align: center; width: 100%;" title="Toggle Acknowledged On/Off" class="btn btn-sm '+isAcknowledged+' px-2 btn-documentFileRevision_Acknowledged">Acknowledged</button>';
-                            } else {
-                              
-                            }
-                          }
-                        } */
                       }
-                      
-
                       documentLibraryRevision += '</td>';
                     documentLibraryRevision += '</tr>';
                   }
                 }
-              documentLibraryRevision += '</table>';
-
-              documentLibraryRevision += '<div class="row">';
-              documentLibraryRevision += '<div class="col-sm">';
                 
-              documentLibraryRevision += '</div>';
-              documentLibraryRevision += '<div class="col-sm">';
-              documentLibraryRevision += '<span class="label float-right" style="font-size: 10px;">Effective Date: '+data[i].effective_date+'</span>';
-              documentLibraryRevision += '</div>';
-              documentLibraryRevision += '</div>';
-              
-
+                documentLibraryRevision += '</table>';
               documentLibraryRevision += '</div>';
               documentLibraryRevision += '</li>';
           $('#documentLibraryRevision').append(documentLibraryRevision);
         }
-        
+        console.log(data);
         $('.btn-documentRevision_ModalFilePreview').on('click', function(e){
           $(".filePreview").remove();
           var fileName = $(this).data("file");
