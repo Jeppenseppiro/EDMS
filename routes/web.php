@@ -66,7 +66,6 @@ Route::group( ['middleware' => 'auth'], function(){
     //Route::get('documentlibrary', 'DocumentLibrariesController@index')->name('documentlibrary');
     Route::get('documentlibrary/{tag}', 'DocumentLibrariesController@index');
 
-    Route::get('documentlibrary/documentlibrary/category/tag/{id}', 'DocumentLibrariesController@dependentCategory');
     Route::post('documentlibrary/documentlibrary/store', 'DocumentLibrariesController@store')->name('documentlibrary.store');
     Route::post('documentlibrary/documentlibrary/user/access', 'DocumentLibraryAccessesController@store');
     Route::post('documentlibrary/documentlibrary/user/access/{id}', 'DocumentLibraryAccessesController@access');

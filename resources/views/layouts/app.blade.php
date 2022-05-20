@@ -18,6 +18,13 @@
     {{-- <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /> --}}
     @yield('head')
     <style>
+      body  {
+        background: url({{ asset('background.jpg') }} ) no-repeat center center fixed;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
       .content {
         min-height: 100vh;
         height: auto;

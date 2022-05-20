@@ -25,7 +25,7 @@ class FilesController extends Controller
         $dateToday = date('Y-m-d');
 
         $revision_file = DocumentFileRevision::with('documentRevision.documentLibrary')
-                                            ->when(!in_array(1, $role), function ($query, $role) {
+                                            ->when(!in_array(1, $role) && !in_array(3, $role), function ($query, $role) {
                                                 $query->whereHas('documentUserAccess', function ($userAccess) {
                                                     $userAccess->where('user_access', '=', auth()->user()->id);
                                                 });
@@ -55,7 +55,7 @@ class FilesController extends Controller
             
             //User Access
             //Commit
-            if($revision_file->documentUserAccess != null || auth()->user()->role == 1){
+            if($revision_file->documentUserAccess != null || in_array(1, $role) || in_array(3, $role)){
                 $pdfPassword1 = new Pdf($file, [
                                     'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
                                     'useExec' => true,
@@ -78,7 +78,7 @@ class FilesController extends Controller
                                     'useExec' => true,
                                 ]);
 
-                if(auth()->user()->role != 1){
+                if(!in_array(1, $role) && !in_array(3, $role)){
                     //Allow Printing
                     $revision_file->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
                     //Allow Fill-In

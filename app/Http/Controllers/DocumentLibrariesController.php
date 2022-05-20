@@ -80,40 +80,8 @@ class DocumentLibrariesController extends Controller
         return $document_libraries;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function dependentCategory($id)
-    {
-        $documentLibrary_DependentCategory = DocumentCategory::where([
-                                                                        ['tag', '=', $id],
-                                                                        ['status', '!=', "Inactive"],
-                                                                    ])->get();
-        return $documentLibrary_DependentCategory;
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-    /* public function store(){
-        $documentRevisions = DocumentRevision::with('user', 'revisionFiles')
-                                ->where([
-                                    ['document_library_id', '=', 10],
-                                ])
-                                ->get();
-        dd($documentRevisions);
-    } */
-
     public function store(Request $request)
     {   
-        //dd($request->all());
-
         // Validation
         $attachmentTypes = $request->documentLibrary_AttachmentType;
         // dd($attachmentTypes);
@@ -123,33 +91,7 @@ class DocumentLibrariesController extends Controller
             'documentLibrary_DocumentNumberSeries' => ['required', 'unique:document_libraries,document_number_series'],
         ]);
 
-        //Handle File Upload
-        /* if($request->hasFile('documentLibrary_Attachment')){
-            $fileNameWithExt = $request->file('documentLibrary_Attachment')->getClientOriginalName();
-            $filename = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-            $extension = $request->file('documentLibrary_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = time().'-'.$filename.'.'.$extension;
-            
-            if ($request->documentLibrary_Tag == 1) { $tag = 'iso'; }
-            elseif ($request->documentLibrary_Tag == 2) { $tag = 'legal'; }
-            else { $tag = 'others'; }
-
-            $path = Storage::putFile('app/public/document/'.$extension.'/'.$tag, $request->file('documentLibrary_Attachment'));
-            $path_basename = basename($path);
-            //$path = $request->file('documentLibrary_Attachment')->storeAs(storage_path('app/pdf/iso/'), $fileNameToStore);
-
-            //$fileNameToStore = $request->file('documentLibrary_Attachment');
-        } else {
-            $extension = $request->file('documentLibrary_Attachment')->getClientOriginalExtension();
-            $fileNameToStore = "noimage.".$extension;
-        } */
-
-        // $getDocumentLibraryID = DB::select("SHOW TABLE STATUS LIKE 'document_libraries'");
-        // $nextDocumentLibraryID = $getDocumentLibraryID[0]->Auto_increment;
-
-        // $getDocumentRevisionID = DB::select("SHOW TABLE STATUS LIKE 'document_revisions'");
-        // $nextDocumentRevisionID = $getDocumentRevisionID[0]->Auto_increment;
-
+        //Document Library
         $documentLibrary = new DocumentLibrary;
         $documentLibrary->description = $request->documentLibrary_Description;
         $documentLibrary->category = $request->documentLibrary_Category;
@@ -167,6 +109,7 @@ class DocumentLibrariesController extends Controller
         $documentRevision = new DocumentRevision;
         $documentRevision->document_library_id = $documentLibrary->id;
         $documentRevision->revision = $request->documentLibrary_Revision;
+        $documentRevision->effective_date = $request->documentLibrary_DateEffective;
         $documentRevision->user = auth()->user()->id;
         $documentRevision->save();
 
@@ -211,8 +154,10 @@ class DocumentLibrariesController extends Controller
                                                     ['document_library_id', '=', $id],
                                                 ])
                                                 ->orderBy('id', 'desc')
-                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($q) {
-                                                    $q->skip(0)->take(1);
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+                                                    $query->whereHas('documentFileRevision.manyUserAccess', function ($userAccess) {
+                                                        $userAccess->where('user_access','=',auth()->user()->id);
+                                                    });
                                                 })
                                                 ->get();
         
