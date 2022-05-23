@@ -31,7 +31,7 @@
                     <th class="th-sm" width="">Proposed Effective Date</th>
                     <th class="th-sm" width="">Request Type</th>
                     <th class="th-sm" width="">Document Type</th>
-                    <th class="th-sm" width="">Document to Revise</th>
+                    {{-- <th class="th-sm" width="">Document to Revise</th> --}}
                     <th class="th-sm" width="">Document Purpose Request</th>
                     <th class="th-sm" width="">Status</th>
                     <th class="th-sm" width="">Action</th>
@@ -47,11 +47,11 @@
                       <td>{{$request_iso_entry->proposed_effective_date}}</td>
                       <td>{{$request_iso_entry->requestType->description}}</td>
                       <td>{{$request_iso_entry->documentType->category_description}}</td>
-                      <td>
+                      {{-- <td>
                         @if($request_iso_entry->documentToRevise != null) 
                           {{$request_iso_entry->documentToRevise->document_number_series}}
                         @endif
-                      </td>
+                      </td> --}}
                       <td>{{$request_iso_entry->document_purpose_request}}</td>
                       <td>{{$request_iso_entry->requestIsoEntryLatestHistory->status}}</td>
                       <td>
