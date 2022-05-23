@@ -169,6 +169,10 @@
                   <input id="updateDocumentLibrary_UserID" name="updateDocumentLibrary_UserID" type="hidden" value="{{ Auth::user()->id }}"/>
                   <input id="documentLibrary_Tag" name="documentLibrary_Tag" type="hidden" value="{{ $tagID }}"/>
                     <div class="container">
+                      <a href="../extraction/library/1" target="_blank" style="text-align: center" type="button" class="btn btn-outline-success waves-effect pdf_RevisionHistory">
+                        PDF
+                      </a>
+
                       <div class="row">
                         <div class="col-sm-6">
                           <div class="md-form">
@@ -444,28 +448,6 @@
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');
 
-      /* $('#documentLibrary_Tag').on('change', e => {
-        documentTagID = $('#documentLibrary_Tag option:selected').not('option:disabled').val();
-
-        
-        $.ajax({
-          //dataType: 'JSON',
-          type: 'GET',
-          //documentlibrary/store
-          url:  'documentlibrary/category/tag/'+documentTagID,
-          //data: documentLibraryID,
-          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        }).done(function(data){
-          console.log(data);
-          $('#documentLibrary_Category').empty();
-          $('#documentLibrary_Category').append('<option class="documentCategory_OptionDisabled" value="" disabled selected>Category</option>');
-          $.each(data, function(key, data){
-            $('#documentLibrary_Category').append('<option value="'+ data.id +'">' + data.category_description+ '</option>');
-          });
-        });
-      }).trigger('change'); */
-      
-
       $('#documentLibrary_AddFileUpload').on('click', function(e){
         var count = count + 1;
         var documentLibraryFileUpload =
@@ -536,6 +518,7 @@
 
       $('#modalDocumentLibraryUpdate').modal('show');
       var documentLibraryID = $(this).data("id");
+      
       $.ajax({
         dataType: 'JSON',
         type: 'POST',
@@ -545,6 +528,7 @@
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
       }).done(function(data){
         $(".completed").remove();
+        $('.pdf_RevisionHistory').attr("href", '../extraction/library/'+documentLibraryID);
         $('#updateDocumentLibrary_ID').val(documentLibraryID);
         for(let i = 0; i < data.length; i++){
           var documentLibraryRevision = '<li class="completed">';

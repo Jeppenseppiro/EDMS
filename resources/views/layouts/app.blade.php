@@ -18,13 +18,6 @@
     {{-- <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /> --}}
     @yield('head')
     <style>
-      body  {
-        background: url({{ asset('background.jpg') }} ) no-repeat center center fixed;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-      }
       .content {
         min-height: 100vh;
         height: auto;
@@ -69,106 +62,102 @@
     </div> --}}
     @include('includes.navbar')
     @yield('content')
-  </body>
 
-  {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
-  <script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/bootstrap.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/mdb.min.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/addons-pro/timeline.min.js') }}" type="text/javascript"></script>
-  {{-- <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/filepond.js') }}" type="text/javascript"></script> --}}
-  
-  {{-- <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script> --}}
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
-  <script src="{{ url('js/addons/datatables.min.js') }}" type="text/javascript"></script>
-  <script src="{{ asset('js/datatables/dataTables.buttons.min.js')}}"></script>
-  <script src="{{ asset('js/buttons.html5.min.js')}}"></script>
-  <script src="{{ asset('js/buttons.print.min.js')}}"></script>
-  <script src="{{ asset ('js/jszip/jszip.min.js')}}"></script>
-  <script src="{{ asset('js/pdfmake/pdfmake.min.js')}}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-  
-  {{-- <script src="filepond.min.js"></script>
-  <script src="filepond.jquery.js"></script> --}}
-  {{-- <script>
-    CKEDITOR.replace('sample-editor');
-  </script> --}}
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
-  <script>
-    $(window).on('load', function() {
-      $('#mdb-preloader').delay(100).fadeOut(300);
-    });
-
-    $(document).ready(function() {
-      // SideNav Button Initialization
-      $(".button-collapse").sideNav({
-        slim: true
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
+    <script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/popper.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/bootstrap.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/mdb.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/addons-pro/timeline.min.js') }}" type="text/javascript"></script>
+    {{-- <script src="{{ asset('ckeditor5-build-classic/ckeditor.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/filepond.js') }}" type="text/javascript"></script> --}}
+    {{-- <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="{{ url('js/addons/datatables.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/datatables/dataTables.buttons.min.js')}}"></script>
+    <script src="{{ asset('js/buttons.html5.min.js')}}"></script>
+    <script src="{{ asset('js/buttons.print.min.js')}}"></script>
+    <script src="{{ asset ('js/jszip/jszip.min.js')}}"></script>
+    <script src="{{ asset('js/pdfmake/pdfmake.min.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    {{-- <script src="filepond.min.js"></script>
+    <script src="filepond.jquery.js"></script> --}}
+    {{-- <script>
+      CKEDITOR.replace('sample-editor');
+    </script> --}}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      $(window).on('load', function() {
+        $('#mdb-preloader').delay(100).fadeOut(300);
       });
-      // SideNav Scrollbar Initialization
-      var sideNavScrollbar = document.querySelector('.custom-scrollbar');
-      var ps = new PerfectScrollbar(sideNavScrollbar);
-    })
+
+      $(document).ready(function() {
+        // SideNav Button Initialization
+        $(".button-collapse").sideNav({
+          slim: true
+        });
+        // SideNav Scrollbar Initialization
+        var sideNavScrollbar = document.querySelector('.custom-scrollbar');
+        var ps = new PerfectScrollbar(sideNavScrollbar);
+      })
+      
+      var container = document.querySelector('.custom-scrollbar');
+      var ps = new PerfectScrollbar(container, {
+        wheelSpeed: 2,
+        wheelPropagation: true,
+        minScrollbarLength: 20
+      });
+
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth()+01).padStart(2, '0'); //January is 0!
+      var mm_datepicker = String(today.getMonth()).padStart(2, '0'); //January is 0!
+      var yyyy = today.getFullYear();
+      today = mm + '/' + dd + '/' + yyyy;
+
+      // Data Picker Initialization
+      $('.datepicker').pickadate({
+        min: new Date(yyyy,mm_datepicker,dd),
+        format: 'yyyy-mm-dd',
+        formatSubmit: 'yyyy-mm-dd',
+      });
+
+      // Material Select Initialization
+      $(document).ready(function() {
+        $('.mdb-select').materialSelect();
+      });
+
+      // Tooltips Initialization
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+
+      //
+      toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": false,
+        "positionClass": "md-toast-top-full-width",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": 300,
+        "hideDuration": 1000,
+        "timeOut": 0,
+        "extendedTimeOut": 0,
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut",
+        "tapToDismiss": false
+      }
+
+      $('.errorMessage').trigger('click');
+      // What You See Is What You Get (WYSIWYG) Text Editor
+      //$("#demo").mdbWYSIWYG();
+    </script>
     
-    var container = document.querySelector('.custom-scrollbar');
-    var ps = new PerfectScrollbar(container, {
-      wheelSpeed: 2,
-      wheelPropagation: true,
-      minScrollbarLength: 20
-    });
-
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth()+01).padStart(2, '0'); //January is 0!
-    var mm_datepicker = String(today.getMonth()).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    today = mm + '/' + dd + '/' + yyyy;
-
-    // Data Picker Initialization
-    $('.datepicker').pickadate({
-      min: new Date(yyyy,mm_datepicker,dd),
-      format: 'yyyy-mm-dd',
-      formatSubmit: 'yyyy-mm-dd',
-    });
-
-    // Material Select Initialization
-    $(document).ready(function() {
-      $('.mdb-select').materialSelect();
-    });
-
-    // Tooltips Initialization
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-
-    //
-    toastr.options = {
-      "closeButton": true,
-      "debug": false,
-      "newestOnTop": true,
-      "progressBar": false,
-      "positionClass": "md-toast-top-full-width",
-      "preventDuplicates": false,
-      "onclick": null,
-      "showDuration": 300,
-      "hideDuration": 1000,
-      "timeOut": 0,
-      "extendedTimeOut": 0,
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "fadeIn",
-      "hideMethod": "fadeOut",
-      "tapToDismiss": false
-    }
-
-    $('.errorMessage').trigger('click');
-    // What You See Is What You Get (WYSIWYG) Text Editor
-    //$("#demo").mdbWYSIWYG();
-  </script>
-  
-  @yield('script')
+    @yield('script')
+  </body>
 </html>
