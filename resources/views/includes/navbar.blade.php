@@ -62,7 +62,11 @@
                       <div class="collapsible-body">
                         <ul>
                           <li><a href="{{ url('documentrequest/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Entry</a></li>
+                          
+                          @if(in_array(1, $role) || in_array(8, $role))
                           <li><a href="{{ url('documentcopy/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Copy</a></li>
+                          @endif
+                          
                           <li><a href="{{ url('documentlibrary/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Document Library</a></li>
                         </ul>
                       </div>

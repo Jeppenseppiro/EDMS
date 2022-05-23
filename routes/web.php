@@ -40,6 +40,8 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::put('documentrequest/documentrequest/{id}', 'RequestEntriesController@update');
     Route::post('documentrequest/documentrequest/requesthistory/iso/{id}', 'RequestEntriesController@history_iso');
     Route::post('documentrequest/documentrequest/requesthistory/legal/{id}', 'RequestEntriesController@history_legal');
+    Route::post('documentrequest/documentrequest/documenttype/iso/{id}', 'RequestEntriesController@documentInformationType');
+
     Route::get('documentrequest/requestentryhistory', 'RequestEntryHistoriesController@index');
     Route::post('documentrequest/requestentryhistory/iso/store', 'RequestEntryHistoriesController@iso_store')->name('requestentryhistory_iso');
     Route::post('documentrequest/requestentryhistory/legal/store', 'RequestEntryHistoriesController@legal_store')->name('requestentryhistory_legal');
@@ -90,9 +92,9 @@ Route::group( ['middleware' => 'auth'], function(){
 
     //---------- PDF View ----------//
     Route::get('/file/{link}', 'FilesController@documentFile')->name('pdf_iso');
-    Route::get('/file/{attachment}/{uniquelink}', 'FilesController@requestCopy');
-    Route::get('/file/etransmittal/{uniquelink}', 'FilesController@etransmittalFile');
+    Route::get('/file/etransmittal/{link}', 'FilesController@etransmittalFile');
     Route::get('/file/permittinglicenses/{link}', 'FilesController@permittingLicenses')->name('permittingandlicenses.file');
+    Route::get('/file/{attachment}/{uniquelink}', 'FilesController@requestCopy');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
 
     //---------- PDF Export ----------//

@@ -30,9 +30,20 @@ class RequestEntriesController extends Controller
         }
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
+
+
         $request_iso_entries = RequestIsoEntry::with('user','requestType','documentType','documentToRevise','requestStatus','requestIsoEntryLatestHistory')
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+                                                    $query->where('requestor_name','=',auth()->user()->id);
+                                                })
                                                 ->get();
-        $request_legal_entries = RequestLegalEntry::with('user','documentType','requestStatus')->get();
+        $request_legal_entries = RequestLegalEntry::with('user','documentType','requestStatus')
+                                                    ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+                                                        $query->where('requestor_name','=',auth()->user()->id);
+                                                    })
+                                                    ->get();
+
+
         $users = User::get();
         $document_iso_categories = DocumentCategory::where([
                                                             ['tag', '!=', '2'],
@@ -242,5 +253,15 @@ class RequestEntriesController extends Controller
                                     ])
                                     ->orderBy('id', 'DESC')->get();
         return $requestIsoEntryHistories;
+    }
+
+    public function documentInformationType(Request $request, $id)
+    {
+        $documentInformationType = DocumentLibrary::with('documentCategory')
+                                    ->where([
+                                        ['id', '=', $id]
+                                    ])
+                                    ->first();
+        return $documentInformationType;
     }
 }
