@@ -272,7 +272,7 @@
                                     @endif
                                   </a>
                                   @if(in_array(1, $role) || in_array(3, $role))
-                                    Password: {{$request_iso_copy->documentRevision->documentFileRevision[$key]->file_password}}
+                                    Password: {{$request_iso_copy->password}}
                                   @endif
                                   <br> 
                                 @endif 

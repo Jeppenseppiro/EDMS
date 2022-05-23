@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\HtmlString;
 
 class SendRequestEntry extends Notification
 {
@@ -43,10 +44,20 @@ class SendRequestEntry extends Notification
     {
         return (new MailMessage)
                     ->subject("Request Entry: ".$this->requestEntryEmail['dicr_no'])
-                    ->line("DICR No: ".$this->requestEntryEmail['dicr_no'])
+
+                    ->line(new HtmlString
+                        ("Request Entry: <b>".$this->requestEntryEmail['dicr_no']."</b>"))
+                    ->line(new HtmlString
+                        ("DICR No: <b>".$this->requestEntryEmail['dicr_no']."</b><br> 
+                          Title: <b>".$this->requestEntryEmail['title']."</b><br> 
+                          Status: <b>".$this->requestEntryEmail['status']."</b><br> 
+                          Remarks: <b>".$this->requestEntryEmail['remarks']."</b>
+                        "));
+
+                    /* ->line("DICR No: ".$this->requestEntryEmail['dicr_no'])
                     ->line("Title: ".$this->requestEntryEmail['title'])
                     ->line("Status: ".$this->requestEntryEmail['status'])
-                    ->line("Remarks: ".$this->requestEntryEmail['remarks']);
+                    ->line("Remarks: ".$this->requestEntryEmail['remarks']); */
     }
 
     /**
