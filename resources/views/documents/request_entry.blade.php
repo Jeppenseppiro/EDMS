@@ -168,8 +168,8 @@
 
               if(data[i].request_file){
                 //requestEntryHistoryData += '<span class="label float-left" style="font-size: 14px;" href="asd">'+data[i].request_file.file_upload+'</span>';
-                // requestEntryHistoryData += '<button id="'+i+'" data-file="'+data[i].request_file.file_mask+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-requestEntry_ModalFilePreview" data-toggle="modal" data-target="#filePreviewModal">'+data[i].request_file.file_upload+'</button>';
-                requestEntryHistoryData += '<a data-id="" href="../file/requestentry/'+data[i].request_file.file_mask+'" target="_blank" style="text-align: center" type="button" class="btn btn-sm btn-success px-2">'+data[i].request_file.file_upload+'</a>';
+                requestEntryHistoryData += '<button id="'+i+'" data-file="'+data[i].request_file.file_mask+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-requestEntry_ModalFilePreview" data-toggle="modal" data-target="#filePreviewModal">'+data[i].request_file.file_upload+'</button>';
+                // requestEntryHistoryData += '<a data-id="" href="../file/requestentry/'+data[i].request_file.file_mask+'" target="_blank" style="text-align: center" type="button" class="btn btn-sm btn-success px-2">'+data[i].request_file.file_upload+'</a>';
               }
               
               requestEntryHistoryData += '</div>';
@@ -189,7 +189,7 @@
           var fileName = $(this).data("file");
           var requestEntryFilePreview = '<div class="filePreview">';
               /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-              requestEntryFilePreview += '<iframe src="../storage/request entry/pdf/iso/'+fileName+'#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
+              requestEntryFilePreview += '<iframe src="../storage/requestentry/pdf/iso/'+fileName+'#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
               requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
           $('#requestEntry_ModalFilePreview').append(requestEntryFilePreview);
@@ -551,7 +551,7 @@
           var fileName = $(this).data("file");
           var requestEntryFilePreview = '<div class="filePreview">';
               /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-              requestEntryFilePreview += '<embed src="../storage/request entry/pdf/legal/'+fileName+'#toolbar=0" style="width:100%;height:100vh;"/>';
+              requestEntryFilePreview += '<embed src="../storage/requestentry/pdf/legal/'+fileName+'#toolbar=0" style="width:100%;height:100vh;"/>';
               requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
           $('#requestLegalEntry_ModalFilePreview').append(requestEntryFilePreview);
