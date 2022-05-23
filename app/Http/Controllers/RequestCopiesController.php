@@ -83,10 +83,10 @@ class RequestCopiesController extends Controller
     
     public function store_iso(Request $request)
     {
-        /* $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
+        $seed = str_split('ABCDEFGHIJKLMNOPQRSTUVWXYZ'); // and any other characters  
         shuffle($seed); // probably optional since array_is randomized; this may be redundant
-        $requestCopy_Code = '';
-        foreach (array_rand($seed, 6) as $k) $requestCopy_Code .= $seed[$k]; */
+        $requestcopy_Password = '';
+        foreach (array_rand($seed, 6) as $k) $requestcopy_Password .= $seed[$k];
         $this->validate($request, [
             'requestCopy_Requestor' => ['required'],
             'requestCopy_FileRequest' => ['required'],
@@ -107,6 +107,7 @@ class RequestCopiesController extends Controller
         $requestIsoCopy->tag = $request->requestISOCopy_TagID;
         $requestIsoCopy->date_request = $request->requestISOCopy_DateRequest;
         $requestIsoCopy->document_library_id = $request->requestCopy_FileRequest;
+        $requestIsoCopy->password = $requestcopy_Password;
 
         $revision = DocumentLibrary::with(['documentMultipleRevision' => function($query){
                                     $query->where('is_obsolete', '=', 0);
