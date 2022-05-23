@@ -90,9 +90,9 @@ Route::group( ['middleware' => 'auth'], function(){
 
     //---------- PDF View ----------//
     Route::get('/file/{link}', 'FilesController@documentFile')->name('pdf_iso');
-    Route::get('/file/{attachment}/{uniquelink}', 'FilesController@requestCopy');
-    Route::get('/file/etransmittal/{uniquelink}', 'FilesController@etransmittalFile');
+    Route::get('/file/etransmittal/{link}', 'FilesController@etransmittalFile');
     Route::get('/file/permittinglicenses/{link}', 'FilesController@permittingLicenses')->name('permittingandlicenses.file');
+    Route::get('/file/{attachment}/{uniquelink}', 'FilesController@requestCopy');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
 
     //---------- PDF Export ----------//
