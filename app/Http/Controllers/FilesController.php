@@ -329,8 +329,7 @@ class FilesController extends Controller
 
     public function requestentryFile($link)
     {
-        $fileUpload = FileUpload::with('getTag')->where([['file_mask', '=', $link],])->first();
-        // dd($fileUpload);
+        /* $fileUpload = FileUpload::with('getTag')->where([['file_mask', '=', $link],])->first();
         $extension = $fileUpload->file_upload;
         $extension = explode(".",$extension);
         $extension = end($extension);
@@ -351,14 +350,40 @@ class FilesController extends Controller
                         'useExec' => true,
                     ]);
 
-        $pdf->allow('FillIn')
-                ->saveAs($tmpFile);
+        $result = $pdf->addFile($file)
+            ->allow('AllFeatures')
+            ->saveAs($tmpFile);
+        if ($result === false) {
+            $error = $pdf->getError();
+        }
 
         if($extension == 'pdf'){
             return response()->file($tmpFile);
         } else {
             return response()->download($file);
+        } */
+        $file = storage_path('app/public/requestentry/pdf/iso/Inma1oofZ8aNzlxOmL3jTnHp2mOaFPT06qVG2cOV.pdf');
+        $tmpFile = storage_path('app/public/tmp/')."Inma1oofZ8aNzlxOmL3jTnHp2mOaFPT06qVG2cOV.pdf";
+        $pw = 'abc';
+        $pdf = new Pdf($file/* , [
+                        'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                        'useExec' => true,
+                    ] */);
+
+        $result = $pdf->allow(null)      // Change permissions
+            ->flatten()                 // Merge form data into document (doesn't work well with UTF-8!)
+            ->keepId('first')           // Keep first/last Id of combined files
+            ->dropXfa()                 // Drop newer XFA form from PDF
+            ->dropXmp()                 // Drop newer XMP data from PDF
+            ->needAppearances()         // Make clients create appearance for form fields
+            ->setPassword($pw)          // Set owner password
+            ->setUserPassword($pw)      // Set user password
+            ->passwordEncryption(128)   // Set password encryption strength
+            ->saveAs($tmpFile);
+        if ($result === false) {
+            $error = $pdf->getError();
         }
+        return response()->file($tmpFile);
     }
 
     public function etransmittalFile($link)
