@@ -243,4 +243,14 @@ class RequestEntriesController extends Controller
                                     ->orderBy('id', 'DESC')->get();
         return $requestIsoEntryHistories;
     }
+
+    public function documentInformationType(Request $request, $id)
+    {
+        $documentInformationType = DocumentLibrary::with('documentCategory')
+                                    ->where([
+                                        ['id', '=', $id]
+                                    ])
+                                    ->first();
+        return $documentInformationType;
+    }
 }

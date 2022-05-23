@@ -75,6 +75,21 @@
     $(".requestEntryDocumentRevised").hide();
     $(".requestEntryAttachment").hide();
     
+    $('#requestEntry_DocumentRevised').change(function () {
+      requestEntry_DocumentRevisedID = $(this).val();
+      requestEntry = {};
+        requestEntry.DocumentRevisedID = requestEntry_DocumentRevisedID;
+
+      $.ajax({
+        dataType: 'JSON',
+        type: 'POST',
+        url:  'documentrequest/documenttype/iso/'+requestEntry_DocumentRevisedID,
+        data: requestEntry,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+      }).done(function(data){
+        $('#requestEntry_DocumentType').val(data.category);
+      });
+    });
 
     $('.btn-requestIsoEntryInsert').on('click', function(e){
       $("#requestEntry_DICR").val();
@@ -90,27 +105,31 @@
       $('#requestEntry_DocumentPurposeRequest').val('').trigger("change"); */
 
       $("#requestEntry_RequestType").change(function() {
-        if($('#requestEntry_RequestType').val() == 1){
-          $('#requestEntry_DocumentRevised').val('');
-          $(".requestEntryDocumentRevised").hide();
-          $("#requestEntry_DocumentRevised").prop('required',false);
-          $(".requestEntryAttachment").show();
-          
-        } else if($('#requestEntry_RequestType').val() == 2){
+        if($('#requestEntry_RequestType').val() == 2){
           $(".requestEntryDocumentRevised").show();
           $(".requestEntryAttachment").show();
+          $("#requestEntry_Attachment").prop('required',true);
           $("#requestEntry_DocumentRevised").prop('required',true);
+          $("#requestEntry_DocumentType").addClass("disabled");
           $('.requestEntry_DocumentReference').text("Document to be Revised");
           $('.requestEntry_DocumentReferenceNote').html("Note: Pevious revisions will automatically be <b>Obsolete</b> once new revision is uploaded");
         } else if($('#requestEntry_RequestType').val() == 3 || $('#requestEntry_RequestType').val() == 4){
-          $(".requestEntryAttachment").hide();
           $(".requestEntryDocumentRevised").show();
+          $(".requestEntryAttachment").hide();
+          $("#requestEntry_Attachment").prop('required',false);
           $("#requestEntry_DocumentRevised").prop('required',true);
+          $("#requestEntry_DocumentType").addClass("disabled");
           $('.requestEntry_DocumentReference').text("Document to be Discontinued");
           $('.requestEntry_DocumentReferenceNote').text("");
+        } else/* ($('#requestEntry_RequestType').val() == 1) */{
+          $('#requestEntry_DocumentRevised').val('');
+          $(".requestEntryDocumentRevised").hide();
+          $("#requestEntry_DocumentRevised").prop('required',false);
+          $("#requestEntry_DocumentType").removeClass("disabled");
+          $(".requestEntryAttachment").show();
+          $("#requestEntry_Attachment").prop('required',false);
         }
       });
-
     });
 
     // -- Datatable Action Buttons --//

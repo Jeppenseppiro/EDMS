@@ -40,6 +40,8 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::put('documentrequest/documentrequest/{id}', 'RequestEntriesController@update');
     Route::post('documentrequest/documentrequest/requesthistory/iso/{id}', 'RequestEntriesController@history_iso');
     Route::post('documentrequest/documentrequest/requesthistory/legal/{id}', 'RequestEntriesController@history_legal');
+    Route::post('documentrequest/documentrequest/documenttype/iso/{id}', 'RequestEntriesController@documentInformationType');
+
     Route::get('documentrequest/requestentryhistory', 'RequestEntryHistoriesController@index');
     Route::post('documentrequest/requestentryhistory/iso/store', 'RequestEntryHistoriesController@iso_store')->name('requestentryhistory_iso');
     Route::post('documentrequest/requestentryhistory/legal/store', 'RequestEntryHistoriesController@legal_store')->name('requestentryhistory_legal');

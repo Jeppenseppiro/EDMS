@@ -13,6 +13,9 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
     public function index(){
+        $role = explode(",",auth()->user()->role);
+        $dateToday = date('Y-m-d');
+
         $requestEntries = RequestIsoEntry::select('id', 'created_at')->get()->groupBy(function($data){
             return Carbon::parse($data->created_at)->format('M');
         });
@@ -71,6 +74,8 @@ class DashboardController extends Controller
                 'requestEntries_MonthCount' => $requestEntries_MonthCount,
                 'requestCopies_Months' => $requestCopies_Months,
                 'requestCopies_MonthCount' => $requestCopies_MonthCount,
+                'role' => $role,
+                'dateToday' => $dateToday,
             )
         );
     }

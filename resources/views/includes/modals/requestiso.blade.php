@@ -114,7 +114,7 @@
               <div class="file-field">
                 <div class="btn btn-primary btn-sm float-left">
                   <span>Choose file</span>
-                  <input type="file" name="requestEntry_Attachment" required>
+                  <input type="file" id="requestEntry_Attachment" name="requestEntry_Attachment" required>
                 </div>
                 <div class="file-path-wrapper">
                   <input class="file-path validate" type="text" placeholder="Attachment">

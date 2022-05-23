@@ -31,6 +31,8 @@ class EtransmittalsController extends Controller
             array(
                 'users' => $users,
                 'etransmittals' => $etransmittals,
+                'role' => $role,
+                'dateToday' => $dateToday,
             )
         );
     }
