@@ -1,4 +1,12 @@
 /* Your custom styles */
+body {
+  background: url('background.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -webkit-background-size: cover;
+}
+
 #mdb-preloader {
   position: fixed;
   top: 0;

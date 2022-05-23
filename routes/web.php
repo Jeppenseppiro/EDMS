@@ -94,4 +94,7 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::get('/file/etransmittal/{uniquelink}', 'FilesController@etransmittalFile');
     Route::get('/file/permittinglicenses/{link}', 'FilesController@permittingLicenses')->name('permittingandlicenses.file');
     Route::get('/pdf/isoview/{link}', 'FilesController@viewISO');
+
+    //---------- PDF Export ----------//
+    Route::get('/extraction/library/{document_library_id}', 'ExtractionsController@library_revision')->name('extraction.documentlibrary');
 });
