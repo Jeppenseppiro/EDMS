@@ -168,7 +168,8 @@
 
               if(data[i].request_file){
                 //requestEntryHistoryData += '<span class="label float-left" style="font-size: 14px;" href="asd">'+data[i].request_file.file_upload+'</span>';
-                requestEntryHistoryData += '<button id="'+i+'" data-file="'+data[i].request_file.file_mask+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-requestEntry_ModalFilePreview" data-toggle="modal" data-target="#filePreviewModal">'+data[i].request_file.file_upload+'</button>';
+                // requestEntryHistoryData += '<button id="'+i+'" data-file="'+data[i].request_file.file_mask+'" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-requestEntry_ModalFilePreview" data-toggle="modal" data-target="#filePreviewModal">'+data[i].request_file.file_upload+'</button>';
+                requestEntryHistoryData += '<a data-id="" href="../file/requestentry/'+data[i].request_file.file_mask+'" target="_blank" style="text-align: center" type="button" class="btn btn-sm btn-success px-2">'+data[i].request_file.file_upload+'</a>';
               }
               
               requestEntryHistoryData += '</div>';

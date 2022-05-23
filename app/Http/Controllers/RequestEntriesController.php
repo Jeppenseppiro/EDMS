@@ -124,7 +124,7 @@ class RequestEntriesController extends Controller
             $extension = $request->file('requestEntry_Attachment')->getClientOriginalExtension();
             $fileNameToStore = $filename.'.'.$extension;
 
-            $path = Storage::putFile('public/request entry/' . $extension . '/iso/', $request->file('requestEntry_Attachment'));
+            $path = Storage::putFile('public/requestentry/' . $extension . '/iso/', $request->file('requestEntry_Attachment'));
             $path_basename = basename($path);
 
             $fileUpload = new FileUpload;
@@ -198,7 +198,7 @@ class RequestEntriesController extends Controller
             $extension = $request->file('requestLegalEntry_Attachment')->getClientOriginalExtension();
             $fileNameToStore = $filename.'.'.$extension;
 
-            $path = Storage::putFile('public/request entry/' . $extension . '/legal/', $request->file('requestLegalEntry_Attachment'));
+            $path = Storage::putFile('public/requestentry/' . $extension . '/legal/', $request->file('requestLegalEntry_Attachment'));
             $path_basename = basename($path);
 
             $fileUpload = new FileUpload;

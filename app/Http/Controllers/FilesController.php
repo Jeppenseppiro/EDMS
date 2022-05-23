@@ -7,6 +7,8 @@ use App\DocumentFileRevision;
 use App\DocumentLibrary;
 use App\Etransmittal;
 use App\EtransmittalHistory;
+use App\FileUpload;
+use App\Tag;
 use App\RequestIsoCopy;
 use App\RequestCopyHistory;
 use tecknickom\tcpdf\tcpdf;
@@ -275,7 +277,6 @@ class FilesController extends Controller
 
                         $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
                                         ->addFile($file, 'A', $pdfPassword_password)
-                                        
                                         ->stamp($watermarkFile)
                                         ->saveAs($tmpFile);
                         if($request_copy->documentRevision->is_obsolete == 1){
@@ -326,6 +327,40 @@ class FilesController extends Controller
         }
     }
 
+    public function requestentryFile($link)
+    {
+        $fileUpload = FileUpload::with('getTag')->where([['file_mask', '=', $link],])->first();
+        // dd($fileUpload);
+        $extension = $fileUpload->file_upload;
+        $extension = explode(".",$extension);
+        $extension = end($extension);
+
+        if($fileUpload->tag == 1){
+            $fileUpload_Tag = 'iso';
+        } elseif($fileUpload->tag == 2){
+            $fileUpload_Tag = 'legal';
+        } else{
+            $fileUpload_Tag = 'others';
+        }
+
+        $file = storage_path('app/public/requestentry/'.$extension.'/'.$fileUpload_Tag.'/'.$fileUpload->file_mask);
+        $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
+
+        $pdf = new Pdf($file, [
+                        'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
+                        'useExec' => true,
+                    ]);
+
+        $pdf->allow('FillIn')
+                ->saveAs($tmpFile);
+
+        if($extension == 'pdf'){
+            return response()->file($tmpFile);
+        } else {
+            return response()->download($file);
+        }
+    }
+
     public function etransmittalFile($link)
     {
         $etransmittal = EtransmittalHistory::where([['attachment_mask', '=', $link],])->first();
@@ -340,7 +375,6 @@ class FilesController extends Controller
             return response()->download($file);
         }
     }
-
     public function permittingLicenses($link)
     {
         $permittingLicense = PermitLicense::where([['attachment_mask', '=', $link],])->first();
