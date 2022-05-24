@@ -177,18 +177,29 @@ class FilesController extends Controller
                                                 })
                                                 ->first();
         } */
-        $request_copy = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
-                                                ->when(!in_array(1, $role), function ($query, $role) {
+        /* $request_copy = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query, $role) {
                                                     $query->whereHas('documentUserAccess', function ($userAccess) {
-                                                        $userAccess->where('user_access', '=', auth()->user()->id);
+                                                        
                                                     });
                                                 })
                                                 ->where('attachment_mask', $attachment)
                                                 ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userLink) use($uniquelink){
                                                     $userLink->where('request_copy_uniquelink', '=', $uniquelink);
                                                 })
+                                                ->first(); */
+        $request_copy = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
+                                                ->where('attachment_mask', $attachment)
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+                                                    $query->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
+                                                        $query->where('requestor', '=', auth()->user()->id);
+                                                    });
+                                                })
+                                                ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userLink) use($uniquelink){
+                                                    $userLink->where('request_copy_uniquelink', '=', $uniquelink);
+                                                })
                                                 ->first();
-        // dd($request_copy);
+        dd($request_copy);
 
         if(!empty($request_copy)){
             $date1 = date('Y-m-d', time());
@@ -327,64 +338,6 @@ class FilesController extends Controller
         }
     }
 
-    public function requestentryFile($link)
-    {
-        /* $fileUpload = FileUpload::with('getTag')->where([['file_mask', '=', $link],])->first();
-        $extension = $fileUpload->file_upload;
-        $extension = explode(".",$extension);
-        $extension = end($extension);
-
-        if($fileUpload->tag == 1){
-            $fileUpload_Tag = 'iso';
-        } elseif($fileUpload->tag == 2){
-            $fileUpload_Tag = 'legal';
-        } else{
-            $fileUpload_Tag = 'others';
-        }
-
-        $file = storage_path('app/public/requestentry/'.$extension.'/'.$fileUpload_Tag.'/'.$fileUpload->file_mask);
-        $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
-
-        $pdf = new Pdf($file, [
-                        'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
-                        'useExec' => true,
-                    ]);
-
-        $result = $pdf->addFile($file)
-            ->allow('AllFeatures')
-            ->saveAs($tmpFile);
-        if ($result === false) {
-            $error = $pdf->getError();
-        }
-
-        if($extension == 'pdf'){
-            return response()->file($tmpFile);
-        } else {
-            return response()->download($file);
-        } */
-        $file = storage_path('app/public/requestentry/pdf/iso/Inma1oofZ8aNzlxOmL3jTnHp2mOaFPT06qVG2cOV.pdf');
-        $tmpFile = storage_path('app/public/tmp/')."Inma1oofZ8aNzlxOmL3jTnHp2mOaFPT06qVG2cOV.pdf";
-        $pw = 'abc';
-        $pdf = new Pdf($file/* , [
-                        'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
-                        'useExec' => true,
-                    ] */);
-
-        $result = $pdf->allow(null)      // Change permissions
-            ->flatten()                 // Merge form data into document (doesn't work well with UTF-8!)
-            ->keepId('first')           // Keep first/last Id of combined files
-            ->dropXfa()                 // Drop newer XFA form from PDF
-            ->dropXmp()                 // Drop newer XMP data from PDF
-            ->needAppearances()         // Make clients create appearance for form fields
-            ->setPassword($pw)          // Set owner password
-            ->setUserPassword($pw)      // Set user password
-            ->passwordEncryption(128)   // Set password encryption strength
-            ->saveAs($tmpFile);
-        if ($result === false) {
-            $error = $pdf->getError();
-        }
-        return response()->file($tmpFile);
-    }
 
     public function etransmittalFile($link)
     {
