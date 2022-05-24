@@ -30,6 +30,9 @@ class RequestCopiesController extends Controller
         $dateToday = date('Y-m-d');
 
         $request_iso_copies = RequestIsoCopy::with('userRequestor', 'documentRevision.documentFileRevision', 'requestCopyType','requestIsoCopyLatestHistory')
+                                            ->when(!in_array(1, $role), function ($query) {
+                                                $query->where('requestor', '=', auth()->user()->id);
+                                            })
                                             ->when(in_array(3, $role), function ($query) {
                                                 $query->whereHas('requestIsoCopyLatestHistory', function ($query){
                                                     $query->where('status', '=', 6);
