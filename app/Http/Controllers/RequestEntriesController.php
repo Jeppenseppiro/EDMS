@@ -137,31 +137,18 @@ class RequestEntriesController extends Controller
             $fileUpload->save();
         }
 
-        
 
-        $requestor = User::where('id', '=', $request->requestEntry_Requestor)->first();
-        $requestEntryRequestor = [
-            'dicr_no' => date("Y")."-".sprintf('%06d', $getLastDICR + 1),
-            'title' => $request->requestEntry_Title,
-            'status' => "New",
-            'remarks' => "Created new request entry",
-        ];
-        Notification::send($requestor, new SendRequestEntry($requestEntryRequestor));
-
-        
-        $dco = User::with('getRole')
-                        ->where([
-                                    ['role', '=', 3],
-                                    ['company', '=', auth()->user()->company]
-                                ])
-                        ->first();
+        $requestor = User::where('id', '=', auth()->user()->id)->first();
+        $requestor_DCO = User::where([['company', '=', auth()->user()->company], ['role', '=', 3]])->first();
         $requestEntryEmail = [
-            'dicr_no' => date("Y")."-".sprintf('%06d', $getLastDICR + 1),
+            'tag' =>  "Document Management",
+            'dicr_no' =>  date_format($requestIsoEntry->created_at,"Y")."-".sprintf('%06d', $requestIsoEntry->id),
             'title' => $request->requestEntry_Title,
             'status' => "New",
             'remarks' => "Created new request entry",
         ];
-        Notification::send($dco, new SendRequestEntry($requestEntryEmail));
+        Notification::send($requestor, new SendRequestEntry($requestEntryEmail));
+        Notification::send($requestor_DCO, new SendRequestEntry($requestEntryEmail));
 
         return redirect()->back();
     }
@@ -211,7 +198,17 @@ class RequestEntriesController extends Controller
             $fileUpload->save();
         }
 
-        
+        $requestor = User::where('id', '=', auth()->user()->id)->first();
+        $requestor_DCO = User::where([['company', '=', auth()->user()->company], ['role', '=', 3]])->first();
+        $requestEntryEmail = [
+            'tag' =>  "Legal",
+            'dicr_no' =>  date_format($requestLegalEntry->created_at,"Y")."-".sprintf('%06d', $requestLegalEntry->id),
+            'title' => $request->requestEntry_Title,
+            'status' => "New",
+            'remarks' => "Created new request entry",
+        ];
+        Notification::send($requestor, new SendRequestEntry($requestEntryEmail));
+        Notification::send($requestor_DCO, new SendRequestEntry($requestEntryEmail));
         
         return redirect()->back();
         //return $fileUpload;

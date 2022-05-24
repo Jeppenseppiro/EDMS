@@ -190,6 +190,7 @@
                           <th class="th-sm" width="">Recipient</th>
                           <th class="th-sm" width="">Recipient Company</th>
                           <th class="th-sm" width="">Recipient Department</th>
+                          <th class="th-sm" width="">Created At</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
@@ -205,6 +206,7 @@
                             <td>{{$etransmittal->getRecipient->name}}</td>
                             <td>{{$etransmittal->getRecipient->getCompany->company_name}}</td>
                             <td>{{$etransmittal->getRecipient->getDepartment->department}}</td>
+                            <td>{{date_format($etransmittal->created_at,"Y-m-d H:i:s")}}</td>
                             <td>
                               <button id="{{$key}}" data-id="{{$etransmittal->id}}" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 btn-etransmittal_View" title="Update E-Transmittal"><i class="fa-solid fa-arrows-rotate"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$etransmittal->id}}" style="color: black; text-align: center" type="button" class="btn btn-sm btn-warning px-2 btn-etransmittal_Edit" title="Edit E-Transmittal"><i class="fa-solid fa-pen-line"></i></button> --}}

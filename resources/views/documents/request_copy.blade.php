@@ -29,7 +29,7 @@
               <div class="modal-body">
                 <input type="text" id="requestISOCopy_TagID" name="requestISOCopy_TagID" value="{{$tagID}}" hidden>
                 <div class="row">
-                  <div class="col-sm-12 requestCopy_Requestor">
+                  <div class="col-sm-12 requestCopy_Requestor" hidden>
                     <div class="md-form">
                       <i class="fa-solid fa-address-card prefix"></i>
                       <div class="md-form py-0 ml-5">
@@ -320,18 +320,12 @@
     role = {!! json_encode(auth()->user()->role) !!};
     tagID = {!! json_encode($tagID) !!};
     
-    if(tagID == 1){
-      $('.requestCopy_Requestor').attr("hidden",false);
-    } else {
-      $('.requestCopy_Requestor').attr("hidden",true);
-    }
-    
     if(tagID == 2){
       $('#requestCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     }
     var userRoles = role.split(',');
     //console.log(requestCopy_JSON);
-    //$('#requestCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
+    $('#requestCopy_Requestor option[value="{{ Auth::user()->id }}"]').attr("selected",true);
     
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');

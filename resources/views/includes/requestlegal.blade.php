@@ -24,7 +24,7 @@
               <table id="datatableLegal" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                 <thead>
                   <tr>
-                    <th class="th-sm" width="">ID</th>
+                    <th class="th-sm" width="">DICR No.</th>
                     <th class="th-sm" width="">Date Request</th>
                     <th class="th-sm" width="">Requestor</th>
                     <th class="th-sm" width="">Document Type</th>
@@ -37,7 +37,7 @@
                 <tbody id="requestLegalEntry">
                   @foreach ($request_legal_entries as $key => $request_legal_entry)
                     <tr>
-                      <td width="1%">{{$request_legal_entry->id}}</td>
+                      <td width="1%">{{date_format($request_legal_entry->created_at,"Y")."-".sprintf('%06d', $request_legal_entry->id)}}</td>
                       <td>{{$request_legal_entry->date_request}}</td>
                       <td>{{$request_legal_entry->user->name}}</td>
                       <td>{{$request_legal_entry->documentType->category_description}}</td>

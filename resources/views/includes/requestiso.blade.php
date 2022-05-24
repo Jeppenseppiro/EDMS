@@ -40,7 +40,7 @@
                 <tbody id="requestISOEntry">
                   @foreach ($request_iso_entries as $key => $request_iso_entry)
                     <tr>
-                      <td>{{$request_iso_entry->dicr_no}}</td>
+                      <td>{{date_format($request_iso_entry->created_at,"Y")."-".sprintf('%06d', $request_iso_entry->id)}}</td>
                       <td>{{$request_iso_entry->date_request}}</td>
                       <td>{{$request_iso_entry->user->name}}</td>
                       <td>{{$request_iso_entry->title}}</td>
@@ -55,10 +55,10 @@
                       <td>{{$request_iso_entry->document_purpose_request}}</td>
                       <td>{{$request_iso_entry->requestIsoEntryLatestHistory->status}}</td>
                       <td>
-                        @if(in_array(1, $role) || in_array(3, $role))
+                        {{-- @if(in_array(1, $role) || in_array(3, $role)) --}}
                         <button id="{{$key}}" data-id="{{$request_iso_entry->id}}" style="text-align: center" type="button" title="Update Document Management Request Entry" class="btn btn-sm btn-success px-2 btn-request_isoView"><i class="fa-solid fa-arrows-rotate"></i></button>
                         {{-- <button id="{{$key}}" data-id="{{$request_iso_entry->id}}" style="color: black; text-align: center" type="button" title="Edit Request Entry" class="btn btn-sm btn-warning px-2 btn-request_isoEdit"><i class="fa-solid fa-pen-line"></i></button> --}}
-                        @endif
+                        {{-- @endif --}}
                       </td>
                     </tr>
                   @endforeach

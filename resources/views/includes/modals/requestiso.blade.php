@@ -132,10 +132,13 @@
 
         </form>
       </div>
+      
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary btn-requestISOEntrySummaryInsert">Submit</button>
+        @if(in_array(1, $role) || in_array(3, $role))
         <button type="button" class="btn btn-warning btn-requestISOEntrySummaryEdit">Edit</button>
+        @endif
       </div>
     </div>
   </div>
@@ -202,10 +205,12 @@
           </ul>
 
         </div>
+        @if(in_array(1, $role) || in_array(3, $role))
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           <button type="button" id="" class="btn btn-primary btn-requestISOEntrySummaryUpdate">Submit</button>
         </div>
+        @endif
       </form>
     </div>
   </div>

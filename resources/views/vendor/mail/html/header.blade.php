@@ -1,7 +1,8 @@
 <tr>
     <td class="header">
         <a href="{{ $url }}">
-            {{ $slot }}
+            {{-- {{ $slot }} --}}
+            Electronic Document Management System
         </a>
     </td>
 </tr>
