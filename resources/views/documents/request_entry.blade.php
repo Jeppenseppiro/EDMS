@@ -551,7 +551,7 @@
           var fileName = $(this).data("file");
           var requestEntryFilePreview = '<div class="filePreview">';
               /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-              requestEntryFilePreview += '<embed src="../storage/requestentry/pdf/legal/'+fileName+'#toolbar=0" style="width:100%;height:100vh;"/>';
+              requestEntryFilePreview += '<iframe src="../storage/requestentry/pdf/iso/'+fileName+'#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
               requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
           $('#requestLegalEntry_ModalFilePreview').append(requestEntryFilePreview);

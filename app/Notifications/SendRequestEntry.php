@@ -48,7 +48,8 @@ class SendRequestEntry extends Notification
                     ->line(new HtmlString
                         ("Request Entry: <b>".$this->requestEntryEmail['dicr_no']."</b>"))
                     ->line(new HtmlString
-                        ("DICR No: <b>".$this->requestEntryEmail['dicr_no']."</b><br> 
+                        ("Tag: <b>".$this->requestEntryEmail['tag']."</b><br> 
+                          DICR No: <b>".$this->requestEntryEmail['dicr_no']."</b><br> 
                           Title: <b>".$this->requestEntryEmail['title']."</b><br> 
                           Status: <b>".$this->requestEntryEmail['status']."</b><br> 
                           Remarks: <b>".$this->requestEntryEmail['remarks']."</b>
