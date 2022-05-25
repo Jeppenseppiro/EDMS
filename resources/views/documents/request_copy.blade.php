@@ -59,11 +59,10 @@
                       <div class="md-form py-0 ml-5">
                         <select id="requestCopy_FileRequest" name="requestCopy_FileRequest" class="mdb-select" searchable="Search document to request copy" required>
                           <option class="mr-1" value="" disabled selected>File Request</option>
-                          @foreach ($document_libraries as $document_library)
+                          {{-- @foreach ($document_libraries as $document_library)
                             
                             <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->documentMultipleRevision->first()->revision}}</option>
-                            {{-- <option value={{$document_library->id}}>{{$document_library->documentMultipleRevision}}</option> --}}
-                          @endforeach
+                          @endforeach --}}
                         </select>
                         <label class="mdb-main-label">File Request</label>
                       </div>
