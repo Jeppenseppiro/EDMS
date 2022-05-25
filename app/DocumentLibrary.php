@@ -35,6 +35,10 @@ class DocumentLibrary extends Model
         return $this->hasMany(DocumentRevision::class, 'document_library_id', 'id')/* ->where('is_obsolete', 0) */->orderBy('id', 'DESC');
     }
 
+    public function documentLatestMultipleRevision(){
+        return $this->hasMany(DocumentRevision::class, 'document_library_id', 'id')->orderBy('id', 'DESC');
+    }
+
     public function documentAccess(){
         return $this->hasMany(DocumentLibraryAccess::class,'document_library_id','id');
     }

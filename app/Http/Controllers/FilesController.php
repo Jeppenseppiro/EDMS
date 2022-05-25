@@ -192,14 +192,15 @@ class FilesController extends Controller
         $request_copy = DocumentFileRevision::
                                             with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
                                             ->where('attachment_mask', $attachment)
-                                                ->when(!in_array(1, $role) || !in_array(3, $role), function ($query) {
+                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+                                                    $query->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
+                                                        $query->where('requestor', '=', auth()->user()->id);
+                                                    });
                                                     $query->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
                                                         $query->where('requestor', '=', auth()->user()->id);
                                                     });
                                                 })
-                                                ->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
-                                                    $query->where('requestor', '=', auth()->user()->id);
-                                                })
+                                                
                                                 ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userLink) use($uniquelink){
                                                     $userLink->where('request_copy_uniquelink', '=', $uniquelink);
                                                 })
@@ -340,7 +341,7 @@ class FilesController extends Controller
 
             
         } else {
-            abort(404, 'Request Copy not found');
+            abort(403, 'Request Copy not found');
         }
     }
 
