@@ -52,21 +52,16 @@ class RequestCopiesController extends Controller
         $users = User:: when(!in_array(1, $role), function ($query) {
                             $query->where('department', '=', auth()->user()->department);
                         })->get();
-        $document_libraries = DocumentLibrary::with(['documentMultipleRevision' => function($query){$query->orderBy('id', 'DESC')->first();}])
+        $document_libraries = DocumentLibrary::with('documentRevision')
                                             ->where([
                                                 ['company', '=', auth()->user()->company], 
                                                 ['tag', '=', $tagID]
                                             ])
                                             ->get();
-        
         $request_iso_copy_statuses = RequestIsoCopyStatus::where("is_active", '=', 'Active')->get();
         $request_iso_copy_types = RequestIsoCopyType::get();
 
-        $emailrequestor = User::where('request_copy_histories.request_copy_id', '=', 1)
-                                ->join('request_copy_histories', 'request_copy_histories.user', '=', 'users.id')
-                                ->first();
-
-        //dd($request_iso_copies);
+        // dd($document_libraries);
         return view('documents.request_copy',
             array(
                 'request_iso_copies' => $request_iso_copies,

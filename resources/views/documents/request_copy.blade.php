@@ -61,7 +61,7 @@
                           <option class="mr-1" value="" disabled selected>File Request</option>
                           @foreach ($document_libraries as $document_library)
                             
-                            <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{-- {{$document_library->documentMultipleRevision->first()->revision}} --}}</option>
+                            <option value={{$document_library->id}}>{{$document_library->document_number_series}} | {{$document_library->description}} | {{$document_library->documentRevision->revision}}</option>
                           @endforeach
                         </select>
                         <label class="mdb-main-label">File Request</label>
