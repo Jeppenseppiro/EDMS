@@ -46,7 +46,8 @@ class FilesController extends Controller
             
             $extension = $revision_file->attachment;
             $extension = explode(".",$extension);
-            $file = storage_path('app/public/document/'.$extension[1].'/'.$fileCategory.'/').$link;
+            $extension = end($extension);
+            $file = storage_path('app/public/document/'.$extension.'/'.$fileCategory.'/').$link;
             $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
             if($revision_file->is_stamped == 1){
                 $watermarkFile = storage_path('app/controlledcopy_watermark.pdf');
@@ -90,7 +91,7 @@ class FilesController extends Controller
                     $allow_fillin = null;
                 }
                     
-                if($extension[1] == 'pdf'){
+                if($extension == 'pdf'){
                         //Allow Fill-In
                     auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
                     
@@ -188,12 +189,16 @@ class FilesController extends Controller
                                                     $userLink->where('request_copy_uniquelink', '=', $uniquelink);
                                                 })
                                                 ->first(); */
-        $request_copy = DocumentFileRevision::with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
-                                                ->where('attachment_mask', $attachment)
-                                                ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
+        $request_copy = DocumentFileRevision::
+                                            with('documentUserAccess','documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory')
+                                            ->where('attachment_mask', $attachment)
+                                                ->when(!in_array(1, $role) || !in_array(3, $role), function ($query) {
                                                     $query->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
                                                         $query->where('requestor', '=', auth()->user()->id);
                                                     });
+                                                })
+                                                ->whereHas('documentRevision.documentLibrary.requestIsoCopy', function ($query){
+                                                    $query->where('requestor', '=', auth()->user()->id);
                                                 })
                                                 ->whereHas('documentRevision.documentLibrary.requestIsoCopy.requestIsoCopyHistory', function ($userLink) use($uniquelink){
                                                     $userLink->where('request_copy_uniquelink', '=', $uniquelink);
@@ -208,7 +213,7 @@ class FilesController extends Controller
             $timestamp2 = strtotime($date2);
             $difference = $timestamp2 - $timestamp1;
             $days = $difference/(24*60*60);
-
+            // dd($days);
             if($days >= 0){
                 $link = $request_copy->attachment_mask;
                 // Source file and watermark config
@@ -218,10 +223,11 @@ class FilesController extends Controller
                 
                 $extension = $request_copy->attachment;
                 $extension = explode(".",$extension);
-                $file = storage_path('app/public/document/'.$extension[1].'/'.$fileCategory.'/').$link;
+                $extension = end($extension);
+                $file = storage_path('app/public/document/'.$extension.'/'.$fileCategory.'/').$link;
                 $tmpFile = storage_path('app/public/tmp/').auth()->user()->id."_".$link;
                 $headers = [
-                    'Content-Type' => 'application/'.$extension[1],
+                    'Content-Type' => 'application/'.$extension,
                 ];
 
                 
@@ -232,7 +238,7 @@ class FilesController extends Controller
                 }
                 
                 //User Access
-                if($request_copy->documentUserAccess != null || in_array(1, $role)){
+                // if($request_copy->documentUserAccess != null || in_array(1, $role)){
                     $pdfPassword1 = new Pdf($file, [
                                         'command' => 'C:\Program Files (x86)\PDFtk\bin\pdftk.exe',
                                         'useExec' => true,
@@ -255,7 +261,7 @@ class FilesController extends Controller
                                 'useExec' => true,
                             ]);
 
-                    if(auth()->user()->role != 1){
+                    /* if(auth()->user()->role != 1){
                         //Allow Printing
                         $request_copy->documentUserAccess->can_print == 1 ? $allow_printing = "Printing" : $allow_printing = null;
                         //Allow Fill-In
@@ -263,10 +269,10 @@ class FilesController extends Controller
                     } else {
                         $allow_printing = null;
                         $allow_fillin = null;
-                    }
+                    } */
                     
 
-                    if($extension[1] == 'pdf'){
+                    if($extension == 'pdf'){
                         //Allow Fill-In
                         auth()->user()->role == 1 ? $allow_allFeatures = "AllFeatures" : $allow_allFeatures = null;
                         
@@ -294,9 +300,9 @@ class FilesController extends Controller
                             $obsolete_watermarkFile = storage_path('app/obsolete_watermark.pdf');
                             $result = $obsolete_pdf
                                             ->addFile($tmpFile, 'A', $pdfPassword_password)
-                                            ->allow($allow_printing)
-                                            ->allow($allow_fillin)
-                                            ->allow($allow_allFeatures)
+                                            // ->allow($allow_printing)
+                                            // ->allow($allow_fillin)
+                                            ->allow('FillIn')
                                             ->setPassword($owner_password)          // Set owner password
                                             ->setUserPassword($user_password)      // Set user password
                                             ->passwordEncryption(128)   // Set password encryption strength
@@ -306,9 +312,9 @@ class FilesController extends Controller
                             $obsolete_watermarkFile = storage_path('app/controlledcopy_blank.pdf');
                             $result = $obsolete_pdf
                                             ->addFile($tmpFile, 'A', $pdfPassword_password)
-                                            ->allow($allow_printing)
-                                            ->allow($allow_fillin)
-                                            ->allow($allow_allFeatures)
+                                            // ->allow($allow_printing)
+                                            // ->allow($allow_fillin)
+                                            ->allow('FillIn')
                                             ->setPassword($owner_password)          // Set owner password
                                             ->setUserPassword($user_password)      // Set user password
                                             ->passwordEncryption(128)   // Set password encryption strength
@@ -325,16 +331,16 @@ class FilesController extends Controller
                     }
                     
                     
-                } else {
+                /* } else {
                     abort(403, 'Forbidden');
-                }
+                } */
             } else {
                 abort(403, 'Link Expired');
             }
 
             
         } else {
-            abort(403, 'Forbidden');
+            abort(404, 'Request Copy not found');
         }
     }
 
@@ -344,10 +350,10 @@ class FilesController extends Controller
         $etransmittal = EtransmittalHistory::where([['attachment_mask', '=', $link],])->first();
         $extension = $etransmittal->attachment;
         $extension = explode(".",$extension);
+        $extension = end($extension);
+        $file = storage_path('app/public/etransmittal/'.$extension.'/'.$etransmittal->attachment_mask);
 
-        $file = storage_path('app/public/etransmittal/'.$extension[1].'/'.$etransmittal->attachment_mask);
-
-        if($extension[1] == 'pdf'){
+        if($extension == 'pdf'){
             return response()->file($file);
         } else {
             return response()->download($file);
@@ -358,10 +364,10 @@ class FilesController extends Controller
         $permittingLicense = PermitLicense::where([['attachment_mask', '=', $link],])->first();
         $extension = $permittingLicense->attachment;
         $extension = explode(".",$extension);
-
+        $extension = end($extension);
         $file = storage_path('app/public/document/others/'.$permittingLicense->attachment_mask);
 
-        if($extension[1] == 'pdf'){
+        if($extension == 'pdf'){
             return response()->file($file);
         } else {
             return response()->download($file);
