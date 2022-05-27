@@ -16,7 +16,8 @@ class EtransmittalsController extends Controller
 
         $etransmittals = Etransmittal::with('getUser.getCompany','getUser.getDepartment','getRecipient.getCompany','getRecipient.getDepartment','getEtransmittalHistory')
                                         ->when(!in_array(1, $role), function ($query) {
-                                            $query->where('recipient', '=', auth()->user()->id);
+                                            $query->where('user', '=', auth()->user()->id)
+                                            ->orWhere('recipient', '=', auth()->user()->id);
                                         })
                                         ->get();
                                         

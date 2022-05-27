@@ -309,6 +309,10 @@
       var datatable = $('#datatable').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
+        fixedColumns:   {
+            left: 1,
+            right: 1
+        },
         "order": [[ 0, "desc" ]],
         initComplete: function () {
           var api = this.api();

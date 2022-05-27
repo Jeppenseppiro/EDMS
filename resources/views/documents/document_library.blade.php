@@ -181,26 +181,28 @@
                             <label for="documentLibrary_ControlCode">Control Code</label>
                           </div>
                         </div>
-                        <div class="col-sm-6">
-                          <div class="md-form">
-                            <i class="fa-solid fa-input-text prefix"></i>
-                            <input type="text" id="documentLibrary_Remarks" name="documentLibrary_Remarks" class="form-control" required>
-                            <label for="documentLibrary_Remarks">Remarks</label>
-                          </div>
-                        </div>
+                        
 
-                        <div class="col-sm-6">
+                        {{-- <div class="col-sm-6">
                           <div class="md-form">
                             <i class="fa-solid fa-input-text prefix"></i>
                             <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" required>
                             <label for="documentLibrary_Revision">Revision</label>
                           </div>
-                        </div>
+                        </div> --}}
                         <div class="col-sm-6">
                           <div class="md-form">
                             <i class="fa-solid fa-calendar prefix"></i>
                             <input type="text" id="documentLibrary_DateEffective" name="documentLibrary_DateEffective" class="form-control datepicker" required>
                             <label for="documentLibrary_DateEffective">Effective Date</label>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                          <div class="md-form">
+                            <i class="fa-solid fa-input-text prefix"></i>
+                            <input type="text" id="documentLibrary_Remarks" name="documentLibrary_Remarks" class="form-control" required>
+                            <label for="documentLibrary_Remarks">Remarks</label>
                           </div>
                         </div>
                       </div>
