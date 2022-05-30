@@ -91,28 +91,29 @@ class DocumentLibrariesController extends Controller
             'documentLibrary_DocumentNumberSeries' => ['required', 'unique:document_libraries,document_number_series'],
         ]);
 
+        $oldRevision = DocumentRevision::where('document_library_id', $request->updateDocumentLibrary_ID)->orderBy('id','desc')->first();
+        $oldRevision != null ? $revisionData = $oldRevision->revision + 1 : $revisionData = 0;
+
         //Document Library
         $documentLibrary = new DocumentLibrary;
         $documentLibrary->description = $request->documentLibrary_Description;
         $documentLibrary->category = $request->documentLibrary_Category;
         $documentLibrary->document_number_series = $request->documentLibrary_DocumentNumberSeries;
         $documentLibrary->tag = $request->documentLibrary_Tag;
-        $documentLibrary->revision = $request->documentLibrary_Revision;
+        $documentLibrary->revision = $revisionData;
         $documentLibrary->control = $request->documentLibrary_Control;
         $documentLibrary->user = auth()->user()->id;
         $documentLibrary->department = $request->documentLibrary_Department;
         $documentLibrary->company = $request->documentLibrary_Company;
         $documentLibrary->save();
 
-
         // Document Revision
         $documentRevision = new DocumentRevision;
         $documentRevision->document_library_id = $documentLibrary->id;
-        $documentRevision->revision = $request->documentLibrary_Revision;
+        $documentRevision->revision = $revisionData;
         $documentRevision->effective_date = $request->documentLibrary_DateEffective;
         $documentRevision->user = auth()->user()->id;
         $documentRevision->save();
-
 
         // Document File Revision
         if ($request->hasFile('documentLibrary_Attachment')) {
@@ -149,16 +150,24 @@ class DocumentLibrariesController extends Controller
     {
         $role = explode(",",auth()->user()->role);
 
-        $documentRevisions = DocumentRevision::with('documentFileRevision.user','documentFileRevision.documentUserAccess','documentFileRevision.manyUserAccess')
+        $documentRevisions = DocumentRevision::with(
+        /* ['documentFileRevision' => function($query){$query->where('is_deleted', 0);}], */
+        'documentFileRevision',
+        'documentFileRevision.user',
+        'documentFileRevision.documentUserAccess',
+        'documentFileRevision.manyUserAccess')
+                                                /* ->whereHas('documentFileRevision', function ($query) {
+                                                    $query->where('is_deleted','=','2');
+                                                }) */
                                                 ->where([
                                                     ['document_library_id', '=', $id],
                                                 ])
-                                                ->orderBy('id', 'desc')
                                                 ->when(!in_array(1, $role) && !in_array(3, $role), function ($query) {
-                                                    $query->whereHas('documentFileRevision.manyUserAccess', function ($userAccess) {
-                                                        $userAccess->where('user_access','=',auth()->user()->id);
+                                                    $query->whereHas('documentFileRevision.manyUserAccess', function ($query) {
+                                                        $query->where('user_access','=',auth()->user()->id);
                                                     });
                                                 })
+                                                ->orderBy('id', 'desc')
                                                 ->get();
         
         return $documentRevisions;

@@ -13,7 +13,7 @@ class DocumentRevisionsController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'documentLibrary_Attachment' => ['nullable','max:20000'],
+            'documentLibrary_Attachment' => ['required','max:100000'],
             /* 'documentLibrary_Revision' => [
                 'required',
                 Rule::unique('document_revisions,revision','document_revisions,document_library_id')
