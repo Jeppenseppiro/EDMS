@@ -446,12 +446,11 @@
     role = {!! json_encode(auth()->user()->role) !!};
     var userRoles = role.split(',');
     count = 0;
-
     $('.btn-documentLibraryInsert').on('click', function(e){
       $('#modalDocumentLibraryInsert').modal('show');
 
       $('#documentLibrary_AddFileUpload').on('click', function(e){
-        var count = count + 1;
+        count = count + 1;
         var documentLibraryFileUpload =
             documentLibraryFileUpload += '<tr id="row'+count+'">';
             documentLibraryFileUpload += '  <td>';
@@ -486,7 +485,7 @@
 
     $('.btn-documentLibrary_View').on('click', function(e){
       $('#documentLibraryUpdate_AddFileUpload').on('click', function(e){
-        var count = count + 1;
+        count = count + 1;
         var documentLibraryFileUpload =
             documentLibraryFileUpload += '<tr id="row'+count+'">';
             documentLibraryFileUpload += '  <td>';
@@ -536,28 +535,39 @@
           var documentLibraryRevision = '<li class="completed">';
               documentLibraryRevision += '<a>';
               documentLibraryRevision += '<span class="circle">+</span>';
-              documentLibraryRevision += '<span class="label">Revision '+data[i].revision+' ';
+              documentLibraryRevision += '<span class="label">Revision '+data[i].revision+'';
               data[i].is_obsolete >= 1 ? documentLibraryRevision += '<span class="badge badge-danger">Obsolete</span>' : documentLibraryRevision += '';
               documentLibraryRevision += '<br><span class="label" style="font-size: 10px;">Effective Date: '+data[i].effective_date+'</span>';
               documentLibraryRevision += '</span>';
               documentLibraryRevision += '</a>';
 
               documentLibraryRevision += '<div class="step-content grey lighten-3" style=" min-width:90%;">';
+                documentLibraryRevision += '<form class="md-form" action="documentrevision/file/store" method="POST" enctype="multipart/form-data">';
+                documentLibraryRevision += '@csrf';
                 documentLibraryRevision += '<table class="table table-sm  table_documentRevision'+data[i].id+'">';
-
                 if((userRoles.includes("1") == true || userRoles.includes("3") == true) && data[i].is_obsolete <= 0){
                   documentLibraryRevision += '<button data-id="'+data[i].id+'" style="text-align: center" type="button" class="btn btn-sm btn-info px-3 float-right attachment_documentRevision"><i class="fa-solid fa-plus"></i></button>';
                 }
+
                 
                 for(var x = 0; x < data[i].document_file_revision.length; x++){
                   // If conditional is to show only file revision if the user has access/tagged
-                  userRoles.includes("1") == true || userRoles.includes("3") == true ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
+                  if(userRoles.includes("1") == true || userRoles.includes("3") == true){
+                    fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999
+                    fetchAllFileRevision_IsDeleted = data[i].document_file_revision[x].is_deleted < 99999
+                  } else {
+                    fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
+                    fetchAllFileRevision_IsDeleted = data[i].document_file_revision[x].is_deleted == 0
+                  }
+                  // userRoles.includes("1") == true || userRoles.includes("3") == true ? fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length < 99999 : fetchAllFileRevision = data[i].document_file_revision[x].many_user_access.length >= 1
                   
                   if(fetchAllFileRevision){
+                    if(fetchAllFileRevision_IsDeleted){
                     data[i].document_file_revision[x].is_stamped == 0 ? isStamped = 'btn-blue-grey' : isStamped = 'btn-success';
                     data[i].document_file_revision[x].is_deleted == 0 ? isDeleted = 'btn-blue-grey' : isDeleted = 'btn-success';
                     data[i].document_file_revision[x].is_discussed == 0 ? isDiscussed = 'btn-blue-grey' : isDiscussed = 'btn-success';
-                    documentLibraryRevision += '<tr>';
+                    
+                    documentLibraryRevision += '<tr id="'+data[i].document_file_revision[x].document_revision_id+'">';
                       documentLibraryRevision += '<td>';
                         $('attachment'+x).click(function() {
                           window.location.href = "file/'+data[i].document_file_revision[x].attachment_mask+'";
@@ -609,15 +619,19 @@
                       }
                       documentLibraryRevision += '</td>';
                     documentLibraryRevision += '</tr>';
+                    }
                   }
                 }
                 
                 documentLibraryRevision += '</table>';
+                documentLibraryRevision += '<button type="submit" class="btn btn-sm btn-primary waves-effect waves-light attachment_documentRevisionSubmit">Submit</button>';
+                documentLibraryRevision += '</form>';
               documentLibraryRevision += '</div>';
               documentLibraryRevision += '</li>';
           $('#documentLibraryRevision').append(documentLibraryRevision);
         }
-        console.log(data);
+        $('.attachment_documentRevisionSubmit').hide();
+        
         $('.btn-documentRevision_ModalFilePreview').on('click', function(e){
           $(".filePreview").remove();
           var fileName = $(this).data("file");
@@ -659,7 +673,9 @@
               documentRevisionFileUpload += '  <td><button type="button" class="btn btn-sm btn-danger px-2 remove_insertrevisionfileupload" data-row="row'+count+'"><i class="fa-solid fa-trash"></i></button></td>';
               documentRevisionFileUpload += '</tr>';
           $('.table_documentRevision'+documentLibrary_ID).append(documentRevisionFileUpload);
+          $('.attachment_documentRevisionSubmit').show();
         });
+
         $(document).on('click', '.remove_insertrevisionfileupload', function(){
           var delete_row = $(this).data("row");
           $('#' + delete_row).remove();
@@ -891,6 +907,37 @@
           });
         });
 
+        $('.btn-documentFileRevision_Archive').on('click', function(e){
+          documentFileRevision_FileID = $(this).data("id");
+
+          if($(this).attr("id") == 0){
+            $(this).attr("id", "1");
+            documentFileRevision_IsDeleted = 1;
+          } else {
+            $(this).attr("id", "0");
+            documentFileRevision_IsDeleted = 0;
+          }
+
+          $(this).toggleClass('btn-blue-grey')
+                 .toggleClass('btn-danger');
+
+          edit_documentFileRevision = {};
+          edit_documentFileRevision.documentFileRevision_IsDeleted = documentFileRevision_IsDeleted;
+
+          $.ajax({
+            type: 'PUT',
+            url:  'documentrevision/file/'+documentFileRevision_FileID+'/edit',
+            data: edit_documentFileRevision,
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          }).done(function(data){
+            if(data.is_deleted == 1){
+              toastr.success("Archive for "+data.attachment+" is turned ON");
+            } else {
+              toastr.warning("Archive for "+data.attachment+" is turned OFF");
+            }
+          });
+        });
+        
         $('.btn-documentFileRevision_Discussed').on('click', function(e){
           if($(this).attr("id") == 0){
             Swal.fire({

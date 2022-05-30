@@ -77,6 +77,7 @@ Route::group( ['middleware' => 'auth'], function(){
     Route::post('documentlibrary/documentrevision/user/access', 'DocumentFileRevisionAccessesController@store');
     Route::post('documentlibrary/documentrevision/user/access/{id}', 'DocumentFileRevisionAccessesController@access');
     Route::put('documentlibrary/documentrevision/user/access/{id}/edit', 'DocumentFileRevisionAccessesController@edit');
+    Route::post('documentlibrary/documentrevision/file/store', 'DocumentFileRevisionsController@store');
     Route::put('documentlibrary/documentrevision/file/{id}/edit', 'DocumentFileRevisionsController@edit');
 
     //---------- E-Transmittal ----------//
