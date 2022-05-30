@@ -150,15 +150,7 @@ class DocumentLibrariesController extends Controller
     {
         $role = explode(",",auth()->user()->role);
 
-        $documentRevisions = DocumentRevision::with(
-        /* ['documentFileRevision' => function($query){$query->where('is_deleted', 0);}], */
-        'documentFileRevision',
-        'documentFileRevision.user',
-        'documentFileRevision.documentUserAccess',
-        'documentFileRevision.manyUserAccess')
-                                                /* ->whereHas('documentFileRevision', function ($query) {
-                                                    $query->where('is_deleted','=','2');
-                                                }) */
+        $documentRevisions = DocumentRevision::with('documentFileRevision','documentFileRevision.user','documentFileRevision.documentUserAccess','documentFileRevision.manyUserAccess')
                                                 ->where([
                                                     ['document_library_id', '=', $id],
                                                 ])
@@ -169,7 +161,6 @@ class DocumentLibrariesController extends Controller
                                                 })
                                                 ->orderBy('id', 'desc')
                                                 ->get();
-        
         return $documentRevisions;
     }
 }

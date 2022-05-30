@@ -35,14 +35,17 @@ class RequestCopiesController extends Controller
                                                     $query->where('status', '=', 6);
                                                 });
                                             }) */
+                                            ->when(in_array(2, $role), function ($query) {
+                                                $query->where('requestor', '=', auth()->user()->id);
+                                            })
                                             ->when(in_array(3, $role), function ($query) {
                                                 $query->whereHas('requestIsoCopyLatestHistory', function ($query){
                                                     $query->where('status', '=', 6);
                                                 });
                                             })
                                             ->when(in_array(5, $role), function ($query) {
-                                                $query->whereHas('userRequestor', function ($requestorImmediateHead){
-                                                    $requestorImmediateHead->where('department', '=', auth()->user()->department);
+                                                $query->whereHas('userRequestor', function ($query){
+                                                    $query->where('department', '=', auth()->user()->department);
                                                 });
                                             })
                                             ->where('tag', '=', $tagID)
@@ -54,7 +57,7 @@ class RequestCopiesController extends Controller
                         })->get();
         $document_libraries = DocumentLibrary::with('documentRevision')
                                             ->where([
-                                                ['company', '=', auth()->user()->company], 
+                                                // ['company', '=', auth()->user()->company], 
                                                 ['tag', '=', $tagID]
                                             ])
                                             ->get();
@@ -112,7 +115,7 @@ class RequestCopiesController extends Controller
         $revision = DocumentLibrary::with(['documentMultipleRevision' => function($query){
                                     $query->where('is_obsolete', '=', 0);
                                 }])
-                                ->where('id', 1)
+                                ->where('id', $request->requestCopy_FileRequest)
                                 ->first();
 
         //if($revision->documentRequested){
