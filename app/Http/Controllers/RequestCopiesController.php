@@ -6,6 +6,7 @@ use App\RequestIsoCopy;
 use App\RequestCopyHistory;
 use App\User;
 use App\DocumentLibrary;
+use App\Company;
 use App\RequestIsoCopyStatus;
 use App\RequestIsoCopyType;
 use Illuminate\Http\Request;
@@ -61,6 +62,7 @@ class RequestCopiesController extends Controller
                                                 ['tag', '=', $tagID]
                                             ])
                                             ->get();
+        $companies = Company::get();
         $request_iso_copy_statuses = RequestIsoCopyStatus::where("is_active", '=', 'Active')->get();
         $request_iso_copy_types = RequestIsoCopyType::get();
 
@@ -70,6 +72,7 @@ class RequestCopiesController extends Controller
                 'request_iso_copies' => $request_iso_copies,
                 'users' => $users,
                 'document_libraries' => $document_libraries,
+                'companies' => $companies,
                 'request_iso_copy_statuses' => $request_iso_copy_statuses,
                 'request_iso_copy_types' => $request_iso_copy_types,
                 'role' => $role,
