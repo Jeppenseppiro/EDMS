@@ -137,13 +137,16 @@ class RequestEntriesController extends Controller
             $fileUpload->save();
         }
 
+        $email_requestIsoEntry = RequestIsoEntry::with('requestType')->where('id', '=', $requestIsoEntry->id)->first();
 
         $requestor = User::where('id', '=', auth()->user()->id)->first();
         $requestor_DCO = User::where([['company', '=', auth()->user()->company], ['role', '=', 3]])->first();
+
         $requestEntryEmail = [
             'tag' =>  "Document Management",
             'dicr_no' =>  date_format($requestIsoEntry->created_at,"Y")."-".sprintf('%06d', $requestIsoEntry->id),
             'title' => $request->requestEntry_Title,
+            'type' => $email_requestIsoEntry->requestType->description,
             'status' => "New",
             'remarks' => "Created new request entry",
         ];
@@ -204,6 +207,7 @@ class RequestEntriesController extends Controller
             'tag' =>  "Legal",
             'dicr_no' =>  date_format($requestLegalEntry->created_at,"Y")."-".sprintf('%06d', $requestLegalEntry->id),
             'title' => $request->requestEntry_Title,
+            'type' => "N/A",
             'status' => "New",
             'remarks' => "Created new request entry",
         ];

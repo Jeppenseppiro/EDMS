@@ -67,81 +67,24 @@ class RequestEntryHistoriesController extends Controller
         //$getCurrentEntryHistoryID = RequestEntryHistory::get();
         //$nextCurrentEntryHistoryID = $getCurrentEntryHistoryID->count();
 
-        
+        $email_requestIsoEntry = RequestIsoEntry::with('requestType')->where('id', '=', $request->updateISO_ID)->first();
 
-        if (auth()->user()->role == 3){
-            $bpm = User::where('role', '=', 4)->first();
-            $bpm_dicr = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
-            $bpm_status = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
-            $requestEntryEmail = [
-                'dicr_no' => $bpm_dicr->dicr_no,
-                'title' => $bpm_dicr->title,
-                'status' => $bpm_status->status,
-                'remarks' => $request->requestEntry_RemarksUpdate,
-            ];
-            Notification::send($bpm, new SendRequestEntry($requestEntryEmail));
+        $requestIsoEntry = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
+        $requestEntryStatus = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
 
-        } elseif (auth()->user()->role == 4) {
-            $ih_dicr = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
-            $ih = User::where([
-                ['id', '=', $ih_dicr->requestor_name],
-            ])->first();
-            $ih = User::where([
-                ['company', '=', $ih->company],
-                ['role', '=', 5],
-            ])->first();
-            $ih_status = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
-            $requestEntryEmail = [
-                'dicr_no' => $ih_dicr->dicr_no,
-                'title' => $ih_dicr->title,
-                'status' => $ih_status->status,
-                'remarks' => $request->requestEntry_RemarksUpdate,
-            ];
-            Notification::send($ih, new SendRequestEntry($requestEntryEmail));
+        $requestor = User::where('id', '=', auth()->user()->id)->first();
+        $requestor_DCO = User::where([['company', '=', auth()->user()->company], ['role', '=', 3]])->first();
 
-
-
-            $dco_dicr = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
-            $dco = User::where([
-                ['id', '=', $dco_dicr->requestor_name],
-            ])->first();
-            $dco = User::where([
-                ['company', '=', $dco->company],
-                ['role', '=', 3],
-            ])->first();
-            $dco_status = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
-            $requestEntryEmail = [
-                'dicr_no' => $dco_dicr->dicr_no,
-                'title' => $dco_dicr->title,
-                'status' => $dco_status->status,
-                'remarks' => $request->requestEntry_RemarksUpdate,
-            ];
-            Notification::send($dco, new SendRequestEntry($requestEntryEmail));
-
-        } elseif (auth()->user()->role == 5) {
-            $bpm = User::where('role', '=', 4)->first();
-            $bpm_dicr = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
-            $bpm_status = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
-            $requestEntryEmail = [
-                'dicr_no' => $bpm_dicr->dicr_no,
-                'title' => $bpm_dicr->title,
-                'status' => $bpm_status->status,
-                'remarks' => $request->requestEntry_RemarksUpdate,
-            ];
-            Notification::send($bpm, new SendRequestEntry($requestEntryEmail));
-
-        }
-        
-        $requestor_dicr = RequestIsoEntry::where('id', '=', $request->updateISO_ID)->first();
-        $requestor = User::where('id', '=', $requestor_dicr->requestor_name)->first();
-        $requestor_status = RequestEntryStatus::where('id', '=', $request->requestEntry_StatusUpdate)->first();
         $requestEntryEmail = [
-            'dicr_no' => $requestor_dicr->dicr_no,
-            'title' => $requestor_dicr->title,
-            'status' => $requestor_status->status,
+            'tag' =>  "Document Management",
+            'dicr_no' =>  date_format($requestIsoEntry->created_at,"Y")."-".sprintf('%06d', $requestIsoEntry->id),
+            'title' => $requestIsoEntry->title,
+            'type' => $email_requestIsoEntry->requestType->description,
+            'status' => $requestEntryStatus->status,
             'remarks' => $request->requestEntry_RemarksUpdate,
         ];
         Notification::send($requestor, new SendRequestEntry($requestEntryEmail));
+        Notification::send($requestor_DCO, new SendRequestEntry($requestEntryEmail));
 
 
 
@@ -162,6 +105,23 @@ class RequestEntryHistoriesController extends Controller
         $requestEntryHistory->remarks = $request->requestLegalEntry_RemarksUpdate;
         $requestEntryHistory->user = auth()->user()->id;
         $requestEntryHistory->save();
+
+        $requestLegalEntry = RequestLegalEntry::where('id', '=', $request->updateLegal_ID)->first();
+        $requestEntryStatus = RequestEntryStatus::where('id', '=', $request->requestLegalEntry_StatusUpdate)->first();
+
+        $requestor = User::where('id', '=', auth()->user()->id)->first();
+        $requestor_DCO = User::where([['company', '=', auth()->user()->company], ['role', '=', 3]])->first();
+
+        $requestEntryEmail = [
+            'tag' =>  "Legal",
+            'dicr_no' =>  date_format($requestLegalEntry->created_at,"Y")."-".sprintf('%06d', $requestLegalEntry->id),
+            'title' => $request->requestEntry_Title,
+            'type' => "N/A",
+            'status' => $requestEntryStatus->status,
+            'remarks' => $request->requestLegalEntry_RemarksUpdate,
+        ];
+        Notification::send($requestor, new SendRequestEntry($requestEntryEmail));
+        Notification::send($requestor_DCO, new SendRequestEntry($requestEntryEmail));
 
         //Handle File Upload
         /* if($request->hasFile('requestLegalEntry_FileUploadUpdate')){

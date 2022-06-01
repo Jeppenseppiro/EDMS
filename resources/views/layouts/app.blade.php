@@ -44,6 +44,9 @@
           font-size: 260%;
         }
       }
+
+      div.container_lockframe { background: transparent; }
+      iframe.lockframe { z-index: -2; }
     </style>
     @yield('style')
   </head>
