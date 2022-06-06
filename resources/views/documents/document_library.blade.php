@@ -476,7 +476,11 @@
         documentLibraryFileUpload +=
           '    <select class="browser-default custom-select" name="documentLibrary_AttachmentType[]" required>';
         documentLibraryFileUpload += '      <option disabled>Open this select menu</option>';
-        documentLibraryFileUpload += '      <option value="1">Approved (Signed)</option>';
+
+        if (tagID == 1) {
+          documentLibraryFileUpload += '      <option value="1">Approved (Signed)</option>';
+        }
+
         documentLibraryFileUpload += '      <option value="2">Fillable</option>';
         documentLibraryFileUpload += '      <option value="3">Raw File</option>';
         documentLibraryFileUpload += '    </select>';
@@ -515,7 +519,9 @@
         documentLibraryFileUpload +=
           '    <select class="browser-default custom-select" name="documentLibrary_AttachmentType[]" required>';
         documentLibraryFileUpload += '      <option disabled>Open this select menu</option>';
-        documentLibraryFileUpload += '      <option value="1">Approved (Signed)</option>';
+        if (tagID == 1) {
+          documentLibraryFileUpload += '      <option value="1">Approved (Signed)</option>';
+        }
         documentLibraryFileUpload += '      <option value="2">Fillable</option>';
         documentLibraryFileUpload += '      <option value="3">Raw File</option>';
         documentLibraryFileUpload += '    </select>';
@@ -728,7 +734,9 @@
           documentRevisionFileUpload +=
             '    <select class="browser-default custom-select" name="documentLibrary_AttachmentRevisionType[]" required>';
           documentRevisionFileUpload += '      <option disabled>Open this select menu</option>';
-          documentRevisionFileUpload += '      <option value="1">Approved (Signed)</option>';
+          if (tagID == 1) {
+            documentRevisionFileUpload += '      <option value="1">Approved (Signed)</option>';
+          }
           documentRevisionFileUpload += '      <option value="2">Fillable</option>';
           documentRevisionFileUpload += '      <option value="3">Raw File</option>';
           documentRevisionFileUpload += '    </select>';
