@@ -581,9 +581,11 @@
         $('.btn-requestEntry_ModalFilePreview').on('click', function(e) {
           $(".filePreview").remove();
           var fileName = $(this).data("file");
+          var fileNameSplit = fileName.split(".");
+          var fileNameExtension = fileNameSplit[fileNameSplit.length - 1];
           var requestEntryFilePreview = '<div class="filePreview">';
           /* requestEntryFilePreview += '<h6>{{ asset("storage/resource/uploads/iso/'+fileName+'") }}'+fileName+'</h6>'; */
-          requestEntryFilePreview += '<iframe src="../storage/requestentry/pdf/legal/' + fileName +
+          requestEntryFilePreview += '<iframe src="../storage/requestentry/' + fileNameExtension + '/legal/' + fileName +
             '#toolbar=0" style="width:100%;height:100vh;" style="pointer-events:none;" oncontextmenu="return false" /></iframe>';
           requestEntryFilePreview += '</div>';
           /* $("#requestEntry_ModalFilePreviewLabel").replaceWith($(fileName)); */
@@ -688,29 +690,29 @@
         $("#addRequestLegalEntry")[0].reportValidity();
       }
       /* //$('#modalRequestLegalEntryInsert').modal('show');
-                                      requestLegalEntry_Requestor = $('#requestLegalEntry_Requestor option:selected').not('option:disabled').text();
-                                      requestLegalEntry_RequestorID = $('#requestLegalEntry_Requestor option:selected').not('option:disabled').val();
-                                      requestLegalEntry_DateRequest = $('#requestLegalEntry_DateRequest').val();
+                                        requestLegalEntry_Requestor = $('#requestLegalEntry_Requestor option:selected').not('option:disabled').text();
+                                        requestLegalEntry_RequestorID = $('#requestLegalEntry_Requestor option:selected').not('option:disabled').val();
+                                        requestLegalEntry_DateRequest = $('#requestLegalEntry_DateRequest').val();
 
-                                      requestLegalEntry_DocumentType = $('#requestLegalEntry_DocumentType option:selected').not('option:disabled').text();
-                                      requestLegalEntry_DocumentTypeID = $('#requestLegalEntry_DocumentType option:selected').not('option:disabled').val();
-                                      requestLegalEntry_Status = $('#requestLegalEntry_Status option:selected').not('option:disabled').text();
-                                      requestLegalEntry_StatusID = $('#requestLegalEntry_Status option:selected').not('option:disabled').val();
+                                        requestLegalEntry_DocumentType = $('#requestLegalEntry_DocumentType option:selected').not('option:disabled').text();
+                                        requestLegalEntry_DocumentTypeID = $('#requestLegalEntry_DocumentType option:selected').not('option:disabled').val();
+                                        requestLegalEntry_Status = $('#requestLegalEntry_Status option:selected').not('option:disabled').text();
+                                        requestLegalEntry_StatusID = $('#requestLegalEntry_Status option:selected').not('option:disabled').val();
 
-                                      requestLegalEntry_Attachment = $('#requestLegalEntry_Attachment').val();
-                                      requestLegalEntry_Remarks = $('#requestLegalEntry_Remarks').val();
-                                      requestLegalEntry = {};
-                                        requestLegalEntry.Requestor = requestLegalEntry_RequestorID;
-                                        requestLegalEntry.DateRequest = requestLegalEntry_DateRequest;
-                                        requestLegalEntry.DocumentType = requestLegalEntry_DocumentTypeID;
-                                        requestLegalEntry.Status = requestLegalEntry_StatusID;
-                                        requestLegalEntry.Attachment = requestLegalEntry_Attachment;
-                                        requestLegalEntry.Remarks = requestLegalEntry_Remarks;
+                                        requestLegalEntry_Attachment = $('#requestLegalEntry_Attachment').val();
+                                        requestLegalEntry_Remarks = $('#requestLegalEntry_Remarks').val();
+                                        requestLegalEntry = {};
+                                          requestLegalEntry.Requestor = requestLegalEntry_RequestorID;
+                                          requestLegalEntry.DateRequest = requestLegalEntry_DateRequest;
+                                          requestLegalEntry.DocumentType = requestLegalEntry_DocumentTypeID;
+                                          requestLegalEntry.Status = requestLegalEntry_StatusID;
+                                          requestLegalEntry.Attachment = requestLegalEntry_Attachment;
+                                          requestLegalEntry.Remarks = requestLegalEntry_Remarks;
 
-                                        console.log(requestLegalEntry);
-                                      Swal.fire({
-                                        title: 'Summary',
-                                        html: `<table class="table table-sm" width="100%">
+                                          console.log(requestLegalEntry);
+                                        Swal.fire({
+                                          title: 'Summary',
+                                          html: `<table class="table table-sm" width="100%">
       <tr>
         <td width="50%" class="text-right">Requestor:</td>
         <td width="50%" class="text-left">`+requestLegalEntry_Requestor+`</td>
@@ -736,30 +738,30 @@
         <td class="text-left">`+requestLegalEntry_Remarks+`</td>
       </tr>
     </table>`,
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Submit'
-                                      }).then((result) => {
-                                        if (result.isConfirmed) {
-                                          Swal.fire(
-                                            'Success!',
-                                            'You have requested a legal document entry',
-                                            'success'
-                                          )
-                                          //$("#addRequestEntry").submit();
-                                          $.ajax({
-                                            dataType: 'JSON',
-                                            type: 'POST',
-                                            url:  'documentrequest/legal/store',
-                                            data: requestLegalEntry,
-                                            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                                          }).done(function(data){
-                                            console.log(data);         
-                                          });
-                                          $('#modalRequestLegalEntryInsert').modal('hide');
-                                        }
-                                      }) */
+                                          showCancelButton: true,
+                                          confirmButtonColor: '#3085d6',
+                                          cancelButtonColor: '#d33',
+                                          confirmButtonText: 'Submit'
+                                        }).then((result) => {
+                                          if (result.isConfirmed) {
+                                            Swal.fire(
+                                              'Success!',
+                                              'You have requested a legal document entry',
+                                              'success'
+                                            )
+                                            //$("#addRequestEntry").submit();
+                                            $.ajax({
+                                              dataType: 'JSON',
+                                              type: 'POST',
+                                              url:  'documentrequest/legal/store',
+                                              data: requestLegalEntry,
+                                              headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                                            }).done(function(data){
+                                              console.log(data);         
+                                            });
+                                            $('#modalRequestLegalEntryInsert').modal('hide');
+                                          }
+                                        }) */
     });
   </script>
   <script>
