@@ -51,7 +51,7 @@ class DocumentLibrariesController extends Controller
                                     //->join('request_types', 'request_iso_entry_histories.status', '=', 'request_types.id')
                                     //->where('status','=',4)->get();
         $document_categories = DocumentCategory::where([['tag', '=', $tagID],['status', '=', 'Active'],])->get();
-        $document_departments = Department::get();
+        $document_departments = Department::where('status', '=', 'Active')->get();
         $document_companies = Company::get();
         $tags = Tag::get();
         $users = User::with('getUserAccess')

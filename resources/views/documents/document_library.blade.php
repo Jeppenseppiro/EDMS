@@ -86,7 +86,7 @@
                   <div class="col-sm-6">
                     <div class="md-form">
                       <i class="fa-solid fa-input-text prefix"></i>
-                      <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control" value="0" readonly>
+                      <input type="number" id="documentLibrary_Revision" name="documentLibrary_Revision" class="form-control">
                       <label for="documentLibrary_Revision">Revision No</label>
                     </div>
                   </div>
@@ -608,8 +608,8 @@
                   '" data-file="' + data[i].document_file_revision[x].attachment +
                   '" style="text-align: center" type="button" class="btn btn-sm btn-success px-2 attachment' + x +
                   '">' + data[i].document_file_revision[x].attachment + '</a>';
-                userRoles.includes("1") == true || userRoles.includes("3") == true ? documentLibraryRevision +=
-                  'Password: ' + data[i].document_file_revision[x].file_password : documentLibraryRevision += '';
+                /* userRoles.includes("1") == true || userRoles.includes("3") == true ? documentLibraryRevision +=
+                  'Password: ' + data[i].document_file_revision[x].file_password : documentLibraryRevision += ''; */
                 documentLibraryRevision += '</td>';
 
                 documentLibraryRevision += '<td>';

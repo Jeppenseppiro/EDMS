@@ -21,7 +21,7 @@ class UsersController extends Controller
         //$users = DB::table('users')->get();
         $users = User::with('getCompany','getDepartment','getRole')->get();
         $companies = Company::get();
-        $departments = Department::get();
+        $departments = Department::where('status', '=', 'Active')->get();
         return view('users.users',
             array(
                 'users' => $users,

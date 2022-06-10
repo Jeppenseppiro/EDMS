@@ -121,7 +121,7 @@
 
       // Data Picker Initialization
       $('.datepicker').pickadate({
-        min: new Date(yyyy,mm_datepicker,dd),
+        // min: new Date(yyyy,mm_datepicker,dd),
         format: 'yyyy-mm-dd',
         formatSubmit: 'yyyy-mm-dd',
       });
