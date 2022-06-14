@@ -405,14 +405,11 @@
                             <td>{{ $document_library->documentCompany->company_code }}</td>
                             <td>{{ $document_library->document_number_series }}</td>
                             <td>{{ $document_library->description }}</td>
-                            <td>{{ $document_library->revision }}</td>
-
+                            <td>{{ $document_library->documentRevision->revision }}</td>
                             <td>{{ $document_library->documentCategory->category_description }}</td>
                             <td>{{ $document_library->documentTag->description }}</td>
-                            <td></td>
+                            <td>{{ $document_library->documentRevision->effective_date }}</td>
                             <td>{{ $document_library->attachment }}</td>
-
-
                             <td>
                               <button id="{{ $key }}" data-id="{{ $document_library->id }}" style="text-align: center" type="button" title="Update Document Library" class="btn btn-sm btn-success px-2 btn-documentLibrary_View"><i class="fa-solid fa-arrows-rotate"></i></button>
                               {{-- <button id="{{$key}}" data-id="{{$document_library->id}}" style="text-align: center" type="button" class="btn btn-sm btn-info px-2 btn-documentLibrary_User"><i class="fa-solid fa-user"></i></button> --}}
