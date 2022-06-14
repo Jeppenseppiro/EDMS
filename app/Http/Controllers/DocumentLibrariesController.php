@@ -87,12 +87,12 @@ class DocumentLibrariesController extends Controller
         // dd($attachmentTypes);
 
         $this->validate($request, [
-            'documentLibrary_Attachment' => ['required', 'max:30000'],
+            'documentLibrary_Attachment' => ['required', 'max:100000'],
             'documentLibrary_DocumentNumberSeries' => ['required', 'unique:document_libraries,document_number_series'],
         ]);
 
         $oldRevision = DocumentRevision::where('document_library_id', $request->updateDocumentLibrary_ID)->orderBy('id','desc')->first();
-        $oldRevision != null ? $revisionData = $oldRevision->revision + 1 : $revisionData = 0;
+        $oldRevision != null ? $revisionData = $oldRevision->revision + 1 : $revisionData = $oldRevision->revision;
 
         //Document Library
         $documentLibrary = new DocumentLibrary;

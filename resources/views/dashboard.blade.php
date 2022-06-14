@@ -10,7 +10,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-file-pen"></i> Request Entry</h5>
             <hr>
-            <h1>{{$requestEntries->count()}}</h1>
+            <h1>{{ $requestEntries_Total->count() }}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -18,7 +18,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-copy"></i> Request Copy</h5>
             <hr>
-            <h1>{{$requestCopies->count()}}</h1>
+            <h1>{{ $requestCopies_Total->count() }}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -26,7 +26,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-database"></i> Document Library</h5>
             <hr>
-            <h1>{{$documentLibraries->count()}}</h1>
+            <h1>{{ $documentLibraries_Total->count() }}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -34,7 +34,7 @@
           <div class="card-body">
             <h5 class="card-title"><i class="fa-solid fa-file-export"></i> E-Transmittal</h5>
             <hr>
-            <h1>{{$eTransmittals->count()}}</h1>
+            <h1>{{ $eTransmittals_Total->count() }}</h1>
             {{-- <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p> --}}
           </div>
         </div>
@@ -73,68 +73,81 @@
         </div>
       </div>
 
-      
+
     </section>
 
   </div>
 @endsection
 
 @section('script')
-  
+
   <script>
-    var yData_requestEntries = JSON.parse('{!! json_encode($requestEntries_Months) !!}');
-    var xData_requestEntries = JSON.parse('{!! json_encode($requestEntries_MonthCount) !!}');
+    var months = JSON.parse('{!! json_encode($months) !!}');
+    var finalData = JSON.parse('{!! json_encode($finalData) !!}');
 
-    var yData_requestCopies = JSON.parse('{!! json_encode($requestCopies_Months) !!}');
-    var xData_requestCopies = JSON.parse('{!! json_encode($requestCopies_MonthCount) !!}');
+    var requestEntryCount = [];
+    var requestCopyCount = [];
+    var documentLibraryCount = [];
+    var eTransmittalCount = [];
 
+    // console.log(finalData);
+    for (var i = 0; i < finalData.length; i++) {
+      requestEntryCount[i] = finalData[i].countEntries;
+      requestCopyCount[i] = finalData[i].countCopies;
+      documentLibraryCount[i] = finalData[i].countDocumentLibraries;
+      eTransmittalCount[i] = finalData[i].countEtransmittals;
+    }
     var ctxB = document.getElementById("dashboardChart").getContext('2d');
     var myChart = new Chart(ctxB, {
       plugins: [ChartDataLabels],
       type: 'bar',
       data: {
-        labels: yData_requestEntries,
+        labels: months,
         datasets: [{
-          label: 'Request Entry',
-          data : xData_requestEntries,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255,99,132,1)'
-          ],
-          borderWidth: 2
-        }/*, {
-          label: 'Request Copy',
-          data : xData_requestCopies,
-          backgroundColor: [
-            'rgba(54, 162, 235, 0.2)'
-          ],
-          borderColor: [
-            'rgba(54, 162, 235, 1)'
-          ],
-          borderWidth: 2
-        }, {
-          label: 'Document Library',
-          data : [{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}}],
-          backgroundColor: [
-            'rgba(255, 206, 86, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 206, 86, 1)'
-          ],
-          borderWidth: 2
-        }, {
-          label: 'E-Transmittal',
-          data : [{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}},{{$documentLibraries->count()}}],
-          backgroundColor: [
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 2
-        } */],
+            label: 'Request Entry',
+            data: requestEntryCount,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)'
+            ],
+            borderWidth: 2
+          },
+          {
+            label: 'Request Entry',
+            data: requestCopyCount,
+            backgroundColor: [
+              'rgba(255, 157, 0, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255, 157, 0, 1)'
+            ],
+            borderWidth: 2
+          },
+          {
+            label: 'Document Library',
+            data: documentLibraryCount,
+            backgroundColor: [
+              'rgba(7, 129, 230, 0.2)'
+            ],
+            borderColor: [
+              'rgba(7, 129, 230, 1)'
+            ],
+            borderWidth: 2
+          },
+          {
+            label: 'E-Transmittal',
+            data: eTransmittalCount,
+            backgroundColor: [
+              'rgba(69, 158, 41, 0.2)'
+            ],
+            borderColor: [
+              'rgba(69, 158, 41, 1)'
+            ],
+            borderWidth: 2
+          }
+        ],
       }
     });
     /*

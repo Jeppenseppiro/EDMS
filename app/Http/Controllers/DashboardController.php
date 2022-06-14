@@ -16,66 +16,82 @@ class DashboardController extends Controller
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
 
-        $requestEntries = RequestIsoEntry::select('id', 'created_at')->get()->groupBy(function($data){
-            return Carbon::parse($data->created_at)->format('M');
-        });
+        $requestEntries_Total = RequestIsoEntry::get();
+        $requestCopies_Total = RequestIsoCopy::get();
+        $documentLibraries_Total = DocumentLibrary::get();
+        $eTransmittals_Total = Etransmittal::get();
 
-        $requestEntries_Months = ['January','February','March','April','May','June,','July','August','September','October','November','December'];
-        $requestEntries_MonthCount = [];
-        foreach ($requestEntries as $month => $values) {
-            $requestEntries_Months[] = $month;
-            $requestEntries_MonthCount[] = count($values);
-        }
-        //dd($requestEntries);
-        ///////////////////////////////////////////////////////////////
+        $requestEntries = RequestIsoEntry::select('id', 'created_at')->get()->groupBy(function($data){
+            return Carbon::parse($data->created_at)->format('F');
+        });
 
         $requestCopies = RequestIsoCopy::select('id', 'created_at')->get()->groupBy(function($data){
-            return Carbon::parse($data->created_at)->format('M');
+            return Carbon::parse($data->created_at)->format('F');
         });
 
-        $requestCopies_Months = [];
-        $requestCopies_MonthCount = [];
-        foreach ($requestEntries as $month => $values) {
-            $requestCopies_Months[] = $month;
-            $requestCopies_MonthCount[] = count($values);
-        }
+        $documentLibraries = DocumentLibrary::select('id', 'created_at')->get()->groupBy(function($data){
+            return Carbon::parse($data->created_at)->format('F');
+        });
 
-        $documentLibraries = DocumentLibrary::get();
-        $eTransmittals = Etransmittal::get();
+        $eTransmittals = Etransmittal::select('id', 'created_at')->get()->groupBy(function($data){
+            return Carbon::parse($data->created_at)->format('F');
+        });
 
+        $requestEntries_array =  $requestEntries->toArray();
+        $requestCopies_array =  $requestCopies->toArray();
+        $documentLibraries_array = $documentLibraries->toArray();
+        $eTransmittals_array = $eTransmittals->toArray();
         
+        $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        $finalData = [];
 
-        /* $requestEntries_Chart = RequestIsoEntry::
-                                select(DB::raw("COUNT(*) as count"))
-                                ->whereYear('created_at',date('Y'))
-                                ->groupBy(DB::raw("MONTH(created_at)"))
-                                ->pluck('count');
+        foreach($months as $key => $month){
+            $datarequestEntriesCount = [];
+            $countEntries = 0;
+            $countCopies = 0;
+            $countDocumentLibraries = 0;
+            $countEtransmittals = 0;
+            
+            if(array_key_exists($month,$requestEntries_array)){
+              $countEntries = count($requestEntries_array[$month]);
+            }
+            
+            if(array_key_exists($month,$requestCopies_array)){
+              $countCopies = count($requestCopies_array[$month]);
+            }
 
-        $requestEntries_Month = RequestIsoEntry::
-                                select(DB::raw("MONTH(created_at) as month"))
-                                ->whereYear('created_at',date('Y'))
-                                ->groupBy(DB::raw("MONTH(created_at)"))
-                                ->pluck('month');
+            if(array_key_exists($month,$documentLibraries_array)){
+              $countDocumentLibraries = count($documentLibraries_array[$month]);
+            }
 
-        $requestEntries_Datas = array(0,0,0,0,0,0,0,0,0,0,0,0);
-
-        foreach ($requestEntries_Datas as $index => $requestEntries_Data) {
-            $requestEntries_Datas[$requestEntries_Month] = $requestEntries_Chart[$index];
-        } */
-
-        //dd($requestEntries_Chart);
+            if(array_key_exists($month,$eTransmittals_array)){
+              $countEtransmittals = count($eTransmittals_array[$month]);
+            }
+            
+            $datarequestEntriesCount = [
+                'month' => $month,
+                'countEntries' => $countEntries,
+                'countCopies' => $countCopies,
+                'countDocumentLibraries' => $countDocumentLibraries,
+                'countEtransmittals' => $countEtransmittals,
+            ];
+          
+            $finalData[$key] = $datarequestEntriesCount;
+        }
+        // dd($finalData);
+        
         return view('dashboard',
             array(
+                'requestEntries_Total' => $requestEntries_Total,
+                'requestCopies_Total' => $requestCopies_Total,
+                'documentLibraries_Total' => $documentLibraries_Total,
+                'eTransmittals_Total' => $eTransmittals_Total,
                 'requestEntries' => $requestEntries,
                 'requestCopies' => $requestCopies,
                 'documentLibraries' => $documentLibraries,
                 'eTransmittals' => $eTransmittals,
-                'requestEntries_Months' => $requestEntries_Months,
-                'requestEntries_MonthCount' => $requestEntries_MonthCount,
-                'requestCopies_Months' => $requestCopies_Months,
-                'requestCopies_MonthCount' => $requestCopies_MonthCount,
-                'role' => $role,
-                'dateToday' => $dateToday,
+                'months' => $months,
+                'finalData' => $finalData,
             )
         );
     }
