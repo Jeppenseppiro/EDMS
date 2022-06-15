@@ -179,7 +179,7 @@
                   <input id="documentLibrary_Tag" name="documentLibrary_Tag" type="hidden" value="{{ $tagID }}" />
                   <div class="container">
                     <a href="../extraction/library/1" target="_blank" style="text-align: center" type="button" class="btn btn-outline-success waves-effect pdf_RevisionHistory">
-                      PDF
+                      History
                     </a>
 
                     <div class="row">

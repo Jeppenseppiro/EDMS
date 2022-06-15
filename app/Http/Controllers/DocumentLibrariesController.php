@@ -92,7 +92,7 @@ class DocumentLibrariesController extends Controller
         ]);
 
         $oldRevision = DocumentRevision::where('document_library_id', $request->updateDocumentLibrary_ID)->orderBy('id','desc')->first();
-        $oldRevision != null ? $revisionData = $oldRevision->revision + 1 : $revisionData = $oldRevision->revision;
+        $oldRevision != null ? $revisionData = $oldRevision->revision + 1 : $revisionData = $request->documentLibrary_Revision;
 
         //Document Library
         $documentLibrary = new DocumentLibrary;

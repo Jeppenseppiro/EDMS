@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Role;
 use App\Department;
 use App\Company;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class UsersController extends Controller
     {
         //$users = DB::table('users')->get();
         $users = User::with('getCompany','getDepartment','getRole')->get();
+        $roles = Role::get();
         $companies = Company::get();
         $departments = Department::where('status', '=', 'Active')->get();
         return view('users.users',
@@ -27,6 +29,7 @@ class UsersController extends Controller
                 'users' => $users,
                 'companies' => $companies,
                 'departments' => $departments,
+                'roles' => $roles,
             )
         );
     }

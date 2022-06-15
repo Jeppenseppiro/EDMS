@@ -31,11 +31,11 @@
               </a>
 
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                  @csrf
+                @csrf
               </form>
             @endguest
 
-            
+
           </li>
         </ul>
       </li>
@@ -45,28 +45,28 @@
 
           <li class="active">
             <a href="{{ route('dashboard') }}" class="waves-effect">
-              <i class="w-fa fas fa-tachometer-alt"></i>Dashboard
+              <i class="w-fa fas fa-bars"></i>Dashboard
             </a>
           </li>
-          
+
           <li>
             <a class="collapsible-header waves-effect arrow-r">
-              <i class="w-fa fas fa-tachometer-alt"></i>Documents<i class="fas fa-angle-down rotate-icon"></i>
+              <i class="w-fa fas fa-rectangle-list"></i>Documents<i class="fas fa-angle-down rotate-icon"></i>
             </a>
             <div class="collapsible-body">
               <ul>
                 <li>
                   <ul class="collapsible collapsible-accordion mt-0">
                     <li><a class="collapsible-header waves-effect arrow-r">
-                      <i class="fas fa-chevron-right"></i>Document Management</a>
+                        <i class="fas fa-chevron-right"></i>Document Management</a>
                       <div class="collapsible-body">
                         <ul>
                           <li><a href="{{ url('documentrequest/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Entry</a></li>
-                          
-                          {{-- @if(in_array(1, $role) || in_array(8, $role)) --}}
+
+                          {{-- @if (in_array(1, $role) || in_array(8, $role)) --}}
                           <li><a href="{{ url('documentcopy/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Copy</a></li>
                           {{-- @endif --}}
-                          
+
                           <li><a href="{{ url('documentlibrary/iso') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Document Library</a></li>
                         </ul>
                       </div>
@@ -76,7 +76,7 @@
                 <li>
                   <ul class="collapsible collapsible-accordion mt-0">
                     <li><a class="collapsible-header waves-effect arrow-r">
-                      <i class="fas fa-chevron-right"></i>Legal</a>
+                        <i class="fas fa-chevron-right"></i>Legal</a>
                       <div class="collapsible-body">
                         <ul>
                           <li><a href="{{ url('documentrequest/legal') }}" class="waves-effect">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Request Entry</a></li>
@@ -117,16 +117,16 @@
                     <span class="sv-normal">E-Transmittal</span>
                   </a>
                 </li>
-                
+
               </ul>
             </div>
           </li>
-          
 
-          @if(auth()->user()->role == 1)
+
+          @if (auth()->user()->role == 1)
             <li>
               <a class="collapsible-header waves-effect arrow-r">
-                <i class="w-fa fas fa-tachometer-alt"></i>Configuration<i class="fas fa-angle-down rotate-icon"></i>
+                <i class="w-fa fas fa-gears"></i>Configuration<i class="fas fa-angle-down rotate-icon"></i>
               </a>
               <div class="collapsible-body">
                 <ul>
@@ -241,7 +241,7 @@
     </ul>
     <div class="sidenav-bg mask-strong"></div>
   </div>
-  
+
   <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
     <div class="float-left">
       <a href="#" data-activates="slide-out" class="button-collapse"><i class="fas fa-bars"></i></a>
