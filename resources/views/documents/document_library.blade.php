@@ -388,14 +388,15 @@
                     <table id="datatable" class="table table-hover table-striped table-bordered table-sm" cellspacing="0" width="100%">
                       <thead>
                         <tr>
-                          <th class="th-sm " width="">Company</th>
-                          <th class="th-sm " width="">Control Code</th>
-                          <th class="th-sm " width="">Document Title</th>
-                          <th class="th-sm " width="">Revision No</th>
-                          <th class="th-sm " width="">Category</th>
-                          <th class="th-sm " width="">Tag</th>
-                          <th class="th-sm " width="">Implementation Date</th>
-                          <th class="th-sm " width="">Date Request</th>
+                          <th class="th-sm" width="5%">Company</th>
+                          <th class="th-sm" width="">Department</th>
+                          <th class="th-sm" width="">Control Code</th>
+                          <th class="th-sm" width="">Document Title</th>
+                          <th class="th-sm" width="">Revision No</th>
+                          <th class="th-sm" width="">Category</th>
+                          <th class="th-sm" width="">Tag</th>
+                          <th class="th-sm" width="">Implementation Date</th>
+                          <th class="th-sm" width="">Date Request</th>
                           <th class="th-sm" width="">Action</th>
                         </tr>
                       </thead>
@@ -403,6 +404,7 @@
                         @foreach ($document_libraries as $key => $document_library)
                           <tr>
                             <td>{{ $document_library->documentCompany->company_code }}</td>
+                            <td>{{ $document_library->documentDepartment->department }}</td>
                             <td>{{ $document_library->document_number_series }}</td>
                             <td>{{ $document_library->description }}</td>
                             <td>{{ $document_library->documentRevision->revision }}</td>
@@ -1258,7 +1260,10 @@
       var datatable = $('#datatable').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-
+        fixedColumns: {
+          left: 1,
+          right: 1
+        },
         initComplete: function() {
           var api = this.api();
 

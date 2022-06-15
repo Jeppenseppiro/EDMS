@@ -19,8 +19,13 @@
   {{-- <link href="{{ asset('css/filepond.css') }}" rel="stylesheet"> --}}
   {{-- <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" /> --}}
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.datatables.net/fixedcolumns/4.1.0/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
   @yield('head')
   <style>
+    thead input {
+      width: 100%;
+    }
+
     .content {
       min-height: 100vh;
       height: auto;
@@ -88,8 +93,9 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-  <script src="{{ url('js/addons/datatables.min.js') }}" type="text/javascript"></script>
+  <script src="{{ asset('js/addons/datatables.min.js') }}" type="text/javascript"></script>
   <script src="{{ asset('js/datatables/dataTables.buttons.min.js') }}"></script>
+  <script src="https://cdn.datatables.net/fixedcolumns/4.1.0/js/dataTables.fixedColumns.min.js"></script>
   <script src="{{ asset('js/buttons.html5.min.js') }}"></script>
   <script src="{{ asset('js/buttons.print.min.js') }}"></script>
   <script src="{{ asset('js/jszip/jszip.min.js') }}"></script>
