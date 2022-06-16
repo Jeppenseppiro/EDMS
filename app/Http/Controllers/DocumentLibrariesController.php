@@ -38,13 +38,19 @@ class DocumentLibrariesController extends Controller
 
         $document_libraries = DocumentLibrary::with('user','documentCategory','documentTag','documentDepartment','documentCompany', 'documentRevision.documentFileRevision.documentUserAccess')
                                                 ->when(!in_array(1, $role) && !in_array(3, $role), function ($query, $role) {
-                                                    $query->whereHas('documentRevision.documentFileRevision.documentUserAccess', function ($userAccess) {
-                                                        $userAccess->where('user_access','=',auth()->user()->id);
+
+                                                    $query->when(auth()->user()->company != 5, function ($query){
+                                                        $query->where('company', '=', auth()->user()->company);
+                                                    });
+
+                                                    $query->whereHas('documentRevision.documentFileRevision.documentUserAccess', function ($query) {
+                                                        $query->where('user_access','=',auth()->user()->id);
                                                     });
                                                 })
-                                                ->when(auth()->user()->company != 5, function ($query){
+                                                
+                                                /* ->when(auth()->user()->company != 5 || !in_array(1, $role), function ($query){
                                                     $query->where('company', '=', auth()->user()->company);
-                                                })
+                                                }) */
                                                 ->where('tag', '=', $tagID)
                                                 ->get();
         
