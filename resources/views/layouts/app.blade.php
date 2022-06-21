@@ -71,7 +71,7 @@
 </head>
 
 <body class="cyan-skin fixed-sn">
-  <div id="mdb-preloader" class="flex-center">
+  <div id="mdb-preloader" class="flex-center" hidden>
     {{-- <div class="preloader-wrapper active"> --}}
     <div class="spinner-border text-primary" style="width: 20rem; height: 20rem; font-size: 100px;" role="status">
       <span class="sr-only">Loading...</span>
@@ -109,12 +109,12 @@
     </script> --}}
   <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    $(window).on('load', function() {
-      $('#mdb-preloader').delay(100).fadeOut(300);
-    });
-
-
     $(document).ready(function() {
+      //Spinner
+      $('button[type="submit"]').on('click', function(e) {
+        $('#mdb-preloader').removeAttr('hidden');
+      });
+
       // SideNav Button Initialization
       $(".button-collapse").sideNav({
         slim: true
@@ -125,7 +125,7 @@
 
       //Chosen Select
       $(".chosen").chosen({
-        width: "95%"
+        width: "100%"
       });
     });
 

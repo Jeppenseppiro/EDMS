@@ -12,16 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //$users = DB::table('users')->get();
         $users = User::with('getCompany','getDepartment','getRole')->get();
-        $roles = Role::get();
+        $roles = Role::where('id', '!=', '1')->get();
         $companies = Company::get();
         $departments = Department::where('status', '=', 'Active')->get();
         return view('users.users',
@@ -34,17 +29,6 @@ class UsersController extends Controller
         );
     }
 
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -61,54 +45,11 @@ class UsersController extends Controller
         $userAccount->password = bcrypt($request->password);
         $userAccount->company = $request->company;
         $userAccount->department = $request->department;
+        $userAccount->role = implode(",", $request->role);
+        // dd($userRoles);
         $userAccount->save();
         //
 
         return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 }

@@ -21,7 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 class FilesController extends Controller
 {
-    public function documentFile($link)
+   public function documentFile($link)
     {
         $role = explode(",",auth()->user()->role);
         $dateToday = date('Y-m-d');
@@ -109,7 +109,7 @@ class FilesController extends Controller
                     }
 
                     $owner_password = $pdfPassword_password;
-                    $user_password = $revision_file->file_password;
+                    $user_password = '';
 
                     $result = $pdf/*-> {($pdfPassword_status  === true)  ? 'addFile' : 'setProp3'}($file, 'A', $pdfPassword_password) */
                                     ->addFile($file, 'A', $pdfPassword_password)
@@ -122,8 +122,8 @@ class FilesController extends Controller
                                         ->allow($allow_printing)
                                         ->allow($allow_fillin)
                                         ->allow($allow_allFeatures)
-                                        // ->setPassword($owner_password)          // Set owner password
-                                        // ->setUserPassword($user_password)      // Set user password
+                                        ->setPassword($owner_password)          // Set owner password
+                                        ->setUserPassword($user_password)      // Set user password
                                         // ->passwordEncryption(128)   // Set password encryption strength
                                         ->stamp($obsolete_watermarkFile)
                                         ->saveAs($tmpFile);
@@ -134,8 +134,8 @@ class FilesController extends Controller
                                         ->allow($allow_printing)
                                         ->allow($allow_fillin)
                                         ->allow($allow_allFeatures)
-                                        // ->setPassword($owner_password)          // Set owner password
-                                        // ->setUserPassword($user_password)      // Set user password
+                                        ->setPassword($owner_password)          // Set owner password
+                                        ->setUserPassword($user_password)      // Set user password
                                         // ->passwordEncryption(128)   // Set password encryption strength
                                         ->stamp($obsolete_watermarkFile)
                                         ->saveAs($tmpFile);

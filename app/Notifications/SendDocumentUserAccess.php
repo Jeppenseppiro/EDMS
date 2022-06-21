@@ -44,12 +44,11 @@ class SendDocumentUserAccess extends Notification
         return (new MailMessage)
                     ->subject("Document Access: ".$this->documentUserAccessEmail['documentLibrary_Series'])
                     ->line(new HtmlString
-                        ("You now have access to the Dcument Library <b>".$this->documentUserAccessEmail['documentLibrary_Series']."</b>"))
+                        ("You now have access to the Document Library <b>".$this->documentUserAccessEmail['documentLibrary_Series']."</b>"))
                     ->line(new HtmlString
                         ("Access User: <b>".$this->documentUserAccessEmail['documentLibrary_AccessUser']."</b><br> 
                           Document Code: <b>".$this->documentUserAccessEmail['documentLibrary_Series']."</b><br> 
-                          Revision: <b>".$this->documentUserAccessEmail['documentRevision_Revision']."</b><br> 
-                          Attachment: <b>".$this->documentUserAccessEmail['documentFileRevision_Attachment']."</b>
+                          Revision: <b>".$this->documentUserAccessEmail['documentRevision_Revision']."</b>
                         "));
     }
 
