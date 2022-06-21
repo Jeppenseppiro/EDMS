@@ -17,7 +17,7 @@
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header warning-color">
-              <h5 class="modal-title" id="exampleModalLabel">User Sign Up</h5>
+              <h5 class="modal-title" id="exampleModalLabel">User Register</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -107,12 +107,15 @@
                   </div>
                 </div>
 
+                <br>
+
                 <div class="row">
-                  <div class="col-sm-6">
-                    <select class="{{-- js-example-basic-multiple --}} chosen" name="states[]" multiple="multiple" placeholder="User Roles">
-                      <option value="AL">Alabama</option>
-                      ...
-                      <option value="WY">Wyoming</option>
+                  <div class="col-sm-12">
+                    <p class="h2">Roles</p>
+                    <select class="{{-- js-example-basic-multiple --}} chosen" name="role[]" multiple="multiple" placeholder="User Roles" required>
+                      @foreach ($roles as $role)
+                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div>
